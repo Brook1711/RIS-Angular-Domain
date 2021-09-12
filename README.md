@@ -41,9 +41,13 @@
 
 ## 系统模型：
 
-
-
 单用户时分系统
+
+分为上行和下行两种subframe
+
+每个$t$-th subframe中都有$N_p$个相同的训练向量$\bf{v}_t$，这保证了在用户端可以估计（部分的）信道特征。
+
+然后基于估计的特征，用户会使用多普勒补偿矩阵（Doppler compensation matrix）对多普勒效应作出补偿。在本质上将快速时变信道转换为慢时变有效信道（slow time-arying effective channel）
 
 
 $$
@@ -60,8 +64,17 @@ $$
 $$
 
 [^1]: G. Liu, A. Liu, R. Zhang and M. Zhao, "Angular-Domain Selective Channel Tracking and Doppler Compensation for High-Mobility mmWave Massive MIMO," in IEEE Transactions on Wireless Communications, vol. 20, no. 5, pp. 2902-2916, May 2021, doi: 10.1109/TWC.2020.3045272.
+[^]: 
 
 
 
+
+
+
+
+
+
+>  # Noted
+>
 > 绘图采用liboffice绘制
 
