@@ -105,7 +105,89 @@ $\beta_{R, n}= \begin{cases}\theta_{R, q}-\tilde{\theta}_{R, n_{q}}, & n=n_{q}, 
 
 > # Noted
 >
-> 本质上来讲off-grid vector 是所有路径的量化误差向量
+> $q$和$m_q$是一一对应的关系，这个关系在刚开始制定量化划分的时候就需要足够密集以保证每个$q$可以分得一个唯一的grid point
+
+> # Noted
+>
+> 本质上来讲off-grid vector 是所有路径的量化误差向量，但并不代表误差，他其实代表了一种定位手段。在这种定位手段假设量化的所有grid point上均有一个对应的传播路径，至于grid point和实际的误差和grid point 上到底有没有传播路径，则是由$\bf{\beta}_T$和${\bf \beta}_R$所描述的
+
+$$
+\boldsymbol{A}_{R, i}(\boldsymbol{\varphi})=\left[\tilde{\boldsymbol{a}}_{R, i}\left(\boldsymbol{\varphi}^{1}\right), \ldots, \tilde{\boldsymbol{a}}_{R, i}\left(\boldsymbol{\varphi}^{N}\right)\right] \in \mathbb{C}^{N \times N}
+$$
+
+$$
+\boldsymbol{A}_{T}\left(\boldsymbol{\beta}_{T}\right)=\left[\boldsymbol{a}_{T}\left(\tilde{\theta}_{T, 1}+\beta_{T, 1}\right), \ldots, \boldsymbol{a}_{T}\left(\tilde{\theta}_{T, \bar{M}}+\beta_{T, \bar{M}}\right)\right] \in \mathbb{C}^{M \times \bar{M}}
+$$
+
+$$
+\tilde{\boldsymbol{a}}_{R, i}\left(\boldsymbol{\varphi}^{n}\right)=\boldsymbol{a}_{R}\left(\tilde{\theta}_{R, n}+\beta_{R, n}\right) \times e^{j 2 \pi f_{d} i \cos \left(\tilde{\theta}_{R, n}+\beta_{R, n}+\eta\right)}
+$$
+
+为了可以写成更加紧凑的矩阵形式，定义了矩阵$\tilde{X}$表示对应path的path loss：
+$$
+\tilde{x}_{n, m}= \begin{cases}\alpha_{q}, & (n, m)=\left(n_{q}, m_{q}\right), \quad q=1,2, \ldots, L \\ 0, & \text { otherwise. }\end{cases}
+$$
+最后的MIMO信道矩阵可以表示为：
+$$
+\boldsymbol{H}_{i}\left(\boldsymbol{\varphi}, \boldsymbol{\beta}_{T}\right)=\boldsymbol{A}_{R, i}(\boldsymbol{\varphi}) \tilde{\boldsymbol{X}} \boldsymbol{A}_{T}^{H}\left(\boldsymbol{\beta}_{T}\right)
+$$
+注意到，以上推导也可以在二维天线阵列中进行推导
+
+> ##  个人理解
+>
+> 以上步骤只是将多径求和换了一种写法，在量化之后就又通过${\bf \beta}_T$和${\bf \beta}_R$ 弥补了量化误差，实际结果和直接写求和是一样的
+
+### 角度域选择性信道跟踪和多普勒补偿
+
+- mmWave massive MIMO 信道的动态稀疏性（dynamic sparsity）
+- 利用用户端多天线阵列的高AoA分辨率
+
+来估计：信道参数、AoA、rotation angle、maximum DFO
+
+- 目的：
+  - 将高维快速衰落信道转化为低维满衰落信道
+
+- 关键技术：
+  - 角度域选择性信道跟踪
+  - 选择性多普勒补偿
+  - 满衰落信道估计
+  - 下行训练向量设计
+
+> ## Star
+>
+> 注意以下和索引$t$ 基本无关，将其省略
+
+
+
+#### A 用户端的角度域选择性信道跟踪
+
+- 目的
+  - 估计用于多普勒补偿的信道特征
+
+由于信道模型中的DFO参数和AoA存在一对一的对应关系，而且用户处的大规模天线带来的空间高分辨率可以将不同DFO从不同AoA中分离出来
+
+但是这样的代价是由于BS和用户都使用大规模天线，使得参数维度过高，需要估计的参数有：全角度域信道矩阵${\tilde{X}}$、rotation angle $\eta$、maxium DFO $f_d$。
+
+​	为了减小信道开销和信道估计性能，本文提出了**部分估计**信道特征的方法。
+$$
+\begin{aligned}
+\boldsymbol{H}_{i} \mathbf{v} &=\sum_{n=1}^{\bar{N}} \sum_{m=1}^{\bar{M}} \tilde{x}_{n, m} \tilde{\boldsymbol{a}}_{R, i}\left(\boldsymbol{\varphi}^{n}\right) \boldsymbol{a}_{T}^{H}\left(\tilde{\theta}_{T, m}+\beta_{T, m}\right) \mathbf{v} \\
+&=\sum_{n=1}^{\bar{N}} x_{n} \tilde{\boldsymbol{a}}_{R, i}\left(\boldsymbol{\varphi}^{n}\right)=\boldsymbol{A}_{R, i}(\boldsymbol{\varphi}) \boldsymbol{x}
+\end{aligned}
+$$
+最终估计的是部分信道信息：${\boldsymbol \varphi}\ \&\ {\boldsymbol x}$
+
+如果每个训练向量都不一样则开销增加$N_q$倍。
+
+在接收端收到的训练向量的信号为：
+$$
+\boldsymbol{y}=\left[\boldsymbol{H}_{i} \mathbf{v}+\boldsymbol{n}_{i}\right]_{i \in \mathcal{N}_{p}}
+$$
+被估计的量：
+
+> the estimated partial channel coefficients $\hat{x}$, the AoA off-grid vector $\hat{\boldsymbol{\beta}}_{R}$, rotation angle $\hat{\eta}$ and maximum DFO $\hat{f}_{d}$ 
+
+#### B 用户端的角度域选择性多普勒补偿
 
 
 
