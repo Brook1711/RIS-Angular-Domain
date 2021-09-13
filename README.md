@@ -41,14 +41,24 @@
 
 ## 系统模型：
 
+### 帧结构
+
+![image-20210913104714230](README.assets/image-20210913104714230.png)
+
 单用户时分系统
 
 分为上行和下行两种subframe
 
 每个$t$-th subframe中都有$N_p$个相同的训练向量$\bf{v}_t$，这保证了在用户端可以估计（部分的）信道特征。
 
-然后基于估计的特征，用户会使用多普勒补偿矩阵（Doppler compensation matrix）对多普勒效应作出补偿。在本质上将快速时变信道转换为慢时变有效信道（slow time-arying effective channel）
+- 在下行链路中，基于估计的特征，用户会使用多普勒补偿矩阵（Doppler compensation matrix）对多普勒效应作出补偿。在本质上**将快速时变信道转换为慢时变有效信道**（slow time-arying effective channel）
+- 在上行链路中，在每个subframe的头和尾有两种训练向量，该向量是用于在多普勒补偿之后估计慢时变有效通道（slow time-varying effective channel）
 
+上行链路在$t$-thsubframe中优化
+
+下行链路在$(t-1)$-th subframe后优化
+
+### 多普勒和多径信道模型
 
 $$
 \begin{array}{|c|c|c|c|}
@@ -63,8 +73,33 @@ $$
 \end{array}
 $$
 
+
+
+基站和用户都使用半波长间隔ULA
+
+由于系统工作在窄带，所以信道衰落为平稳衰落，用下式表示在$t-th$subframe中$i-th$ symbol的下行信道矩阵[^1-21]：
+$$
+\boldsymbol{H}_{t, i}=\sum_{q=1}^{L_{t}} \alpha_{t, q} e^{j 2 \pi f_{d, t} i \cos \left(\theta_{R, t, q}+\eta_{t}\right)} \boldsymbol{a}_{R}\left(\theta_{R, t, q}\right) \boldsymbol{a}_{T}^{H}\left(\theta_{T, t, q}\right)
+$$
+
+$f_{d,t}$ 泛化最大DFO
+
+$\eta_{t}$ 用户相对于运动方向的rotation angle
+
+### 角度域信道表示
+
+由于假设每个subframe内当前symbol所有参数恒定不变，则在后文的表达式中省略所有变量中的$t$ 脚标
+
+接下来分别对AoD和AoD在$
+[-\pi / 2, \pi / 2]$上进行$\tilde{M}$和$\tilde{N}$离散化
+
+
+
+
+
 [^1]: G. Liu, A. Liu, R. Zhang and M. Zhao, "Angular-Domain Selective Channel Tracking and Doppler Compensation for High-Mobility mmWave Massive MIMO," in IEEE Transactions on Wireless Communications, vol. 20, no. 5, pp. 2902-2916, May 2021, doi: 10.1109/TWC.2020.3045272.
-[^]: 
+[^1-21]: [W. U. Bajwa, J. Haupt, A. M. Sayeed, and R. Nowak, “Compressed channel sensing: A new approach to estimating sparse multipath channels,” Proc. IEEE, vol. 98, no. 6, pp. 1058–1076, Jun. 2010.](doc/1-21_channel.md)
+[^1-]: 
 
 
 
