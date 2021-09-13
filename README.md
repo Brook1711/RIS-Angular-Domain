@@ -84,7 +84,7 @@ $$
 
 $f_{d,t}$ 泛化最大DFO
 
-$\eta_{t}$ 用户相对于运动方向的rotation angle
+$\eta_{t}$ 用户相对于运动方向的`rotation angle`
 
 ### 角度域信道表示
 
@@ -93,13 +93,27 @@ $\eta_{t}$ 用户相对于运动方向的rotation angle
 接下来分别对AoD和AoD在$
 [-\pi / 2, \pi / 2]$上进行$\tilde{M}$和$\tilde{N}$离散化
 
+但是离散化必然会导致量化误差，所以本文提出了[^1-24]
+
+>  off-grid basis for the angular domain channel representation
+
+令$\tilde{\theta}_{T, m_{q}}$和$\tilde{\theta}_{R, n_{q}}$表示距离真实角度$\theta_{T, q}$和$\theta_{R, q}$最近的离散角度，引入`off-grid vector`的概念：$\boldsymbol{\beta}_{T}=\left[\beta_{T, 1}, \beta_{T, 2}, \ldots, \beta_{T, \tilde{M}}\right]^{T}$该向量满足：
+
+$\beta_{T, m}= \begin{cases}\theta_{T, q}-\tilde{\theta}_{T, m_{q}}, & m=m_{q}, \quad q=1,2, \ldots, L \\ 0, & \text { otherwise }\end{cases}$
+
+$\beta_{R, n}= \begin{cases}\theta_{R, q}-\tilde{\theta}_{R, n_{q}}, & n=n_{q}, \quad q=1,2, \ldots, L \\ 0, & \text { otherwise }\end{cases}$
+
+> # Noted
+>
+> 本质上来讲off-grid vector 是所有路径的量化误差向量
+
 
 
 
 
 [^1]: G. Liu, A. Liu, R. Zhang and M. Zhao, "Angular-Domain Selective Channel Tracking and Doppler Compensation for High-Mobility mmWave Massive MIMO," in IEEE Transactions on Wireless Communications, vol. 20, no. 5, pp. 2902-2916, May 2021, doi: 10.1109/TWC.2020.3045272.
 [^1-21]: [W. U. Bajwa, J. Haupt, A. M. Sayeed, and R. Nowak, “Compressed channel sensing: A new approach to estimating sparse multipath channels,” Proc. IEEE, vol. 98, no. 6, pp. 1058–1076, Jun. 2010.](doc/1-21_channel.md)
-[^1-]: 
+[^1-24]: J. Dai, A. Liu, and V. K. N. Lau, “FDD massive MIMO channel estimation with arbitrary 2D-array geometry,” IEEE Trans. Signal Process., vol. 66, no. 10, pp. 2584–2599, May 2018.
 
 
 
