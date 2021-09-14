@@ -185,11 +185,25 @@ $$
 $$
 被估计的量：
 
-> the estimated partial channel coefficients $\hat{x}$, the AoA off-grid vector $\hat{\boldsymbol{\beta}}_{R}$, rotation angle $\hat{\eta}$ and maximum DFO $\hat{f}_{d}$ 
+> the estimated partial channel coefficients $\hat{x}$, 
+>
+> the AoA off-grid vector $\hat{\boldsymbol{\beta}}_{R}$, 
+>
+> rotation angle $\hat{\eta}$ and 
+>
+> maximum DFO $\hat{f}_{d}$ 
 
 #### B 用户端的角度域选择性多普勒补偿
 
+利用A中估计得到的$\hat{\boldsymbol{x}}, \hat{\boldsymbol{\beta}}_{R}, \hat{\eta} \text { and } \hat{f}_{d}$ 对高维快速衰落信道进行降维。
 
+1. 在$N$个AoA中选取$N_q$个能量最大的方向，将$\abs{x_n}^2$作为$n-th$ AoA上的信号能量
+   - $N_d$是用来在空分复用增益和有效CSI信道开销之间作权衡的变量
+2. 由于每一个AoA方向均有一个DFO部分：$e^{j 2 \pi f_{d} i \cos \left(\bar{\theta}_{R, n}+\beta_{R, n}+\eta\right)}$， 所以，会有DFO的补偿向量
+   - $\tilde{\boldsymbol{a}}_{R, i}^{H}\left(\hat{\boldsymbol{\varphi}}^{n}\right)=\boldsymbol{a}_{R}^{H}\left(\tilde{\theta}_{R, n}+\hat{\beta}_{R, n}\right) \times e^{-j 2 \pi \hat{f}_{d} i \cos \left(\bar{\theta}_{R, n}+\hat{\beta}_{R, n}+\eta\right)}$
+   - 选取部分AoA方向：$\mathbf{W}_{i}^{d}=\left[\tilde{\boldsymbol{a}}_{R, i}\left(\hat{\boldsymbol{\varphi}}^{n}\right)\right]_{n \in \mathcal{N}_{d}} \in \mathbb{C}^{N \times N_{d}}$
+   - 转换为慢时变信道：$\boldsymbol{H}_{i}^{s}=\left(\mathbf{W}_{i}^{d}\right)^{H} \boldsymbol{H}_{i}$
+3. 
 
 
 
