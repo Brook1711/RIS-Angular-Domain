@@ -199,11 +199,68 @@ $$
 
 1. 在$N$个AoA中选取$N_q$个能量最大的方向，将$\abs{x_n}^2$作为$n-th$ AoA上的信号能量
    - $N_d$是用来在空分复用增益和有效CSI信道开销之间作权衡的变量
+   
 2. 由于每一个AoA方向均有一个DFO部分：$e^{j 2 \pi f_{d} i \cos \left(\bar{\theta}_{R, n}+\beta_{R, n}+\eta\right)}$， 所以，会有DFO的补偿向量
    - $\tilde{\boldsymbol{a}}_{R, i}^{H}\left(\hat{\boldsymbol{\varphi}}^{n}\right)=\boldsymbol{a}_{R}^{H}\left(\tilde{\theta}_{R, n}+\hat{\beta}_{R, n}\right) \times e^{-j 2 \pi \hat{f}_{d} i \cos \left(\bar{\theta}_{R, n}+\hat{\beta}_{R, n}+\eta\right)}$
    - 选取部分AoA方向：$\mathbf{W}_{i}^{d}=\left[\tilde{\boldsymbol{a}}_{R, i}\left(\hat{\boldsymbol{\varphi}}^{n}\right)\right]_{n \in \mathcal{N}_{d}} \in \mathbb{C}^{N \times N_{d}}$
    - 转换为慢时变信道：$\boldsymbol{H}_{i}^{s}=\left(\mathbf{W}_{i}^{d}\right)^{H} \boldsymbol{H}_{i}$
-3. 
+   
+3. ${\boldsymbol H}_i^s$ 是经过多普勒补偿之后的信道信息，
+
+   - 将$\left(\mathbf{W}_{i}^{d}\right)^{H}$ 看作是一个列的向量的向量，将$H_i$ 看作是一个整体，并写为$\sum_{n=1}^{\tilde{N}} \sum_{m=1}^{\tilde{M}} \tilde{x}_{n, m} \tilde{\boldsymbol{a}}_{R, i}\left(\boldsymbol{\varphi}^{n}\right) \boldsymbol{a}_{T}^{H}\left(\tilde{\theta}_{T, m}+\beta_{T, m}\right)$，
+   - 可以看作是：
+
+   $$
+   \left[\begin{array}{ccccc}
+   {\bf w}_{1}  \\
+   {\bf w}_{2}  \\
+   \vdots  \\
+   {\bf w}_{N_d} 
+   \end{array}\right]\cdot {\boldsymbol H}_i=
+   \left[\begin{array}{ccccc}
+   {\bf w}_{1} {\boldsymbol H}_i \\
+   {\bf w}_{2} {\boldsymbol H}_i \\
+   \vdots  \\
+   {\bf w}_{N_d} {\boldsymbol H}_i
+   \end{array}\right]
+   $$
+
+   - $$
+     \begin{array}{r}
+     \boldsymbol{H}_{i}^{s}=\sum_{m=1}^{\tilde{M}}\left[\tilde{x}_{n, m}+\sum_{\tilde{n}=1, \tilde{n} \neq n} \tilde{x}_{\tilde{n}, m} \tilde{\boldsymbol{a}}_{R, i}^{H}\left(\boldsymbol{\varphi}^{n}\right) \tilde{\boldsymbol{a}}_{R, i}\left(\boldsymbol{\varphi}^{\tilde{n}}\right)\right]_{n \in \mathcal{N}_{d}} \\
+     \times \boldsymbol{a}_{T}^{H}\left(\tilde{\theta}_{T, m}+\beta_{T, m}\right)=\boldsymbol{H}^{s}+\Delta \boldsymbol{H}_{i}
+     \end{array}
+     $$
+
+   - 由此就将信道信息分为了慢时变信道和快时变信道：
+
+   - 慢时变：$\boldsymbol{H}^{s}=\sum_{m=1}^{\tilde{M}}\left[\tilde{x}_{n, m}\right]_{n \in \mathcal{N}_{d}} \boldsymbol{a}_{T}^{H}\left(\theta_{T, m}+\beta_{T, m}\right)$，可以看到和subframe index $i$ 无关，也就是说该部分在一整个frame中保持恒定。
+
+   - 快时变：$\Delta \boldsymbol{H}_{i}=\sum_{m=1}^{\tilde{M}}\left[\sum_{\tilde{n}=1, \tilde{n} \neq n}^{\tilde{N}} \tilde{x}_{\tilde{n}, m} \tilde{\boldsymbol{a}}_{R, i}^{H}\left(\boldsymbol{\varphi}^{n}\right) \tilde{\boldsymbol{a}}_{R, i}\left(\boldsymbol{\varphi}^{\tilde{n}}\right)\right]_{n \in \mathcal{N}_{d}}$
+     $\times \boldsymbol{a}_{T}^{H}\left(\theta_{T, m}+\beta_{T, m}\right)$
+
+4. 快时变组件$\Delta {\boldsymbol H}_i$的二阶矩（方差）大小是遵从$\mathcal{O}\left(\frac{L}{N^{2}}\right)$ 可以看到：
+
+   - 增加接收天线的规模可以使其减小
+   - 多径增加会使其增大，接收信号更不稳定。
+   - 当$N$足够大，$\Delta {\boldsymbol H}_i$ 的能量可以被忽略
+
+5. 大规模MIMO
+
+   - 角度域方法应用了大规模MIMO中的渐变（asymptotical）特性
+   - 更大规模的接收机天线会带来更高的空间分辨率，从而提取不同AoA中的多普勒特性
+   - 当$N$足够大，阵列相应中的${\boldsymbol \alpha}_R(\theta)$相互正交， $\Delta {\boldsymbol H}_i$ 的能量可以被忽略
+
+#### C BS端慢时变信道估计
+
+在经典场景下，基站处的射频链路数量是基站天线数量的$1/2\ \text{or}\ 1/4$ 。因此在上行链路估计中，用户可以$2N_d\ \text{or}\ 4N_d$ 个正交的训练向量（pilots）。这些信号会帮助基站估计信道信息：${\boldsymbol H}_i^s$ 。BS基于估计的${\boldsymbol H}_i^s$ 设计precoding策略，这种策略可以用于both上行和下行。
+
+1. ${\boldsymbol H}_i^s$的相关时间比多普勒补偿之后的符号时间（symbol durations）要大得多[^1-22] 所以每一个frame的时长必须要比${\boldsymbol H}_i^s$的相干时间要短。
+2. 因此，每个frame可以容纳的symbol数量远远大于$N_d$（有效AoA的数量，代表开销数量级），所以，本文提出的方案是可以在实际系统中所接受的。
+
+#### D BS端的训练向量设计
+
+
 
 
 
@@ -211,7 +268,7 @@ $$
 [^1-21]: [W. U. Bajwa, J. Haupt, A. M. Sayeed, and R. Nowak, “Compressed channel sensing: A new approach to estimating sparse multipath channels,” Proc. IEEE, vol. 98, no. 6, pp. 1058–1076, Jun. 2010.](doc/1-21_channel.md)
 [^1-24]: J. Dai, A. Liu, and V. K. N. Lau, “FDD massive MIMO channel estimation with arbitrary 2D-array geometry,” IEEE Trans. Signal Process., vol. 66, no. 10, pp. 2584–2599, May 2018.
 
-
+[^1-22]: W. Guo, W. Zhang, P. Mu, F. Gao, and H. Lin, “High-mobility wideband massive MIMO communications: Doppler compensation, analysis and scaling laws,” IEEE Trans. Wireless Commun., vol. 18, no. 6, pp. 3177–3191, Jun. 2019
 
 
 
