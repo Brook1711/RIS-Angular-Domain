@@ -255,7 +255,7 @@ $$
 
 在经典场景下，基站处的射频链路数量是基站天线数量的$1/2\ \text{or}\ 1/4$ 。因此在上行链路估计中，用户可以$2N_d\ \text{or}\ 4N_d$ 个正交的训练向量（pilots）。这些信号会帮助基站估计信道信息：${\boldsymbol H}_i^s$ 。BS基于估计的${\boldsymbol H}_i^s$ 设计precoding策略，这种策略可以用于both上行和下行。
 
-1. ${\boldsymbol H}_i^s$的相关时间比多普勒补偿之后的符号时间（symbol durations）要大得多[^1-22] 所以每一个frame的时长必须要比${\boldsymbol H}_i^s$的相干时间要短。
+1. ${\boldsymbol H}_i^s$（这里怀疑是写错了，应该是${\boldsymbol H}^s$）的相关时间比多普勒补偿之后的符号时间（symbol durations）要大得多[^1-22] 所以每一个frame的时长必须要比${\boldsymbol H}_i^s$的相干时间要短。
 2. 因此，每个frame可以容纳的symbol数量远远大于$N_d$（有效AoA的数量，代表开销数量级），所以，本文提出的方案是可以在实际系统中所接受的。
 
 #### D BS端的训练向量设计
@@ -269,8 +269,7 @@ $$
 [^1-24]: J. Dai, A. Liu, and V. K. N. Lau, “FDD massive MIMO channel estimation with arbitrary 2D-array geometry,” IEEE Trans. Signal Process., vol. 66, no. 10, pp. 2584–2599, May 2018.
 
 [^1-22]: W. Guo, W. Zhang, P. Mu, F. Gao, and H. Lin, “High-mobility wideband massive MIMO communications: Doppler compensation, analysis and scaling laws,” IEEE Trans. Wireless Commun., vol. 18, no. 6, pp. 3177–3191, Jun. 2019
-
-
+[^1-28]:  X. Zhu, L. Dai, G. Gui, W. Dai, Z. Wang, and F. Adachi, “Structured matching pursuit for reconstruction of dynamic sparse channels,” in Proc. IEEE Global Commun. Conf. (GLOBECOM), Dec. 2015, pp. 1–5
 
 
 
