@@ -273,9 +273,8 @@ $$
 &=\frac{\sqrt{\rho}}{\sqrt{N_{s}}} \sum_{m \in \mathcal{M}^{*}} e^{j \theta_{m}^{s}} \mathbf{b}_{m}^{s}+\frac{\sqrt{1-\rho}}{\sqrt{M-N_{s}}} \sum_{m \in\{1, \ldots, M\} \backslash \mathcal{M}^{*}} e^{j \theta_{m}^{s}} \mathbf{b}_{m}^{s}
 \end{aligned}
 $$
-可以看到，训练向量本质上是方向域正交基底的线性组合，通过在收端进行线性分解就可以获知每个正交方向上的衰落情况，第一部分表示了对于满衰落部分的预测，第二部分则考虑到了下一个frame中会产生新的方向的衰落，所以对于上一时刻中能量集中的方向的剩余进行估计。，在该文中，使用$$
-\mu=0.9 \text { and } \rho=0.5
-$$
+可以看到，训练向量本质上是方向域正交基底的线性组合，通过在收端进行线性分解就可以获知每个正交方向上的衰落情况，第一部分表示了对于满衰落部分的预测，第二部分则考虑到了下一个frame中会产生新的方向的衰落，所以对于上一时刻中能量集中的方向的剩余进行估计。，在该文中，使用$
+\mu=0.9 \text { and } \rho=0.5$
 
 $\mu$ 表示了对于集中能量分布的方向的能量占比阈值，$\rho$表示了旧的方向和新的方向的trade off，说人话就是，对将预算合理的分配到上一时刻能量集中的方向以及除了这个方向之外的新的方向。
 
@@ -285,13 +284,13 @@ $e^{j \theta_{m}^{s}}$ 中的相位随机分布
 
 #### A 基于三层马尔科夫模型的部分角度域信道向量
 
-​	首先，在大规模MIMO中，只有少数的scatter路径被利用，所以说，大规模MIMO信道是稀疏的。另外，${\boldsymbol x}_t$具有时间上的相关性[^1-28] 。这样的动态稀疏性`dynamic sparsity`可以通过三层马尔科夫模型捕获：
+首先，在大规模MIMO中，只有少数的scatter路径被利用，所以说，大规模MIMO信道是稀疏的。另外，${\boldsymbol x}_t$具有时间上的相关性[^1-28] 。这样的动态稀疏性`dynamic sparsity`可以通过三层马尔科夫模型捕获：
 
 ![image-20210916095724215](README.assets/image-20210916095724215.png)
 
 信道辅助向量$\boldsymbol{s}_{t} \in\{0,1\}^{\tilde{N}}$，表示在对应AoA上是否是一个激活信道(active path)。
 
-第二层的随机变量是精度向量$\gamma_{t}=\left[\gamma_{t, 1}, \cdots, \gamma_{t, \tilde{N}}\right]^{T}$ ，其为$x_{t, n}$ 的倒数，则该模型的先验分布（prior distribution），即$\boldsymbol{x}_{1: t}, \gamma_{1: t}$ and $s_{1: t}$的联合分布：
+第二层的随机变量是精度向量$\gamma_{t}=\left[\gamma_{t, 1}, \cdots, \gamma_{t, \tilde{N}}\right]^{T}$ ，其为$x_{t, n}$ 的倒数，则该模型的先验分布（prior distribution），即$\boldsymbol{x}_{1: t}, \gamma_{1: t},s_{1: t}$的联合分布：
 $$
 p\left(\boldsymbol{x}_{1: t}, \boldsymbol{\gamma}_{1: t}, \boldsymbol{s}_{1: t}\right)=\prod_{\tau=1}^{t} p\left(\boldsymbol{s}_{\tau} \mid \boldsymbol{s}_{\tau-1}\right) p\left(\boldsymbol{\gamma}_{\tau} \mid \boldsymbol{s}_{\tau}\right) p\left(\boldsymbol{x}_{\tau} \mid \gamma_{\tau}\right)
 $$
