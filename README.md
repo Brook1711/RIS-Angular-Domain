@@ -260,6 +260,57 @@ $$
 
 #### D BS端的训练向量设计
 
+$t-th$ frame 的训练向量${\boldsymbol v}_t$ 根据上一时刻末尾的慢时变信道信息$\hat{{\boldsymbol H}}_{t-1}^s$进行设计，其基本思想是在已知信道方向的探索和未知信道方向的探索上达到一种平衡。根据B中推导，实际上$\hat{{\boldsymbol H}}_{t-1}^s$ 给出的实际上是 most promising 的信道方向，但是由于估计误差、CSI延迟、和新的信道方向的产生等因素，其他信道方向也应该被纳入考量。
+
+​	具体来讲，该文章引入了一种正交基$\mathbf{B}^{s}=\left[\mathbf{b}_{1}^{s}, \ldots, \mathbf{b}_{M}^{s}\right] \in \mathbb{C}^{M \times M}$ ，并且写出每个正交基上的能量分布：$\lambda_{m}^{s}=\left\|\hat{\boldsymbol{H}}_{t-1}^{s} \mathbf{b}_{m}^{s}\right\|^{2}, \forall m$ 该分布向量$\boldsymbol{\lambda}^{s}=\left[\lambda_{1}^{s}, \ldots, \lambda_{M}^{s}\right]^{T} $的设计原则是尽可能的稀疏。
+
+​	most promissing channel direction 集合 ${\mathcal M}$ 的选择规则为，在元素个数尽量小的前提下，是的这些方向上的能量和不小于一个阈值：$\mathcal{M}^{*}=\operatorname{argmin}_{\mathcal{M}}|\mathcal{M}|$ ，$N_{s}=\left|\mathcal{M}^{*}\right|$
+
+​	最后，训练向量被定义为：
+$$
+\begin{aligned}
+&\mathbf{v}_{t} \\
+&=\frac{\sqrt{\rho}}{\sqrt{N_{s}}} \sum_{m \in \mathcal{M}^{*}} e^{j \theta_{m}^{s}} \mathbf{b}_{m}^{s}+\frac{\sqrt{1-\rho}}{\sqrt{M-N_{s}}} \sum_{m \in\{1, \ldots, M\} \backslash \mathcal{M}^{*}} e^{j \theta_{m}^{s}} \mathbf{b}_{m}^{s}
+\end{aligned}
+$$
+可以看到，训练向量本质上是方向域正交基底的线性组合，通过在收端进行线性分解就可以获知每个正交方向上的衰落情况，第一部分表示了对于满衰落部分的预测，第二部分则考虑到了下一个frame中会产生新的方向的衰落，所以对于上一时刻中能量集中的方向的剩余进行估计。，在该文中，使用$$
+\mu=0.9 \text { and } \rho=0.5
+$$
+
+$\mu$ 表示了对于集中能量分布的方向的能量占比阈值，$\rho$表示了旧的方向和新的方向的trade off，说人话就是，对将预算合理的分配到上一时刻能量集中的方向以及除了这个方向之外的新的方向。
+
+$e^{j \theta_{m}^{s}}$ 中的相位随机分布
+
+## 问题制订和角度域选择性信道跟踪
+
+#### A 基于三层马尔科夫模型的部分角度域信道向量
+
+​	首先，在大规模MIMO中，只有少数的scatter路径被利用，所以说，大规模MIMO信道是稀疏的。另外，${\boldsymbol x}_t$具有时间上的相关性[^1-28] 。这样的动态稀疏性`dynamic sparsity`可以通过三层马尔科夫模型捕获：
+
+![image-20210916095724215](README.assets/image-20210916095724215.png)
+
+信道辅助向量$\boldsymbol{s}_{t} \in\{0,1\}^{\tilde{N}}$，表示在对应AoA上是否是一个激活信道(active path)。
+
+第二层的随机变量是精度向量$\gamma_{t}=\left[\gamma_{t, 1}, \cdots, \gamma_{t, \tilde{N}}\right]^{T}$ ，其为$x_{t, n}$ 的倒数，则该模型的先验分布（prior distribution），即$\boldsymbol{x}_{1: t}, \gamma_{1: t}$ and $s_{1: t}$的联合分布：
+$$
+p\left(\boldsymbol{x}_{1: t}, \boldsymbol{\gamma}_{1: t}, \boldsymbol{s}_{1: t}\right)=\prod_{\tau=1}^{t} p\left(\boldsymbol{s}_{\tau} \mid \boldsymbol{s}_{\tau-1}\right) p\left(\boldsymbol{\gamma}_{\tau} \mid \boldsymbol{s}_{\tau}\right) p\left(\boldsymbol{x}_{\tau} \mid \gamma_{\tau}\right)
+$$
+$p\left(\boldsymbol{x}_{\tau} \mid \gamma_{\tau}\right)=\prod_{n=1}^{N} p\left(x_{\tau, n} \mid \gamma_{\tau, n}\right)$
+
+$p\left(x_{\tau, n} \mid \gamma_{\tau, n}\right)=C N\left(x_{\tau, n} ; 0, \gamma_{\tau, n}^{-1}\right)$
+
+$p\left(\gamma_{\tau} \mid s_{\tau}\right)=\prod_{n=1}^{N} \Gamma\left(\gamma_{\tau, n} ; a_{\tau}, b_{\tau}\right)^{s_{\tau, n}} \Gamma\left(\gamma_{\tau, n} ; \bar{a}_{\tau}, \bar{b}_{\tau}\right)^{1-s_{\tau, n}}$
+
+> # Noted
+>
+> 物理意义上可以理解为激活信道的分布${\boldsymbol s}$ 会导致信道精度${\boldsymbol \gamma}$的差别，信道精度又决定了最终信道特征的分布
+
+$\Gamma\left(\gamma_{\tau, n} ; a_{\tau}, b_{\tau}\right)$ 是一个~~伽马超先验（Gamma hyperprior）~~ 这里应该是论文描述不当，这是一个伽马分布（Gamma distribution），$a_{\gamma}, b_{\gamma}$才应该是超参数[^web-Gamma-distribution] 。
+
+​	$a_{\tau}, b_{\tau}$是信道精度${\gamma}$在信道激活状态下的形状和速率参数，其选择应该遵守以下条件：$\frac{a_{\tau}}{b_{\tau}}=E\left[\gamma_{\tau, n}\right]= \Theta(1)$
+
+
+
 
 
 
@@ -270,6 +321,8 @@ $$
 
 [^1-22]: W. Guo, W. Zhang, P. Mu, F. Gao, and H. Lin, “High-mobility wideband massive MIMO communications: Doppler compensation, analysis and scaling laws,” IEEE Trans. Wireless Commun., vol. 18, no. 6, pp. 3177–3191, Jun. 2019
 [^1-28]:  X. Zhu, L. Dai, G. Gui, W. Dai, Z. Wang, and F. Adachi, “Structured matching pursuit for reconstruction of dynamic sparse channels,” in Proc. IEEE Global Commun. Conf. (GLOBECOM), Dec. 2015, pp. 1–5
+
+[^web-Gamma-distribution]: https://en.wikipedia.org/wiki/Gamma_distribution
 
 
 
