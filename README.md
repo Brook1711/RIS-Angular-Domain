@@ -376,7 +376,16 @@ $$
 
 简单的联合估计$\boldsymbol{x}_{t}$和$ \boldsymbol{\varphi}_{t}$ 所带来的时间复杂度是无法接受的，因此，首先需要对变量进行解耦：
 
-- 
+- 第$t$时刻相关的
+- 之前$t-1$时刻之前的所有信息（message passing[^web-message-passing]）
+
+#### A 联合概率分布的分解和近似
+
+
+
+
+
+
 
 
 
@@ -413,6 +422,7 @@ $$
 [^1-30]: J. Ziniel and P. Schniter, “Dynamic compressive sensing of time-varying signals via approximate message passing,” IEEE Trans. Signal Process.,vol. 61, no. 21, pp. 5270–5284, Jul. 2013.
 [^1-31]: M. K. Samimi and T. S. Rappaport, “3-D millimeter-wave statistical channel model for 5G wireless system design,” IEEE Trans. Microw.Theory Tech., vol. 64, no. 7, pp. 1–19, Jul. 2016.
 [^web-factor-graph]: https://blog.csdn.net/wydbyxr/article/details/82384340
+[^web-message-passing]: https://blog.csdn.net/qq_41603411/article/details/105209622
 
 >  # Noted
 >
