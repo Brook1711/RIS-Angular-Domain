@@ -280,7 +280,7 @@ $\mu$ 表示了对于集中能量分布的方向的能量占比阈值，$\rho$�
 
 $e^{j \theta_{m}^{s}}$ 中的相位随机分布
 
-## 问题制订和角度域选择性信道跟踪
+### 问题制订和角度域选择性信道跟踪
 
 #### A 基于三层马尔科夫模型的部分角度域信道向量
 
@@ -368,11 +368,15 @@ $$
 &=\arg \max _{\boldsymbol{\varphi}_{t}} \ln \int_{\boldsymbol{v}_{t}} p\left(\boldsymbol{y}_{1: t}, \boldsymbol{v}_{t} ; \hat{\boldsymbol{\varphi}}_{1: t-1}, \boldsymbol{\varphi}_{t}\right) d \boldsymbol{v}_{t}
 \end{aligned}
 $$
-在文章中首先写了如何估计$x_{t}$然后再写了如何估计$\hat{\boldsymbol{\varphi}}_{t}$，但是实际算法中的情况却是应该反过来。
+在文章中首先写了如何估计$x_{t}$然后再写了如何估计$\hat{\boldsymbol{\varphi}}_{t}$，~~但是实际算法中的情况却是应该反过来。~~理解错误，这里决定y的值的不仅是$\varphi$还有x
 
-以上算法的难点在于，估计$x_{t}$时，公式中的因子图（factor graph）[^web-factor-graph]含有循环
+以上算法的难点在于，估计$x_{t}$时，公式中的因子图（factor graph）[^web-factor-graph]含有循环，所以通过DD-VBI算法近似求解边界后验概率。并且采用MM算法（majorization-minimization）（是一种普遍的EM算法）[^1-24]
 
+### 基于多普勒感知的动态VBI算法
 
+简单的联合估计$\boldsymbol{x}_{t}$和$ \boldsymbol{\varphi}_{t}$ 所带来的时间复杂度是无法接受的，因此，首先需要对变量进行解耦：
+
+- 
 
 
 
