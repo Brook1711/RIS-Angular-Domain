@@ -333,6 +333,29 @@ $$
 
 在马尔科夫链的起始端，定义其初始概率为一个特定常量：$\lambda \triangleq p\left(s_{1, n}\right)=\frac{\rho_{0,1}}{\rho_{0,1}+\rho_{1,0}}$ 该变量反映了信道的稀疏程度，这样的定义保证了该马尔科夫模型有闭式表达：$p\left(s_{\tau, n}\right)=\lambda^{s_{\tau, n}}(1-\lambda)^{1-s_{\tau, n}}$
 
+​	在噪声设计中，使用同样的方式，在Gamma函数的参数设计中采用：$p\left(\kappa_{\tau}\right)= \Gamma\left(\kappa_{\tau} ; a_{\kappa, \tau}, b_{\kappa, \tau}\right)$，其中的参数有：$a_{\kappa, \tau}, b_{\kappa, \tau} \rightarrow 0$。下图为$a=0.001,b=0.001$，这样设计的目的是为了实现`broad hyperprior`
+
+![image-20210917145402150](README.assets/image-20210917145402150.png)
+
+以上提出的模型有较高的自由度，可以通过调节参数来模拟各种各样的场景。更重要的是，本文提出的算法不需要获知这些参数。
+
+<img src="README.assets/image-20210917145932487.png" alt="image-20210917145932487" style="zoom:50%;" />
+
+该图显示出该三层模型的性质和[^1-31]中提出的mm-SSCM模型类似
+
+#### B 选择性信道追踪问题制定
+
+该问题是要根据一些在收端的观测来估计信道中的一些变量：
+
+- 观测（observation）：
+  - 1～t时刻的接受信号$y_{1:t}$
+  - 1～t-1时刻的角度估计集合$\hat{\varphi}_{1: t-1}=\left\{\hat{\boldsymbol{\beta}}_{R, 1: t-1}, \hat{f}_{d, 1: t-1}, \hat{\eta}_{1: t-1}\right\}$
+- 需要估计的量（estimation）：
+  - 部分信道信息（路损）$\boldsymbol{x}_{t}$
+  - 角度相关信息$\varphi_{t}$
+
+这段估计分为两部分，首先是对于
+
 
 
 
@@ -368,7 +391,9 @@ $$
 [^1-23]:D. G. Tzikas, A. C. Likas, and N. P. Galatsanos, “The variational approximation for Bayesian inference,” IEEE Signal Process. Mag., vol. 25, no. 6, pp. 131–146, Jan. 2008.
 [^1-29]: D. G. Tzikas, A. C. Likas, and N. P. Galatsanos, “The variational approximation for Bayesian inference,” IEEE Signal Process. Mag., vol. 25, no. 6, pp. 131–146, Jan. 2008.
 [^1-30]: J. Ziniel and P. Schniter, “Dynamic compressive sensing of time-varying signals via approximate message passing,” IEEE Trans. Signal Process.,vol. 61, no. 21, pp. 5270–5284, Jul. 2013.
+[^1-31]: M. K. Samimi and T. S. Rappaport, “3-D millimeter-wave statistical channel model for 5G wireless system design,” IEEE Trans. Microw.Theory Tech., vol. 64, no. 7, pp. 1–19, Jul. 2016.
+
 >  # Noted
 >
-> 绘图采用liboffice绘制
+>  绘图采用liboffice绘制
 
