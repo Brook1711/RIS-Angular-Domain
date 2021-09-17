@@ -359,11 +359,18 @@ $$
 $$
 p\left(x_{t, n} \mid \boldsymbol{y}_{1: t} ; \hat{\boldsymbol{\varphi}}_{1: t-1}, \boldsymbol{\varphi}_{t}\right) \propto \int_{-x_{t, n}} p\left(\boldsymbol{y}_{1: t}, \boldsymbol{v}_{t} ; \hat{\boldsymbol{\varphi}}_{1: t-1}, \boldsymbol{\varphi}_{t}\right)
 $$
-其中$\boldsymbol{v}_{t}=\left\{\boldsymbol{x}_{t}, \boldsymbol{s}_{t}, \gamma_{t}, \kappa_{t}\right\}$,$-x_{n,t}$表示$x_t$向量中除去$x_{n,t}$的所有元素
+其中$\boldsymbol{v}_{t}=\left\{\boldsymbol{x}_{t}, \boldsymbol{s}_{t}, \gamma_{t}, \kappa_{t}\right\}$(此时为被积分的对象),$-x_{n,t}$表示$x_t$向量中除去$x_{n,t}$的所有元素.之所以这样写，是因为先假设$\hat{\boldsymbol{\varphi}}_{1: t-1}, \boldsymbol{\varphi}_{t}$是固定的参数，因为如果其值未知，则无法写出$p\left(x_{t, n} \mid \boldsymbol{y}_{1: t}\right)$的确切表达式，写在这里对这个公式影响不大，之所以是正比与而不是等于是因为他们之间只差了一个常数的倍数$p({\boldsymbol y}_{1:t})$，而该公式的目的只是为了找出使后验概率最大的${\boldsymbol x }_{t}$。
 
+另外，在估计$\hat{\boldsymbol{\varphi}}_{t}$时，使用最大似然估计（ML）：
+$$
+\begin{aligned}
+\hat{\varphi} &=\arg \max _{\varphi_{t}} \ln p\left(\boldsymbol{y}_{1: t} ; \hat{\boldsymbol{\varphi}}_{1: t-1}, \boldsymbol{\varphi}_{t}\right) \\
+&=\arg \max _{\boldsymbol{\varphi}_{t}} \ln \int_{\boldsymbol{v}_{t}} p\left(\boldsymbol{y}_{1: t}, \boldsymbol{v}_{t} ; \hat{\boldsymbol{\varphi}}_{1: t-1}, \boldsymbol{\varphi}_{t}\right) d \boldsymbol{v}_{t}
+\end{aligned}
+$$
+在文章中首先写了如何估计$x_{t}$然后再写了如何估计$\hat{\boldsymbol{\varphi}}_{t}$，但是实际算法中的情况却是应该反过来。
 
-
-
+以上算法的难点在于，估计$x_{t}$时，公式中的因子图（factor graph）[^web-factor-graph]含有循环
 
 
 
@@ -401,6 +408,7 @@ $$
 [^1-29]: D. G. Tzikas, A. C. Likas, and N. P. Galatsanos, “The variational approximation for Bayesian inference,” IEEE Signal Process. Mag., vol. 25, no. 6, pp. 131–146, Jan. 2008.
 [^1-30]: J. Ziniel and P. Schniter, “Dynamic compressive sensing of time-varying signals via approximate message passing,” IEEE Trans. Signal Process.,vol. 61, no. 21, pp. 5270–5284, Jul. 2013.
 [^1-31]: M. K. Samimi and T. S. Rappaport, “3-D millimeter-wave statistical channel model for 5G wireless system design,” IEEE Trans. Microw.Theory Tech., vol. 64, no. 7, pp. 1–19, Jul. 2016.
+[^web-factor-graph]: https://blog.csdn.net/wydbyxr/article/details/82384340
 
 >  # Noted
 >
