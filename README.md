@@ -354,7 +354,16 @@ $$
   - 部分信道信息（路损）$\boldsymbol{x}_{t}$
   - 角度相关信息$\varphi_{t}$
 
-这段估计分为两部分，首先是对于
+这段估计分为两部分，首先是对于$x_{t}$的估计，本文通过首先假设$\varphi_{t}$已知来估计$x_t$：
+
+$$
+p\left(x_{t, n} \mid \boldsymbol{y}_{1: t} ; \hat{\boldsymbol{\varphi}}_{1: t-1}, \boldsymbol{\varphi}_{t}\right) \propto \int_{-x_{t, n}} p\left(\boldsymbol{y}_{1: t}, \boldsymbol{v}_{t} ; \hat{\boldsymbol{\varphi}}_{1: t-1}, \boldsymbol{\varphi}_{t}\right)
+$$
+其中$\boldsymbol{v}_{t}=\left\{\boldsymbol{x}_{t}, \boldsymbol{s}_{t}, \gamma_{t}, \kappa_{t}\right\}$,$-x_{n,t}$表示$x_t$向量中除去$x_{n,t}$的所有元素
+
+
+
+
 
 
 
