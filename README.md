@@ -424,7 +424,55 @@ $$
 [^web-factor-graph]: https://blog.csdn.net/wydbyxr/article/details/82384340
 [^web-message-passing]: https://blog.csdn.net/qq_41603411/article/details/105209622
 
->  # Noted
+
+
+# channel estimation for RIS empowered Multi-User MISO Wireless Communication
+
+## 研究背景：
+
+
+
+## 系统模型：
+
+### 收发机模型：
+
+![image-20210919154817637](README.assets/image-20210919154817637.png)
+$$
+\mathbf{Y}_{p} \triangleq \mathbf{H}^{r} D_{p}(\boldsymbol{\Phi}) \mathbf{H}^{s} \mathbf{X}+\mathbf{W}_{p}
+$$
+
+### PARAFAC基础
+
+$$
+[\mathbf{X}]_{i, j, k} \triangleq \sum_{r=1}^{R}[\mathbf{A}]_{i, r}[\mathbf{B}]_{j, r}[\mathbf{C}]_{k, r}
+$$
+
+这样一个三维矩阵的二维切片为：
+$$
+\begin{aligned}
+&\mathbf{X}_{i,:,:}=\mathbf{B} \operatorname{diag}\left([\mathbf{A}]_{i,:}\right) \mathbf{C}^{T}, \quad i=1,2, \ldots, I \\
+&\mathbf{X}_{:, j,:}=\mathbf{C} \operatorname{diag}\left([\mathbf{B}]_{j,:}\right) \mathbf{A}^{T}, \quad j=1,2, \ldots, J \\
+&\mathbf{X}_{:,, k}=\mathbf{A} \operatorname{diag}\left([\mathbf{C}]_{k,:}\right) \mathbf{B}^{T}, \quad k=1,2, \ldots, K
+\end{aligned}
+$$
+
+### 接收的训练信号：
+
+$$
+\widetilde{\mathbf{Z}}_{p} \triangleq \mathbf{Y}_{p} \mathbf{X}^{H}=\underbrace{\mathbf{H}^{r} D_{p}(\boldsymbol{\Phi}) \mathbf{H}^{s}}_{\triangleq \mathbf{z}_{p}}+\widetilde{\mathbf{W}}_{p}
+$$
+
+
+
+Mode-1: $\mathbf{Z}^{1} \triangleq\left(\left(\mathbf{H}^{s}\right)^{T} \circ \boldsymbol{\Phi}\right)\left(\mathbf{H}^{r}\right)^{T} \in \mathbb{C}^{P M \times K}$
+Mode-2: $ \mathbf{Z}^{2} \triangleq\left(\boldsymbol{\Phi} \circ \mathbf{H}^{r}\right) \mathbf{H}^{s} \in \mathbb{C}^{K P \times M}$
+Mode-3: $\mathbf{Z}^{3} \triangleq\left(\mathbf{H}^{r} \circ\left(\mathbf{H}^{s}\right)^{T}\right) \mathbf{\Phi}^{T} \in \mathbb{C}^{M K \times P}$
+
+> # kronecker product
 >
->  绘图采用liboffice绘制
+> ![image-20210919171843823](README.assets/image-20210919171843823.png)
+
+> # Khatri-Rao(column-wise)
+>
+> ![image-20210919172131365](README.assets/image-20210919172131365.png)
 
