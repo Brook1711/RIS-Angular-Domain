@@ -424,6 +424,24 @@ $$
 [^web-factor-graph]: https://blog.csdn.net/wydbyxr/article/details/82384340
 [^web-message-passing]: https://blog.csdn.net/qq_41603411/article/details/105209622
 
+[^VBI]: https://en.wikipedia.org/wiki/Variational_Bayesian_methods
+
+> # VBI
+>
+> **Variational Bayesian methods** are a family of techniques for approximating intractable [integrals](https://en.wikipedia.org/wiki/Integral) arising in [Bayesian inference](https://en.wikipedia.org/wiki/Bayesian_inference) and [machine learning](https://en.wikipedia.org/wiki/Machine_learning). They are typically used in complex [statistical models](https://en.wikipedia.org/wiki/Statistical_model) consisting of observed variables (usually termed "data") as well as unknown [parameters](https://en.wikipedia.org/wiki/Parameter) and [latent variables](https://en.wikipedia.org/wiki/Latent_variable), with various sorts of relationships among the three types of [random variables](https://en.wikipedia.org/wiki/Random_variable), as might be described by a [graphical model](https://en.wikipedia.org/wiki/Graphical_model). As typical in Bayesian inference, the parameters and latent variables are grouped together as "unobserved variables". Variational Bayesian methods are primarily used for two purposes:
+
+
+
+# [grid-basis-2]Direct Localization for Massive MIMO
+
+<img src="README.assets/image-20210921150751250.png" alt="image-20210921150751250" style="zoom:50%;" />
+
+MIMO具有定位的潜力，但是在mmave信道中由于存在多径效应，无法准确估计AoA。
+
+本文提出了一种基于压缩感知的算法。
+
+因为MIMO的天线数量规模较大，所以角度分辨率较高，于是有潜力分别估计各个AoA到达的角度[12,13]尽管如此，基站还是需要估计出LOS路径的AoA[14,15,16]，但是LoS链路并不总是能量最大的链路，于是[17] 提出了综合分析各个AoA的数据进行融合分析，但是这是一个NP-hard问题
+
 
 
 # channel estimation for RIS empowered Multi-User MISO Wireless Communication
