@@ -448,6 +448,18 @@ MIMO具有定位的潜力，但是在mmave信道中由于存在多径效应，�
 
 ## 研究背景：
 
+two step
+
+direct localization approach
+
+本文使用技术：
+
+- match filter[28]
+- coarse TOA estimate[self]
+- grid refinement procedure[29]
+
+
+
 
 
 ## 系统模型：
