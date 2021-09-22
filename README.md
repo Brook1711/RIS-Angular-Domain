@@ -442,12 +442,6 @@ MIMO具有定位的潜力，但是在mmave信道中由于存在多径效应，�
 
 因为MIMO的天线数量规模较大，所以角度分辨率较高，于是有潜力分别估计各个AoA到达的角度[12,13]尽管如此，基站还是需要估计出LOS路径的AoA[14,15,16]，但是LoS链路并不总是能量最大的链路，于是[17] 提出了综合分析各个AoA的数据进行融合分析，但是这是一个NP-hard问题三
 
-
-
-# channel estimation for RIS empowered Multi-User MISO Wireless Communication
-
-## 研究背景：
-
 two step
 
 direct localization approach
@@ -457,6 +451,12 @@ direct localization approach
 - match filter[28]
 - coarse TOA estimate[self]
 - grid refinement procedure[29]
+
+
+
+# channel estimation for RIS empowered Multi-User MISO Wireless Communication
+
+## 研究背景：
 
 
 
