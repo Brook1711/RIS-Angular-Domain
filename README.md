@@ -452,6 +452,35 @@ direct localization approach
 - coarse TOA estimate[self]
 - grid refinement procedure[29]
 
+$$
+\begin{aligned}
+&\tau_{l}(\mathbf{p})=\left\|\mathbf{p}-\tilde{\mathbf{p}}_{l}\right\| / c \\
+&\theta_{l}(\mathbf{p})=\arctan \left(\frac{p^{y}-\tilde{p}_{l}^{y}}{p^{x}-\tilde{p}_{l}^{x}}\right)+\pi \cdot \mathbb{1}\left(p^{x}<\tilde{p}_{l}^{x}\right)
+\end{aligned}
+$$
+
+
+
+$\mathbb{1}(\mathrm{P})$ is one if the logical expression $\mathrm{P}$ is true 
+
+和别的工作不同，该文章从匹配滤波器的角度出发研究接收信号表达形式
+$$
+\begin{aligned}
+\mathbf{z}_{l}^{\mathrm{MF}}(t)=& \int_{0}^{T_{\mathrm{obs}}} s^{*}(\tau-t) \mathbf{z}_{l}(\tau) \mathrm{d} \tau \\
+=& \alpha_{l} r_{s}\left(t-\tau_{l}(\mathbf{p})\right) \mathbf{a}_{l}\left(\theta_{l}(\mathbf{p})\right) \\
+&+\sum_{m=1}^{P_{l}} \alpha_{l}^{m} r_{s}\left(t-\tau_{l}^{m}\right) \mathbf{a}_{l}\left(\theta_{l}^{m}\right)+\mathbf{n}_{l}^{\mathrm{MF}}(t)
+\end{aligned}
+$$
+and sampling at time $t_{l}$, 
+$$
+\overline{\mathbf{z}}_{l}=\mathbf{z}_{l}^{\mathrm{MF}}\left(t_{l}\right)=\bar{\alpha}_{l} \mathbf{a}_{l}\left(\theta_{l}(\mathbf{p})\right)+\sum_{m=1}^{P_{l}} \bar{\alpha}_{l}^{m} \mathbf{a}_{l}\left(\theta_{l}^{m}\right)+\overline{\mathbf{n}}_{l}
+$$
+where $\bar{\alpha}_{l}=r_{s}\left(t_{l}-\tau_{l}(\mathbf{p})\right) \alpha_{l}, \bar{\alpha}_{l}^{m}=r_{s}\left(t_{l}-\tau_{l}^{m}\right) \alpha_{l}^{m}$ and $\overline{\mathbf{n}}_{l} \sim$ $\mathcal{C} \mathcal{N}\left(\mathbf{0}, \sigma^{2} \mathbf{I}\right)$ where $\sigma^{2}=N_{0}$ because, without loss of generalization, the pulse energy is normalized to one $\left(r_{s}(0)=\right.$ $\int|s(\tau)|^{2} \mathrm{~d} \tau=1$ ). The signals in $(8)$ are the input of the proposed method. Contrary to beamforming applications, and similar to direction-of-arrival techniques, the observations across each array $\overline{\mathbf{z}}_{l}$ are not weighted and linearly combined into one output. Such weights would fix the array beampattern and are usually designed to make the array point into one or multiple directions. In our case, since no beamforming is performed, the arrays do not have a "favored direction". In regards to the source, we assume that it has an omnidirectional antenna, in which case the transmitted energy would be the same towards all BSs.
+
+In order to ensure that $\bar{\alpha}_{l} \neq 0$, the signals must be sampled at a time where the energy of the LOS pulse is not zero (i.e. while $\left.r_{s}\left(t_{l}-\tau_{l}(\mathbf{p})\right) \neq 0\right)$. In addition to the sampling times, we will also compute an upper bound on the TOA of the LOS paths at each base station that will enhance the proposed method, which for brevity are simply called TOA estimates. In a nutshell, the objective of our work is to determine the sampling times and the TOA estimates from $\left\{\mathbf{z}_{l}^{\mathrm{MF}}(t)\right\}_{l=1}^{L}$, and then, determine $\mathbf{p}$ from $\left\{\overline{\mathbf{z}}_{l}\right\}_{l=1}^{L}$
+
+
+
 
 
 # channel estimation for RIS empowered Multi-User MISO Wireless Communication
