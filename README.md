@@ -381,7 +381,19 @@ $$
 
 #### A 联合概率分布的分解和近似
 
-
+$$
+\begin{aligned}
+&p\left(\boldsymbol{y}_{1: t}, \boldsymbol{v}_{t} ; \hat{\varphi}_{1: t-1}, \boldsymbol{\varphi}_{t}\right) \\
+&\quad \propto \sum_{s_{t-1}} p\left(\boldsymbol{s}_{t-1} \mid \boldsymbol{y}_{1: t-1} ; \hat{\varphi}_{1: t-1}\right) p\left(\boldsymbol{s}_{t} \mid \boldsymbol{s}_{t-1}\right) \\
+&p \begin{array}{l}
+\left.\boldsymbol{y}_{t} \mid \boldsymbol{x}_{t}, \kappa_{t} ; \boldsymbol{\varphi}_{t}\right) p\left(\boldsymbol{x}_{t} \mid \boldsymbol{\gamma}_{t}\right) p\left(\boldsymbol{\gamma}_{t} \mid \boldsymbol{s}_{t}\right) p\left(\kappa_{t}\right) \\
+& \approx \sum_{s_{t-1}} q\left(\boldsymbol{s}_{t-1} \mid \boldsymbol{y}_{1: t-1} ; \hat{\boldsymbol{\varphi}}_{1: t-1}\right) p\left(\boldsymbol{s}_{t} \mid \boldsymbol{s}_{t-1}\right) \\
+p\left(\boldsymbol{y}_{t} \mid \boldsymbol{x}_{t}, \kappa_{t} ; \boldsymbol{\varphi}_{t}\right) p\left(\boldsymbol{x}_{t} \mid \boldsymbol{\gamma}_{t}\right) p\left(\boldsymbol{\gamma}_{t} \mid \boldsymbol{s}_{t}\right) p\left(\kappa_{t}\right) \\
+& =\hat{p}\left(\boldsymbol{s}_{t} \mid \boldsymbol{y}_{1: t-1} ; \hat{\varphi}_{1: t-1}\right) p\left(\boldsymbol{y}_{t} \mid \boldsymbol{x}_{t}, \kappa_{t} ; \boldsymbol{\varphi}_{t}\right) \\
+p\left(\boldsymbol{x}_{t} \mid \boldsymbol{\gamma}_{t}\right) p\left(\boldsymbol{\gamma}_{t} \mid \boldsymbol{s}_{t}\right) p\left(\kappa_{t}\right),
+\end{array}
+\end{aligned}
+$$
 
 
 
