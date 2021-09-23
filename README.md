@@ -397,6 +397,8 @@ $$
 
 
 
+EM算法：[从最大似然到EM算法浅解_zouxy09的专栏-CSDN博客_最大似然](https://blog.csdn.net/zouxy09/article/details/8537620)
+
 
 
 
