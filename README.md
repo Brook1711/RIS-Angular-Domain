@@ -1,5 +1,21 @@
 # RIS-Angular-Domain
 
+
+
+# 角度域表示
+
+基于角度域稀疏性的大规模MIMO系统关键技术研究
+
+![image-20210927093745546](README.assets/image-20210927093745546.png)
+
+![image-20210927093815242](README.assets/image-20210927093815242.png)
+
+需要搞清楚的点：酉（unitary）变换、
+
+
+
+
+
 主要参考文章[^1]，首先复现该文章的角度域解法，同时对比其他benchmark
 
 ## 研究背景：
@@ -396,8 +412,6 @@ p\left(\boldsymbol{x}_{t} \mid \boldsymbol{\gamma}_{t}\right) p\left(\boldsymbol
 $$
 
 
-
-EM算法：[从最大似然到EM算法浅解_zouxy09的专栏-CSDN博客_最大似然](https://blog.csdn.net/zouxy09/article/details/8537620)
 
 
 
