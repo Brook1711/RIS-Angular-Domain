@@ -1,6 +1,48 @@
 # RIS-Angular-Domain
 
+# channel generation
+## generate $\alpha_{l}$
+$$
+\alpha_{l} \sim \mathcal{C} \mathcal{N}\left(0,10^{-3} d_{\mathrm{BR}}^{-2.2}\right)
+$$
+## generate $\beta_{k,j} $
+$$
+\beta_{k, j} \sim \mathcal{C N}\left(0,10^{-3} d_{\mathrm{RU}}^{-2.8}\right)
+$$
 
+## generate AoA $\phi_{l}$, AoD $w_l$, AoA $\vartheta_{k, j}$
+$$
+\omega_{l}, \psi_{l}, \varphi_{k, j}
+$$
+$$
+\left\{\phi_{l}, \theta_{l}, \vartheta_{k, j}\right\} \text { are continuous and uniformly distributed over }[0, \pi)
+$$
+
+## the channels:
+
+- $k$-th user to the RIS ${\bf h}_k \in \mathbb{C}^{M \times 1}$
+$$
+\mathbf{h}_{k}=\mathbf{A}_{M, k} \boldsymbol{\beta}_{k}
+$$
+- RIS to the BS:    ${\bf H} \in \mathbb{C}^{N \times M}$
+$$
+\mathbf{H}=\mathbf{A}_{N} \Lambda \mathbf{A}_{M}^{\mathrm{H}}
+$$
+- cascaded channel $\mathbf{G}_{k}=\operatorname{HDiag}\left(\mathbf{h}_{k}\right) \in \mathbb{C}^{N \times M}$
+- angle-domain expression: $\mathbf{G}_{k}=\mathbf{A}_{N} \boldsymbol{\Lambda} \mathbf{A}_{M}^{\mathrm{H}} \operatorname{Diag}\left(\mathbf{A}_{M, k} \boldsymbol{\beta}_{k}\right)$
+$$
+\begin{aligned}
+\mathbf{A}_{N} &=\left[\mathbf{a}_{N}\left(\psi_{1}\right), \ldots, \mathbf{a}_{N}\left(\psi_{L}\right)\right] \in \mathbb{C}^{N \times L} \\
+\boldsymbol{\Lambda} &=\operatorname{Diag}\left(\alpha_{1}, \alpha_{2}, \ldots, \alpha_{L}\right) \in \mathbb{C}^{L \times L} \\
+\mathbf{A}_{M} &=\left[\mathbf{a}_{M}\left(\omega_{1}\right), \ldots, \mathbf{a}_{M}\left(\omega_{L}\right)\right] \in \mathbb{C}^{M \times L}
+\end{aligned}
+$$
+$$
+\begin{aligned}
+\mathbf{A}_{M, k} &=\left[\mathbf{a}_{M}\left(\varphi_{k, 1}\right), \ldots, \mathbf{a}_{M}\left(\varphi_{k, J_{k}}\right)\right] \in \mathbb{C}^{M \times J_{k}} \\
+\boldsymbol{\beta}_{k} &=\left[\beta_{k, 1}, \ldots, \beta_{k, J_{k}}\right]^{\mathrm{T}} \in \mathbb{C}^{J_{k} \times 1}
+\end{aligned}
+$$
 
 # 角度域表示
 
@@ -98,7 +140,7 @@ $$
 \boldsymbol{H}_{t, i}=\sum_{q=1}^{L_{t}} \alpha_{t, q} e^{j 2 \pi f_{d, t} i \cos \left(\theta_{R, t, q}+\eta_{t}\right)} \boldsymbol{a}_{R}\left(\theta_{R, t, q}\right) \boldsymbol{a}_{T}^{H}\left(\theta_{T, t, q}\right)
 $$
 
-$f_{d,t}$ 泛化最大DFO
+​	$f_{d,t}$ 泛化最大DFO
 
 $\eta_{t}$ 用户相对于运动方向的`rotation angle`
 
