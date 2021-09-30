@@ -20,7 +20,29 @@
 
 需要注意的是，为了提高信道估计的精度，尤其是第一跳（hoop）的精度，RIS在UPA中心处安放一个单天线的传感器（sensor），该天线具有和RF chain 一样的射频处理能力。
 
+​	在这篇文章中，用户相对于BS和RIS高速移动，
+
 
 
 ## B. RIS-asisted channel model in angle-domain
+
+
+
+# channel estimation
+
+## A. channel estimation protical
+
+
+
+
+
+## B. Channel estimation for the first hoop
+
+
+
+## C. Channel estimation and Doppler compensation for the second hoop
+
+
+
+
 
