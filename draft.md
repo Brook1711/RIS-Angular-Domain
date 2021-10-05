@@ -159,11 +159,6 @@ Lamma 3 级联估计时存在“权重畸变”效应，使得估计的显著角
 Phase 1: broadcast
 
 Phase1.1: broadcast to BS
-$$
-\mathbf{y}_{rb}=\mathbf{H}_{rb}\mathbf{s}_{r}+\mathbf{n}_{rb}={\mathbf A}_N{\mathbf A}_{rb}{
-\mathbf s}_{r} + {\mathbf n}_{rb}\in{\mathbb C}^{N\times 1}
-$$
-${\mathbf U}_N{\mathbf y}_{rb}={\mathbf U}_N{\mathbf A}_N{\mathbf A}_{rb}{\mathbf s}_r +{\}$
 
 Phase1.2: broadcast to user k
 
@@ -190,6 +185,37 @@ Phase 3: Doppler compensation
 ## B. first hop Channel estimation
 
 
+$$
+\mathbf{y}_{rb}=\mathbf{H}_{rb}\mathbf{s}_{r}+\mathbf{n}_{rb}={\mathbf A}_N{\mathbf A}_{rb}{
+\mathbf s}_{r} + {\mathbf n}_{rb}\in{\mathbb C}^{N\times 1}
+$$
+
+$$
+{\mathbf U}_N{\mathbf y}_{rb}={\mathbf U}_N{\mathbf A}_N{\mathbf A}_{rb}{\mathbf s}_r +{\mathbf n}_{rb}
+
+$$
+
+其物理意义为$L$个path中对应的角域能量分布，其中${\mathbf A}_N=[{\mathbf a}_N(\psi_1),\dots,{\mathbf a}_N(\psi_L)]$，则：
+$$
+{\mathbf A}_N^{D}={\mathbf U}_N{\mathbf A}_N = [{\mathbf U}_N{\mathbf a}_N(\psi_1),\dots,{\mathbf U}_N{\mathbf a}_N(\psi_L)]
+$$
+根据Lamma 1,如果${\psi_L}$离散，且刚好分布在grid上，则${\mathbf U}_N{\mathbf a}_N(\psi_l)\ \forall l\in \{1,\dots,L\}$中只有一个元素
+
+> 展开$\psi_L$的取值范围
+
+因此， ${\mathbf U}_N{\mathbf A}_N\in {\mathbb C}^{N\times L}$为一个行稀疏、列满秩的矩阵。
+
+但是，由于在实际系统当中，multi-path中的AoA/AoD分布是连续的，当$\psi_l$分布在离散集合之外时，此时的DFT操作会引起能量泄漏现象[^1-5][^2-2][^1-1][^2-3] 此时需要进行rotatino操作，即在DFT操作之前乘以一个旋转向量${\Phi}_N({\Delta \psi}_l)$。
+$$
+\boldsymbol{\Phi}_{N}\left(\Delta \psi_{l}\right)=\operatorname{Diag}\left\{1, e^{\mathrm{i} \Delta \psi_{l}}, \ldots, e^{\mathrm{i}(N-1) \Delta \psi_{l}}\right\}, \forall l
+$$
+在进行DFT操作前先对每个阵列响应进行相位对齐(DFT and Rotation)：
+$$
+{\mathbf A}_N^{DR} = {\mathbf U}_N{\mathbf A}_N^R = [{\mathbf U}_N{\Phi}_N({\Delta \psi}_1){\mathbf a}_N(\psi_1),\dots,{\mathbf U}_N{\Phi}_N({\Delta \psi}_L){\mathbf a}_N(\psi_L)]
+$$
+我们定义显著角集合$\Omega_N=\{n_l|\forall l\in \{1,\dots,\hat{L}\}\}$ 其中$n_l$表示第$l$个路径对应在BS处的AoA脚标，$\hat{L}$为系统在信道估计阶段取得的显著角个数，这里为了简化模型采用$\hat{L}= L$。
+
+可以从上述过程中看到，虽然可以通过DFT和rotation两步操作将${\mathbf A}_N$分解为行稀疏列满秩矩阵，但是rotation操作需要事先得知所有${\psi}_l\ \forall l \in \{1,\dots ,L\}$的值，$\psi_l$ 的值可以通过$n_l$获知，获取$n_l$的过程被称为“显著角估计”[^1-5]。目前已有在级联信道中显著角估计的方法，但是如Lamma 3所示，对级联信道直接估计显著角有“能量畸变”问题，并且现存方法大多从接收信号的power peak 确定显著角，然而在
 
 
 
