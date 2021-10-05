@@ -208,35 +208,70 @@ $$
 
 因此， ${\mathbf U}_N{\mathbf A}_N\in {\mathbb C}^{N\times L}$为一个行稀疏、列满秩的矩阵。
 
-但是，由于在实际系统当中，multi-path中的AoA/AoD分布是连续的，当$\psi_l$分布在离散集合之外时，此时的DFT操作会引起能量泄漏现象[^1-5][^2-2][^1-1][^2-3] 此时需要进行rotation操作，即在DFT操作之前乘以一个旋转向量${\Phi}_N({\Delta \psi}_l)$。
+但是，由于在实际系统当中，multi-path中的AoA/AoD分布是连续的，当$\psi_l$分布在离散集合之外时，此时的DFT操作会引起能量泄漏现象[^1-5][^2-2][^1-1][^2-3] 此时需要进行rotation操作，即在DFT操作之前乘以一个旋转向量${\Phi}_N({\triangle \psi}_l)$。
 $$
-\boldsymbol{\Phi}_{N}\left(\Delta \psi_{l}\right)=\operatorname{Diag}\left\{1, e^{\mathrm{i} \Delta \psi_{l}}, \ldots, e^{\mathrm{i}(N-1) \Delta \psi_{l}}\right\}, \forall l
+\boldsymbol{\Phi}_{N}\left(\triangle \psi_{l}\right)=\operatorname{Diag}\left\{1, e^{\mathrm{i} \triangle \psi_{l}}, \ldots, e^{\mathrm{i}(N-1) \triangle \psi_{l}}\right\}, \forall l
 $$
 在进行DFT操作前先对每个阵列响应进行相位对齐(DFT and Rotation)：
 $$
-{\mathbf A}_N^{DR} = {\mathbf U}_N{\mathbf A}_N^R = [{\mathbf U}_N{\Phi}_N({\Delta \psi}_1){\mathbf a}_N(\psi_1),\dots,{\mathbf U}_N{\Phi}_N({\Delta \psi}_L){\mathbf a}_N(\psi_L)]
+{\mathbf A}_N^{DR} = {\mathbf U}_N{\mathbf A}_N^R = [{\mathbf U}_N{\Phi}_N({\triangle \psi}_1){\mathbf a}_N(\psi_1),\dots,{\mathbf U}_N{\Phi}_N({\triangle \psi}_L){\mathbf a}_N(\psi_L)]
 $$
-Then，接收信号${\mathbf y}_{rb}$在已知$\hat{\psi_l}$和$\Delta \hat{\psi_l}$的情况下可以通过DFT和rotation变换得到${\mathbf y}_{rb}^{DR}$：
+Then，接收信号${\mathbf y}_{rb}$在已知$\hat{\psi_l}$和$\triangle \hat{\psi_l}$的情况下可以通过DFT和rotation变换得到${\mathbf y}_{rb}^{DR}$：
 $$
 {\mathbf y}_{rb}^{DR}={\mathbf A}_N^{DR}{\mathbf A}_{rb}{\mathbf s}_{r}+{\mathbf n}_{rb}\in {\mathbb C}^{N\times 1}
 $$
-此时，${\mathbf y}_{rb}^{DR}$就是path loss $\alpha_l$加权的${\mathbf U}_N{\Phi}_N({\Delta \psi}_l){\mathbf a}_N(\psi_l)$的线性组合，通过Lamma1 可知：
+此时，${\mathbf y}_{rb}^{DR}$就是path loss $\alpha_l$加权的${\mathbf U}_N{\Phi}_N({\triangle \psi}_l){\mathbf a}_N(\psi_l)$的线性组合，通过Lamma1 可知：
 $$
 [{\mathbf A}_N^{DR}]_{[:,l^{\prime}]}^H[{\mathbf A}_N^{DR}]_{[:,l]}=
 \begin{cases}
-1\quad ,l^{\prime}=l\\
+N\quad ,l^{\prime}=l\\
 0\quad ,others
 \end{cases}
 $$
-当${\mathbf s}_r=1\times \sqrt{p}\in{\mathbb R}$，即RIS处单天线发送单符号导频信号时，路损系数的估计值$\hat{{\mathbf A}}_{rb}$为：
+进而：
 $$
-\hat{\mathbf A}_{rb}=\frac{1}{\sqrt{p}}({\hat{\mathbf A}_{N}^{DR}})^{H}{\mathbf y}_{rb}
+({\mathbf A}_N^{DR})^H{\mathbf A}_N^{DR} = N{\mathbf I}_L
+$$
+所以当${\mathbf s}_r=1\times \sqrt{p}\in{\mathbb R}$，即RIS处单天线发送单符号导频信号时，路损系数的估计值$\hat{{\mathbf A}}_{rb}$为：
+$$
+\begin{aligned}
+\hat{\mathbf A}_{rb}&=\frac{1}{N\sqrt{p}}({\hat{\mathbf A}_{N}^{DR}})^{H}{\mathbf y}_{rb}^{DR}\\
+&\approx \frac{1}{N\sqrt{p}}({{\mathbf A}_{N}^{DR}})^{H}{\mathbf A}_N^{DR}{\mathbf A}_{rb}{\mathbf s}_{r}\\
+&={\mathbf A}_{rb}
+
+\end{aligned}
 $$
 
 
 我们定义显著角集合$\Omega_N=\{n_l|\forall l\in \{1,\dots,\hat{L}\}\}$ 其中$n_l$表示第$l$个路径对应在BS处的AoA脚标，$\hat{L}$为系统在信道估计阶段取得的显著角个数，这里为了简化模型采用$\hat{L}= L$。
 
-可以从上述过程中看到，虽然可以通过DFT和rotation两步操作将${\mathbf A}_N$分解为行稀疏列满秩矩阵。但是rotation操作需要事先得知所有${\psi}_l\ \forall l \in \{1,\dots ,L\}$的值，$\psi_l$ 的值可以通过$n_l$获知，获取$n_l$的过程被称为“显著角估计”[^1-5]。目前已有在级联信道中显著角估计的方法，但是如Lamma 3所示，对级联信道直接估计显著角有“能量畸变”问题，于是我们在本文中分别估计单跳信道的显著角，这样使得估计精度增加
+可以从上述过程中看到，虽然可以通过DFT和rotation两步操作将${\mathbf A}_N$分解为行稀疏列满秩矩阵。但是rotation操作需要事先得知所有${\psi}_l\ \forall l \in \{1,\dots ,L\}$的值，$\psi_l$ 的值可以通过$n_l$获知，获取$n_l$的过程被称为“显著角估计”[^1-5]。
+
+> 目前已有在级联信道中显著角估计的方法，但是如Lamma 3所示，对级联信道直接估计显著角有“能量畸变”问题，于是我们在本文中分别估计单跳信道的显著角，这样使得估计精度增加。
+
+具体来讲，我们通过power peak[^2-2][^2-3][^1-5] 来获知$\Omega_N$:
+$$
+\Omega_N = \{\Omega\ |\sum_{n_l\in \Omega}|| [{\mathbf U}_N]_{[n_l,:]}{\mathbf y}_{rb} ||^2 \geq \sum_{n_l\in\Omega^{\prime}} || [{\mathbf U}_N]_{[n_l,:]}{\mathbf y}_{rb} ||^2,\forall \Omega^{\prime}\subset{\mathcal N},|\Omega^{\prime}|=|\Omega|=L \}
+$$
+注意选取$n_l$时顺序排列：
+$$
+n_l-n_j
+\begin{cases}
+<0 \quad , l<j \\
+>0 \quad , l>j
+\end{cases}
+$$
+在角域表达中，每个$n_l$都对应一个离散的grid basis角$\psi_l^g$ [^1-1][^1-2][^1-3]：
+$$
+\psi_l^g =f(n_l)
+$$
+则给出$\triangle\psi_l$的定义：$\triangle \psi_l = \psi_l^g-\psi_l$，此时，$\psi_l$未知，但根据Lamma 2可知，$\psi_l^g$对应的DFT中相应频点能量最大，且$\triangle\psi_l$在范围$[-\pi/N,+\pi/N]$内，于是，$\triangle\psi_l$可由以下方法求得：
+$$
+\triangle \psi_{l}=\arg \max _{\triangle \psi \in\left[-\frac{\pi}{N}, \frac{\pi}{N}\right]}\left\|\left[\mathbf{U}_{N}\right]_{n_l, :} \boldsymbol{\Phi}_{N}(\triangle \psi) \mathbf{Y}_{1}\right\|^{2}
+$$
+
+
+
 
 
 
@@ -252,9 +287,10 @@ $$
 
 [^1-1]: Angular-domain selective channel tracking and doppler compensation for high-mobility mmWave massive MIMO
 [^1-2]: Cloud-Assisted Cooperative Localization for Vehicle Platoons: A Turbo Approach
-
+[^1-3]: FDD Massive MIMO Channel Estimation With Arbitrary 2D-Array Geometry
 [^1-5]: Virtual Angular-Domain Channel Estimation for FDD Based Massive MIMO Systems With
 Partial Orthogonal Pilot Design
 
 [^2-3]: Channel Estimation for IRS-Assisted Millimeter-Wave MIMO Systems：Sparsity-Inspired Approaches
 [^2-2]: Channel Estimation for RIS-Aided Multiuser Millimeter-Wave Massive MIMO Systems
+
