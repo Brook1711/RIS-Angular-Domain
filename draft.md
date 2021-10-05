@@ -36,8 +36,20 @@ $$
 
 ​	接着，我们假设在phase 2中K个用户同时向BS发射相同长度$\tau_{k,b}$的导频信号$\mathbf{s}_{k,b}\in \mathbb{C}^{A\times \tau_{k,b}}$，为了保证信号的正交性，$\tau_{k,b}\geq K$，则BS接收到的第k个用户的导频信号为$\mathbf{y}_{k,b}\in \mathbb{C}^{N\times\tau_{k,b}}$，
 $$
-[\mathbf{y}_{k,b}]_{:,t} = \mathbf{H}\operatorname{Diag}(\mathbf{h}_k)\mathbf{\Phi}_t\sqrt{p}[\mathbf{s}_{k,b}]_{:,t}+\mathbf{n}_{k,b}
+[\mathbf{y}_{k,b}]_{:,t} = \mathbf{H}\operatorname{Diag}({\mathbf\Phi}_t)\mathbf{h}_k\sqrt{p}[\mathbf{s}_{k,b}]_{:,t}+\mathbf{n}_{k,b}
 $$
+​	级联信道信息可以表示为：${\mathbf G}_k=\{{\mathbf G}_{k,1}, {\mathbf G}_{k,2},\dots,{\mathbf G}_{k,M} \}$
+$$
+{\mathbf G}_{k,m}=[{\mathbf H}]_{[:,m]}[{\mathbf h}_{k}]_{[m,:]},\quad \forall m\in {1,\dots,M}
+$$
+从而，接收的导频信道可以进一步写为：
+$$
+[\mathbf{y}_{k,b}]_{:,t} =\left( \sum_{m=1}^M {\mathbf G}_{k,m}\phi_m \right) \sqrt{p}[\mathbf{s}_{k,b}]_{:,t}+\mathbf{n}_{k,b}
+$$
+
+
+
+
 ​	在phase 3中，RIS处RF chain发射导频信号$\mathbf{s}_{d}\in\mathbb{C}^{1\times \tau_{r,k}}$，用于进行Doppler补偿。此时用户处的接收信号$\mathbf{y}_{d,k}\in \mathbb{C}^{A\times \tau_{r,k}}$为：
 $$
 \mathbf{y}_{d,k}=\mathbf{h}^{H}_{r,k}\mathbf{s}_{d}+\mathbf{n}_{r,k}
@@ -62,7 +74,7 @@ $$
 $$
 
 $$
-\mathbf{h}_{r,k} = \sum_{j=1}^{J_k}\beta_{k,j}\mathbf{a}_A^{H}(\phi_{k,j})\in \mathbb{C}^{1\times A}
+\mathbf{h}_{r,k} = \sum_{j=1}^{J_k}\beta_{k,j}\mathbf{a}_A(\phi_{k,j})\in \mathbb{C}^{A\times 1}
 $$
 
 
@@ -77,21 +89,107 @@ where $X \in\{M, N\}$ and $x \in\left\{\omega_{l}, \psi_{l}, \varphi_{k, j}\righ
 
 ## C. Angular Domain Channel Expressions
 
-根据[^1-5] ，在MIMO mmwave系统中，
+根据[^1-5] 和中文-95，96，103，在MIMO mmwave系统中，
 
-FTR
+> 说明MIMO信道中存在角度域的稀疏性，相比传统的时域和频域具有更大的优势
+
+以下写出$\mathbf{H},\mathbf{h}_k$以及$\mathbf{H}_{rb}, \mathbf{h}_{r,k}$的角域表达式
+$$
+{\mathbf H}={\mathbf A}_N{\mathbf {\mathbf A}{\mathbf A}_M^H}\in {\mathbb C}^{N\times M}
+$$
+其中：
+$$
+\begin{aligned}
+\mathbf{A}_{N} &=\left[\mathbf{a}_{N}\left(\psi_{1}\right), \ldots, \mathbf{a}_{N}\left(\psi_{L}\right)\right] \in \mathbb{C}^{N \times L} \\
+{\mathbf A} &=\operatorname{Diag}\left(\alpha_{1}, \alpha_{2}, \ldots, \alpha_{L}\right) \in \mathbb{C}^{L \times L} \\
+\mathbf{A}_{M} &=\left[\mathbf{a}_{M}\left(\omega_{1}\right), \ldots, \mathbf{a}_{M}\left(\omega_{L}\right)\right] \in \mathbb{C}^{M \times L}
+\end{aligned}
+$$
+${\mathbf h}_k$：
+$$
+\mathbf{h}_k = {\mathbf A}_{M,k}{ \mathbf B}_k{\mathbf A}_{A,k}^H\quad \forall k \in {\mathcal K}
+$$
+
+$$
+\begin{aligned}
+\mathbf{A}_{M, k} &=\left[\mathbf{a}_{M}\left(\varphi_{k, 1}\right), \ldots, \mathbf{a}_{M}\left(\varphi_{k, J_{k}}\right)\right] \in \mathbb{C}^{M \times J_{k}} \\
+{\mathbf B}_{k} &=\operatorname{Diag}\left(\beta_{k, 1}, \ldots, \beta_{k, J_{k}}\right)\in \mathbb{C}^{J_{k} \times J_k}\\
+\mathbf{A}_{A, k} &=\left[\mathbf{a}_{A}\left(\phi_{k, 1}\right), \ldots, \mathbf{a}_{A}\left(\phi_{k, J_{k}}\right)\right] \in \mathbb{C}^{A \times J_{k}} 
 
 
+\end{aligned}
+$$
+
+
+
+$\mathbf{H}_{rb}$
+$$
+{\mathbf H}_{rb} ={\mathbf A}_N{\mathbf A_{rb}}\in \mathbb{C}^{N\times 1}\\
+$$
+where ${\mathbf A}_{rb}=[\alpha_{1}, \alpha_{2}, \ldots, \alpha_{L}]^T\in \mathbb{C}^{L\times 1}$
+
+
+
+$\mathbf{h}_{r,k}$
+
+
+$$
+{\mathbf h }_{r,k}={\mathbf A}_{A,k}{\mathbf B}_{r,k}\in {\mathbb C}^{A\times 1}
+$$
+Where ${\mathbf B}_{r,k}=[\beta_{k,1},\dots,\beta_{k,J_k}]^T\in {\mathbb C}^{J_k \times 1}$
+
+> 在没有进行角域分解之前，复杂度为：；角域分解之后，复杂度为：。。。
+
+Lamma 1 角域表达可以在DFT变换后显示稀疏性
+
+当$\varphi^{\prime}_{l}\in\{  \}$
+
+Lamma 2 rotation angle 说明.power leak [^1-1] [^2-2]
+
+
+
+Lamma 3 级联估计时存在“权重畸变”效应，使得估计的显著角集合存在误差
+
+结论：本文使用的分步估计具有更好的估计精度
 
 # channel estimation
 
 ## A. channel estimation protical
+
+Phase 1: broadcast
+
+Phase1.1: broadcast to BS
+$$
+\mathbf{y}_{rb}=\mathbf{H}_{rb}\mathbf{s}_{r}+\mathbf{n}_{rb}={\mathbf A}_N{\mathbf A}_{rb}{
+\mathbf s}_{r} + {\mathbf n}_{rb}\in{\mathbb C}^{N\times 1}
+$$
+${\mathbf U}_N{\mathbf y}_{rb}={\mathbf U}_N{\mathbf A}_N{\mathbf A}_{rb}{\mathbf s}_r +{\}$
+
+Phase1.2: broadcast to user k
+
+
+
+
+
+Phase 2: cascade channel estimation
+
+
+
+Phase 3: Doppler compensation
+
+
+
+
+
+
 
 
 
 
 
 ## B. first hop Channel estimation
+
+
 
 
 
@@ -103,10 +201,9 @@ FTR
 
 
 
-
-
+[^1-1]: Angular-domain selective channel tracking and doppler compensation for high-mobility mmWave massive MIMO
 [^1-5]: Virtual Angular-Domain Channel Estimation for FDD Based Massive MIMO Systems With
 Partial Orthogonal Pilot Design
 
-[^2-3]: [2-3]Channel Estimation for IRS-Assisted Millimeter-Wave MIMO Systems：Sparsity-Inspired Approaches
-[^2-2]: [2-2]Channel Estimation for RIS-Aided Multiuser Millimeter-Wave Massive MIMO Systems
+[^2-3]: Channel Estimation for IRS-Assisted Millimeter-Wave MIMO Systems：Sparsity-Inspired Approaches
+[^2-2]: Channel Estimation for RIS-Aided Multiuser Millimeter-Wave Massive MIMO Systems
