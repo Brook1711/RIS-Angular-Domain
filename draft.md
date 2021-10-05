@@ -140,15 +140,19 @@ Where ${\mathbf B}_{r,k}=[\beta_{k,1},\dots,\beta_{k,J_k}]^T\in {\mathbb C}^{J_k
 
 > 在没有进行角域分解之前，复杂度为：；角域分解之后，复杂度为：。。。
 
-Lamma 1 角域表达可以在DFT变换后显示稀疏性
+#### Lamma 1 
+
+角域表达可以在DFT变换后显示稀疏性
 
 当$\varphi^{\prime}_{l}\in\{  \}$
 
-Lamma 2 rotation angle 说明.power leak [^1-1] [^2-2]
+#### Lamma 2 
+rotation angle 说明.power leak [^1-1] [^2-2]
 
 
 
-Lamma 3 级联估计时存在“权重畸变”效应，使得估计的显著角集合存在误差
+#### Lamma 3 
+级联估计时存在“权重畸变”效应，使得估计的显著角集合存在误差
 
 结论：本文使用的分步估计具有更好的估计精度
 
@@ -192,7 +196,6 @@ $$
 
 $$
 {\mathbf U}_N{\mathbf y}_{rb}={\mathbf U}_N{\mathbf A}_N{\mathbf A}_{rb}{\mathbf s}_r +{\mathbf n}_{rb}
-
 $$
 
 其物理意义为$L$个path中对应的角域能量分布，其中${\mathbf A}_N=[{\mathbf a}_N(\psi_1),\dots,{\mathbf a}_N(\psi_L)]$，则：
@@ -205,7 +208,7 @@ $$
 
 因此， ${\mathbf U}_N{\mathbf A}_N\in {\mathbb C}^{N\times L}$为一个行稀疏、列满秩的矩阵。
 
-但是，由于在实际系统当中，multi-path中的AoA/AoD分布是连续的，当$\psi_l$分布在离散集合之外时，此时的DFT操作会引起能量泄漏现象[^1-5][^2-2][^1-1][^2-3] 此时需要进行rotatino操作，即在DFT操作之前乘以一个旋转向量${\Phi}_N({\Delta \psi}_l)$。
+但是，由于在实际系统当中，multi-path中的AoA/AoD分布是连续的，当$\psi_l$分布在离散集合之外时，此时的DFT操作会引起能量泄漏现象[^1-5][^2-2][^1-1][^2-3] 此时需要进行rotation操作，即在DFT操作之前乘以一个旋转向量${\Phi}_N({\Delta \psi}_l)$。
 $$
 \boldsymbol{\Phi}_{N}\left(\Delta \psi_{l}\right)=\operatorname{Diag}\left\{1, e^{\mathrm{i} \Delta \psi_{l}}, \ldots, e^{\mathrm{i}(N-1) \Delta \psi_{l}}\right\}, \forall l
 $$
@@ -213,9 +216,29 @@ $$
 $$
 {\mathbf A}_N^{DR} = {\mathbf U}_N{\mathbf A}_N^R = [{\mathbf U}_N{\Phi}_N({\Delta \psi}_1){\mathbf a}_N(\psi_1),\dots,{\mathbf U}_N{\Phi}_N({\Delta \psi}_L){\mathbf a}_N(\psi_L)]
 $$
+Then，接收信号${\mathbf y}_{rb}$在已知$\hat{\psi_l}$和$\Delta \hat{\psi_l}$的情况下可以通过DFT和rotation变换得到${\mathbf y}_{rb}^{DR}$：
+$$
+{\mathbf y}_{rb}^{DR}={\mathbf A}_N^{DR}{\mathbf A}_{rb}{\mathbf s}_{r}+{\mathbf n}_{rb}\in {\mathbb C}^{N\times 1}
+$$
+此时，${\mathbf y}_{rb}^{DR}$就是path loss $\alpha_l$加权的${\mathbf U}_N{\Phi}_N({\Delta \psi}_l){\mathbf a}_N(\psi_l)$的线性组合，通过Lamma1 可知：
+$$
+[{\mathbf A}_N^{DR}]_{[:,l^{\prime}]}^H[{\mathbf A}_N^{DR}]_{[:,l]}=
+\begin{cases}
+1\quad ,l^{\prime}=l\\
+0\quad ,others
+\end{cases}
+$$
+当${\mathbf s}_r=1\times \sqrt{p}\in{\mathbb R}$，即RIS处单天线发送单符号导频信号时，路损系数的估计值$\hat{{\mathbf A}}_{rb}$为：
+$$
+\hat{\mathbf A}_{rb}=\frac{1}{\sqrt{p}}({\hat{\mathbf A}_{N}^{DR}})^{H}{\mathbf y}_{rb}
+$$
+
+
 我们定义显著角集合$\Omega_N=\{n_l|\forall l\in \{1,\dots,\hat{L}\}\}$ 其中$n_l$表示第$l$个路径对应在BS处的AoA脚标，$\hat{L}$为系统在信道估计阶段取得的显著角个数，这里为了简化模型采用$\hat{L}= L$。
 
-可以从上述过程中看到，虽然可以通过DFT和rotation两步操作将${\mathbf A}_N$分解为行稀疏列满秩矩阵，但是rotation操作需要事先得知所有${\psi}_l\ \forall l \in \{1,\dots ,L\}$的值，$\psi_l$ 的值可以通过$n_l$获知，获取$n_l$的过程被称为“显著角估计”[^1-5]。目前已有在级联信道中显著角估计的方法，但是如Lamma 3所示，对级联信道直接估计显著角有“能量畸变”问题，并且现存方法大多从接收信号的power peak 确定显著角，然而在
+可以从上述过程中看到，虽然可以通过DFT和rotation两步操作将${\mathbf A}_N$分解为行稀疏列满秩矩阵。但是rotation操作需要事先得知所有${\psi}_l\ \forall l \in \{1,\dots ,L\}$的值，$\psi_l$ 的值可以通过$n_l$获知，获取$n_l$的过程被称为“显著角估计”[^1-5]。目前已有在级联信道中显著角估计的方法，但是如Lamma 3所示，对级联信道直接估计显著角有“能量畸变”问题，于是我们在本文中分别估计单跳信道的显著角，这样使得估计精度增加
+
+
 
 
 
@@ -228,6 +251,8 @@ $$
 
 
 [^1-1]: Angular-domain selective channel tracking and doppler compensation for high-mobility mmWave massive MIMO
+[^1-2]: Cloud-Assisted Cooperative Localization for Vehicle Platoons: A Turbo Approach
+
 [^1-5]: Virtual Angular-Domain Channel Estimation for FDD Based Massive MIMO Systems With
 Partial Orthogonal Pilot Design
 
