@@ -20,7 +20,7 @@
 
 ​	考虑一个RIS辅助的多用户下行毫米波MIMO通信系统。该系统中BS装备有一个规模为$\sqrt{N} \times \sqrt{N}$的UPA天线阵列。RIS装备有规模为$\sqrt{M} \times \sqrt{M} $的UPA反射阵列。服务用户均为装备有$A$个天线的ULA接收端。将所考虑的时间段分为不同的传输帧（frame），就像图一所示的那样
 
-![image-20211002150332940](draft.assets/image-20211002150332940.png)
+![image-20211007152132082](draft.assets/image-20211007152132082.png)
 
 需要注意的是，为了提高信道估计的精度，尤其是第一跳（hoop）的精度，RIS在UPA中心处安放一个单天线的传感器（sensor），该天线具有和RF chain 一样的射频处理能力。
 
@@ -94,6 +94,8 @@ where $X \in\{M, N\}$ and $x \in\left\{\omega_{l}, \psi^{\prime}_{l}, \varphi_{k
 
 
 $\psi_l$ $\omega_l$ $\varphi_{k,j}$ $\phi_{k,j}$ $J_k$ $\alpha_l$ $\beta_{k,j}$
+
+$\color{red}\psi_{l}\ \omega_{l}\ \varphi_{k, j}\ \phi_{k, j}\ J_{k}\ \alpha_{l}\ \beta_{k, j}$ 
 
 ## C. Angular Domain Channel Expressions
 
