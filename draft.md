@@ -66,11 +66,11 @@ $$
 
 由于BS、RIS、user均装备ULA，则构建空间毫米波信道模型[^2-2][^2-3]：
 $$
-\mathbf{H}=\sum_{l=1}^{L}\alpha_l\mathbf{a}_N(\psi^{\prime}_l)\mathbf{a}_M^H(\omega_l)\in \mathbb{C}^{N\times M}
+\mathbf{H}=\sum_{l=1}^{L}\alpha_l\mathbf{a}_N(\psi^{\prime}_l)\mathbf{a}_M^H(\omega^{\prime}_l)\in \mathbb{C}^{N\times M}
 $$
 
 $$
-\mathbf{h}_k= \sum_{j=1}^{J_k}\beta_{k,j}\mathbf{a}_M(\varphi_{k,j})\mathbf{a}_A^H(\phi_{k,j})\in \mathbb{C}^{M\times A}
+\mathbf{h}_k= \sum_{j=1}^{J_k}\beta_{k,j}\mathbf{a}_M(\varphi^{\prime}_{k,j})\mathbf{a}_A^H(\phi^{\prime}_{k,j})\in \mathbb{C}^{M\times A}
 $$
 
 $$
@@ -78,7 +78,7 @@ $$
 $$
 
 $$
-\mathbf{h}_{r,k} = \sum_{j=1}^{J_k}\beta_{k,j}\mathbf{a}_A(\phi_{k,j})\in \mathbb{C}^{A\times 1}
+\mathbf{h}_{r,k} = \sum_{j=1}^{J_k}\beta_{k,j}\mathbf{a}_A(\phi^{\prime}_{k,j})\in \mathbb{C}^{A\times 1}
 $$
 
 
@@ -90,6 +90,10 @@ $$
 \mathbf{a}_{X}(x)=\left[1, e^{-\mathrm{i} 2 \pi x}, \ldots, e^{-\mathrm{i} 2 \pi(X-1) x}\right]^{\mathrm{T}}
 $$
 where $X \in\{M, N\}$ and $x \in\left\{\omega_{l}, \psi^{\prime}_{l}, \varphi_{k, j}\right\} . \omega_{l}=\frac{d_{\mathrm{RIS}}}{\lambda_{c}} \cos \left(\theta_{l}\right), \psi^{\prime}_{l}=\frac{d_{\mathrm{BS}}}{\lambda_{c}} \cos \left(\phi_{l}\right)$, and $\varphi_{k, j}=$ $\frac{d_{\mathrm{RIS}}}{\lambda_{c}} \cos \left(\vartheta_{k, j}\right)$ are the directional cosine with $\theta_{l}$ and $\phi_{l}$ denoting the $\mathrm{AoD}$ and AoA of the $l$-th spatial path from RIS to BS, respectively, and $\vartheta_{k, j}$ as the AoA of the $j$-th spatial path from user $k$ to RIS. $\lambda_{c}$ is the carrier wavelength. It should be emphasized here that the channel gains $\alpha_{l}$
+
+
+
+$\psi_l$ $\omega_l$ $\varphi_{k,j}$ $\phi_{k,j}$ $J_k$ $\alpha_l$ $\beta_{k,j}$
 
 ## C. Angular Domain Channel Expressions
 
@@ -192,7 +196,7 @@ $$
 可以看到每一列的唯一非零元素的行索引互不相同，所以有推论：${\mathbf A}_N^D={\mathbf U}_N{\mathbf A}_N$为一个行稀疏、列满秩的矩阵，并且${\mathbf A}_N^{D}$每一列正交
 
 #### Lamma 3 
-级联估计时存在“权重畸变”效应，使得估计的显著角集合存在误差
+级联估计时存在“权重畸变”效应，使得估计的显著角集合存在20dB左右的误差
 
 结论：本文使用的分步估计具有更好的估计精度
 
@@ -202,7 +206,7 @@ $$
 
 ## A. channel estimation protical
 
-| ![image-20211005221652478](draft.assets/image-20211005221652478.png) | ![image-20211005225554785](draft.assets/image-20211005225554785.png) | ![image-20211005221800262](draft.assets/image-20211005221800262.png) |
+| ![image-20211006143301763](draft.assets/image-20211006143301763.png) | ![image-20211005225554785](draft.assets/image-20211005225554785.png) | ![image-20211005221800262](draft.assets/image-20211005221800262.png) |
 | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
 | Phase 1: broadcast                                           | Phase 2: cascade channel estimation                          | Phase 3: Doppler compensation                                |
 
@@ -354,7 +358,94 @@ $$
 
 
 
+# Simulation
 
+
+
+
+
+# Conclusion
+
+
+
+
+
+# Appendix
+
+
+
+## Appendix A
+
+
+
+## Appendix B
+
+
+
+## Appendix C
+
+目前已经有工作对于RIS辅助mmwave通信系统的角域级联信道估计[^2-2][^2-3]。但是在级联信道中估计BS端显著角的过程中，使用power peak的估计方式会带来“显著角权重畸变”效应。For simplicity， 我们在证明畸变效应时采用单天线用户，且发送序列长度为1，i.e.,$s\in {\mathbb C}$，并且RIS反射原件上的反射系数均为单位一，i.e.，${\mathbf \Phi }={\mathbf I}_M $，即k-th用户到RIS的上行信道${\mathbf h}_{k}^{s}$为：
+$$
+{\mathbf h}_{k}^{s}={\mathbf A}_{M,k}{\mathbf B}_k
+$$
+where ${\mathbf A}_{M,k} = [{\mathbf a}_M(\phi_{l}^{\prime})]$
+
+具体来讲，在phase2中BS端接收到的导频信号为：
+$$
+{\mathbf y}_{k,b}^s=\underbrace{{\mathbf A}_N}_{\mathrm{part}\ 1 }{\mathbf A}\underbrace{{\mathbf A}_{M}^H \operatorname{Diag}({\mathbf A}_{M,k}{\mathbf B}_{k}){\mathbf I}_M{s}}_{\text{part}\ 2}+{\mathbf n}
+$$
+令${\mathbf \Delta_k}\in {\mathbb C}^{L\times 1}$表示part 2：
+$$
+\begin{aligned}
+{\mathbf \Delta}_k&={\mathbf A}_M^H \operatorname{Diag}({\mathbf A}_{M,k}{\mathbf B}_{k}){\mathbf I}_M{s} \\
+&={\mathbf A}_M^H{\mathbf A}_{M,k}{\mathbf B}_k\\
+&=
+\left[
+\begin{matrix}
+{\mathbf a}_M^H(\omega^{\prime}_1)\\
+\vdots\\
+{\mathbf a}_M^H(\omega^{\prime}_L)
+\end{matrix}
+\right]
+\cdot
+
+\underbrace{\left[
+\sum_{j=1}^{J_k}\beta_j{\mathbf a}_N(\varphi^{\prime}_{k,j})
+\right]}_{\text {part} \ 3}
+
+\end{aligned}
+$$
+令${\mathbf a}_M^{\prime}\in {\mathbb C}^{M\times 1}$表示$\text{part}\ 3$：
+$$
+{\mathbf \Delta}_k=
+\left[
+\begin{matrix}
+{\mathbf a}_M^H(\omega_1)\cdot{\mathbf a}_M^{\prime}\\
+\vdots \\
+{\mathbf a}_M^H(\omega_L)\cdot{\mathbf a}_M^{\prime}
+\end{matrix}
+\right]
+$$
+可以看到，${\mathbf \Delta}_k$中的第l个元素${\mathbf \Delta}_{k,l}={\mathbf a}_M^H(\omega_l)\cdot{\mathbf a}_M^{\prime}\in {\mathbb C}$ 。所以，最终在BS端接收到第用户发射导频信号${\mathbf y}_{k,b}^s$可以被写为：
+$$
+\begin{aligned}
+{\mathbf y}_{k,b}^s&={\mathbf A}_N{\mathbf A}{\mathbf \Delta}_k+{\mathbf n}\\
+&=\sum_{l=1}^L\alpha_l{\Delta}_{k,l}{\mathbf a}_N(\psi_l)
+\end{aligned}
+$$
+可以很清楚的看到，原本l-th path的幅度权重$\alpha_l$变成了经过畸变的$\alpha_l{\Delta}_{{k,l}}$，进而在进行级联信道的显著角估计时，会错误估计能量最集中的角度分量，所估计出的$\hat{\Omega}_{N}(\psi)$不准确。
+
+接下来我们分析级联信道中能量畸变的数量级；具体来讲，${\mathbf \Delta}_{k,l}$可以近似看作是两个不同角的$M$天线阵列响应内积，下图展示了$M=64$时${\mathbf \Delta}_{k,l}$的值随着两个角度误差${\delta}$的变化而变化的趋势
+
+<img src="draft.assets/image-20211007130407720.png" alt="image-20211007130407720" style="zoom: 33%;" />
+
+可以看到，在级联信道当中，$\alpha_l/\alpha_{l^{\prime}}$和$\frac{\alpha_l{\Delta}_{{k,l}}}{\alpha_{l^{\prime}}{\Delta}_{{k,{l}^{\prime}}}}$之间存在着0~40db左右的误差，
+
+
+
+
+
+# Reference
 
 [^1-1]: Angular-domain selective channel tracking and doppler compensation for high-mobility mmWave massive MIMO
 [^1-2]: Cloud-Assisted Cooperative Localization for Vehicle Platoons: A Turbo Approach
