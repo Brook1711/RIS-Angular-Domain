@@ -356,11 +356,37 @@ $$
 
 
 
+## E. Computational Complexity
+
 
 
 
 
 # Simulation
+
+基站天线数量：$N=64$
+
+RIS元素数量：$M=64$
+
+用户天线数量：$A=32$
+
+BS到RIS的多径数量$L=4$
+
+用户到RIS的多径数量：$J_k = 4,\forall k\in \{1,\dots,K\}$
+
+系统工作频段$f_c=28e9\ \text{Hz} = 28\ \text{GHz}$
+
+BS处和RIS处天线间隔满足：$\frac{d_{bs}}{\lambda_c}=\frac{d_{ris}}{\lambda_c}=0.5$
+
+RIS到BS的衰落系数：$\sigma_{br}=2.2$
+
+用户到RIS的衰落系数[^3gpp]：$\sigma_{r,k}=2.8,\forall k\in \{1,\dots,K\}$
+
+噪声功率：$\delta^2_{n}=-114 \mathrm{dBm}$
+
+![image-20211007161322515](draft.assets/image-20211007161322515.png)
+
+
 
 
 
@@ -441,7 +467,7 @@ $$
 
 <img src="draft.assets/image-20211007130407720.png" alt="image-20211007130407720" style="zoom: 33%;" />
 
-可以看到，在级联信道当中，$\alpha_l/\alpha_{l^{\prime}}$和$\frac{\alpha_l{\Delta}_{{k,l}}}{\alpha_{l^{\prime}}{\Delta}_{{k,{l}^{\prime}}}}$之间存在着0~40db左右的误差，
+可以看到，在级联信道当中，$\alpha_l/\alpha_{l^{\prime}}$和$\frac{\alpha_l{\Delta}_{{k,l}}}{\alpha_{l^{\prime}}{\Delta}_{{k,{l}^{\prime}}}}$之间存在着0~40db左右的误差，所以在利用power peak 的方式寻找显著角集合的时候有很大的可能会将本不是显著角的角度判断为显著角。
 
 
 
@@ -457,4 +483,6 @@ Partial Orthogonal Pilot Design
 
 [^2-3]: Channel Estimation for IRS-Assisted Millimeter-Wave MIMO Systems：Sparsity-Inspired Approaches
 [^2-2]: Channel Estimation for RIS-Aided Multiuser Millimeter-Wave Massive MIMO Systems
+
+[^3gpp]: 3GPP, “Study on channel model for frequencies from 0.5 to 100 GHz,” 3rd Generation Partnership Project (3GPP), Technical Specification (TS) 38.901, 01 2020, version 16.1.0.
 
