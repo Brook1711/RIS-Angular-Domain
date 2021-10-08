@@ -94,7 +94,9 @@ where $X \in\{M, N\}$ and $x \in\{\psi_l^{\prime},\omega_l^{\prime},\varphi_{k,j
 $\color{red}{x\in [-\frac{d}{\lambda},\frac{d}{\lambda})}$
 
 $\color{red}{\frac{d}{\lambda}=0.5}$
-
+$$
+\Longrightarrow
+$$
 
 
 $\psi^{\prime}_l=\frac{d}{\lambda}\operatorname{cos}(\psi_l)$ $\omega_l$ $\varphi_{k,j}$ $\phi_{k,j}$ $J_k$ $\alpha_l$ $\beta_{k,j}$
@@ -391,6 +393,8 @@ RIS到BS的衰落系数：$\sigma_{br}=2.2$
 ![image-20211007161322515](draft.assets/image-20211007161322515.png)
 
 
+
+$\alpha_{l} \sim \operatorname{CN}\left(0,10^{-3} d_{\mathrm{BR}}^{\sigma_{rb}}\right)$ and $\beta_{k, j} \sim \operatorname{CN}\left(0,10^{-3} d_{\mathrm{RU}}^{\sigma_{rk}}\right)$
 
 
 
