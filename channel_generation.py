@@ -20,3 +20,4 @@ def generate_B_k(distance, J_k=4, sigma_rk=-2.8):
         )*np.power(path_loss, 1/2)
     return np.mat(B), path_loss
 
+ 
