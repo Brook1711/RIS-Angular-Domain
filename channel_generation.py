@@ -9,6 +9,9 @@ from scipy.io import savemat, loadmat
 # system parameters
 class channel_parameters(object):
     cp_dic = {}
+    cp_dic['N']=64
+    cp_dic['M']=64
+    cp_dic['A']=32
     cp_dic['distance_rb'] = 20    # the distance of the RIS-BS or BS-RIS link
     cp_dic['distance_rk'] = 10    # the distance of the RIS-BS or user-RIS link
 
@@ -131,5 +134,5 @@ np.save('build/data/channel_data.npy',dic_store,allow_pickle=True)
 # test load data
 a = loadmat('build/data/test_save.mat')
 np_load = np.load('build/data/channel_data.npy',allow_pickle=True).item()
-
+print("========================channel generation==========================")
 # %%
