@@ -12,6 +12,7 @@ class channel_parameters(object):
     cp_dic['N']=64
     cp_dic['M']=64
     cp_dic['A']=32
+
     cp_dic['distance_rb'] = 20    # the distance of the RIS-BS or BS-RIS link
     cp_dic['distance_rk'] = 10    # the distance of the RIS-BS or user-RIS link
 
@@ -93,18 +94,22 @@ B_k, B_k_pl = generate_B_k(
 np.random.seed(1234)
 psi = generate_angle(dimension=cp_0.cp_dic['L'])
 psi_prime = cp_0.cp_dic['d_div_lambda_bs'] * np.cos(psi)
+# generate A_N
 
 np.random.seed(2341)
 omega = generate_angle(dimension=cp_0.cp_dic['L'])
 omega_prime = cp_0.cp_dic['d_div_lambda_ris'] * np.cos(omega)
+# generate A_M
 
 np.random.seed(3412)
 varphi = generate_angle(dimension=cp_0.cp_dic['J_k'])
 varphi_prime = cp_0.cp_dic['d_div_lambda_ris'] * np.cos(varphi)
+# generate A_Mk
 
 np.random.seed(4123)
 phi = generate_angle(dimension=cp_0.cp_dic['J_k'])
 phi_prime = cp_0.cp_dic['d_div_lambda_user'] * np.cos(phi)
+# generate A_Ak
 
 # %%
 # store data to mat file 
