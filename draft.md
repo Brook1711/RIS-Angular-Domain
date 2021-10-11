@@ -494,3 +494,5 @@ Partial Orthogonal Pilot Design
 
 [^3gpp]: 3GPP, “Study on channel model for frequencies from 0.5 to 100 GHz,” 3rd Generation Partnership Project (3GPP), Technical Specification (TS) 38.901, 01 2020, version 16.1.0.
 
+[(67条消息) 智能反射面| 用户多天线MIMO系统的信道估计：平行因子分解与Khatri-Rao积_B417科研笔记-CSDN博客](https://zhuyulab.blog.csdn.net/article/details/104448759)
+
