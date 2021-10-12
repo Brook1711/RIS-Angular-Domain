@@ -96,6 +96,7 @@ psi = generate_angle(dimension=cp_0.cp_dic['L'])
 psi_prime = cp_0.cp_dic['d_div_lambda_bs'] * np.cos(psi)
 # generate A_N
 
+
 np.random.seed(2341)
 omega = generate_angle(dimension=cp_0.cp_dic['L'])
 omega_prime = cp_0.cp_dic['d_div_lambda_ris'] * np.cos(omega)
