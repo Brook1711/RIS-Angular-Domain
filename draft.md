@@ -167,7 +167,7 @@ $$
 
 且
 $$
-x_i\in [-0.5,0.5)\ 
+x_i\in [-0.5,0.5)
 $$
 $x_i\in\{ \psi^{\prime}_l,\omega^{\prime}_l,\varphi^{\prime}_{k,j},\phi^{\prime}_{k,j} \}$
 
