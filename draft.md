@@ -10,6 +10,9 @@
 
 
 
+$$
+\mathbf{H}=\mathop{{\mathbf{A}_{N}}}_{(N\times L)} \mathop{\text{Diag}(\mathbf{A})}_{(L\times L)} \mathop{\mathbf{A}_{M}^{H}}_{L\times M}
+$$
 
 
 
@@ -42,7 +45,18 @@ $$
 $$
 [\mathbf{y}_{k,b}]_{:,t} = \mathbf{H}\operatorname{Diag}({\mathbf\Phi}_t)\mathbf{h}_k\sqrt{p}[\mathbf{s}_{k,b}]_{:,t}+\mathbf{n}_{k,b}
 $$
-​	级联信道信息可以表示为：${\mathbf G}_k=\{{\mathbf G}_{k,1}, {\mathbf G}_{k,2},\dots,{\mathbf G}_{k,M} \}$
+$$
+{\mathbf y}_k=\mathop{{\mathbf H}}_{(N\times M)}\mathop{{\mathbf \Phi}}_{(M\times M)}\mathop{{\mathbf h}_k}_{(M\times A)}\mathop{{\mathbf s}_k}_{(A\times 1)}+{\mathbf n}_k
+$$
+
+$$
+M\gg 1 \\
+N \times A \gg 1
+$$
+
+
+
+级联信道信息可以表示为：${\mathbf G}_k=\{{\mathbf G}_{k,1}, {\mathbf G}_{k,2},\dots,{\mathbf G}_{k,M} \}$
 $$
 {\mathbf G}_{k,m}=[{\mathbf H}]_{[:,m]}[{\mathbf h}_{k}]_{[m,:]},\quad \forall m\in {1,\dots,M}
 $$
@@ -442,9 +456,32 @@ $$
 $$
 \begin{aligned}
 {\mathbf y}_t &\approx {\mathbf A}_M^H {\mathbf A}_{M,k}{\mathbf v} +{\mathbf n}_t \\
-&= 
+&= {\mathbf A}_M^H{\mathbf a}_{M,k}^{\prime} + {\mathbf n}_t  \\
+&= \frac{1}{M}{\mathbf A}_M^H{\mathbf U}_{M}^H{\mathbf U}_M{\mathbf a}_M^{\prime}+{\mathbf n}_t\\
+&=\frac{1}{M}[{\mathbf A}_M^{D}]^H{\mathbf a}_M^D +{\mathbf n}_t\\
+&={\mathbf A}({\vec \omega}){\boldsymbol x}_t +{\mathbf n}_t
 \end{aligned}
 $$
+其中, ${\boldsymbol \omega} = \{\omega_1, \dots,\omega_L\}$
+$$
+\begin{aligned}
+{\mathbf A}({\boldsymbol \omega})&=\frac{1}{M}[{\mathbf U}_M {\mathbf a}_M(\omega_1),\dots,{\mathbf U}_M{\mathbf a}_M(\omega_L) ]^H \\
+&=\frac{1}{M}[{\mathbf a}_M^D(\omega_1), \dots, {\mathbf a}_M^D(\omega_L)]^H
+\in {\mathbb C}^{L\times M}
+
+\end{aligned}
+$$
+可以看到，${\mathbf A}({\boldsymbol \omega})$是行稀疏的，且行满秩
+$$
+{\boldsymbol x}_t=
+[\sum_{j=1}^{J_k}{\mathbf U}_M{\mathbf a}_{M}(\varphi_{k,j})]=[\sum_{j=1}^{J_k}{\mathbf a}_M^D(\varphi_{k,j})] \in {\mathbb C}^{M\times 1}
+$$
+可以看到，${\boldsymbol x}_t$是稀疏的，且由于mmWave信道的角度域稀疏性，其$M$个元素中只有$L$个显著元素
+
+这样，我们的级联信道估计问题就转换成了一个标准的CS问题。${\mathbf A}({\boldsymbol \omega})$为含有未知变参数${\boldsymbol \omega}$的data matrix，${\boldsymbol x}_t$ 为需要recovery 的sparse signal，${\boldsymbol y}_t$为measurements。
+
+<img src="draft.assets/image-20211020121730772.png" alt="image-20211020121730772" style="zoom:10%;" />
+
 
 
 
