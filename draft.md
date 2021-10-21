@@ -109,8 +109,14 @@ $\color{red}{x\in [-\frac{d}{\lambda},\frac{d}{\lambda})}$
 
 $\color{red}{\frac{d}{\lambda}=0.5}$
 $$
-\Longrightarrow
+{\color{red}{N}}\times A\times {\color{red}K} & \rightarrow 10^{6} \sim10^{8}\\
+{\color{red}{M}}+ {\color{red}N} & \rightarrow 10^{3} \sim10^{4}
 $$
+
+$$
+
+$$
+
 
 
 $\psi^{\prime}_l=\frac{d}{\lambda}\operatorname{cos}(\psi_l)$ $\omega_l$ $\varphi_{k,j}$ $\phi_{k,j}$ $J_k$ $\alpha_l$ $\beta_{k,j}$
