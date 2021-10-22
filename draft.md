@@ -10,6 +10,9 @@
 
 
 
+$$
+\mathbf{H}=\mathop{{\mathbf{A}_{N}}}_{(N\times L)} \mathop{\text{Diag}(\mathbf{A})}_{(L\times L)} \mathop{\mathbf{A}_{M}^{H}}_{L\times M}
+$$
 
 
 
@@ -42,7 +45,18 @@ $$
 $$
 [\mathbf{y}_{k,b}]_{:,t} = \mathbf{H}\operatorname{Diag}({\mathbf\Phi}_t)\mathbf{h}_k\sqrt{p}[\mathbf{s}_{k,b}]_{:,t}+\mathbf{n}_{k,b}
 $$
-​	级联信道信息可以表示为：${\mathbf G}_k=\{{\mathbf G}_{k,1}, {\mathbf G}_{k,2},\dots,{\mathbf G}_{k,M} \}$
+$$
+{\mathbf y}_k=\mathop{{\mathbf H}}_{(N\times M)}\mathop{{\mathbf \Phi}}_{(M\times M)}\mathop{{\mathbf h}_k}_{(M\times A)}\mathop{{\mathbf s}_k}_{(A\times 1)}+{\mathbf n}_k
+$$
+
+$$
+M\gg 1 \\
+N \times A \gg 1
+$$
+
+
+
+级联信道信息可以表示为：${\mathbf G}_k=\{{\mathbf G}_{k,1}, {\mathbf G}_{k,2},\dots,{\mathbf G}_{k,M} \}$
 $$
 {\mathbf G}_{k,m}=[{\mathbf H}]_{[:,m]}[{\mathbf h}_{k}]_{[m,:]},\quad \forall m\in {1,\dots,M}
 $$
@@ -95,8 +109,14 @@ $\color{red}{x\in [-\frac{d}{\lambda},\frac{d}{\lambda})}$
 
 $\color{red}{\frac{d}{\lambda}=0.5}$
 $$
-\Longrightarrow
+{\color{red}{N}}\times A\times {\color{red}K} & \rightarrow 10^{6} \sim10^{8}\\
+{\color{red}{M}}+ {\color{red}N} & \rightarrow 10^{3} \sim10^{4}
 $$
+
+$$
+
+$$
+
 
 
 $\psi^{\prime}_l=\frac{d}{\lambda}\operatorname{cos}(\psi_l)$ $\omega_l$ $\varphi_{k,j}$ $\phi_{k,j}$ $J_k$ $\alpha_l$ $\beta_{k,j}$
@@ -218,6 +238,8 @@ $$
 | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
 | Phase 1: broadcast                                           | Phase 2: cascade channel estimation                          | Phase 3: Doppler compensation                                |
 
+
+
 Phase 1: broadcast
 
 
@@ -306,6 +328,9 @@ $$
 $$
 
 
+
+
+
 我们定义显著角集合$\Omega_N=\{n_l|\forall l\in \{1,\dots,\hat{L}\}\}$ 其中$n_l$表示第$l$个路径对应在BS处的AoA脚标，$\hat{L}$为系统在信道估计阶段取得的显著角个数，这里为了简化模型采用$\hat{L}= L$。
 
 可以从上述过程中看到，虽然可以通过DFT和rotation两步操作将${\mathbf A}_N$分解为行稀疏列满秩矩阵。但是rotation操作需要事先得知所有${\psi^{\prime}}_l\ \forall l \in \{1,\dots ,L\}$的值，$\psi^{\prime}_l$ 的值可以通过$n_l$获知，获取$n_l$的过程被称为“显著角估计”[^1-5]。
@@ -352,7 +377,116 @@ $$
 $$
 根据[^1-5] 在设计k-th用户的导频信号${\mathbf s}_{k,b}\in {\mathbb C}^{A\times \tau_{k,b}}$时可以根据Phase 1中获知的用户端上行AoD$\phi_{k,j}$ 将发射能量集中到显著角集合$\Omega_{A,k}$中，使得RIS端接收的导频信号质量更好。
 
+将基站接收信号写开就是一下的形式：
+$$
+\begin{aligned}
+\left[{\mathbf y}_{k,b} \right]_{:,t} &={\mathbf A}_N{\mathbf A}{\mathbf A}_M^H{\mathbf \Phi}_t{\mathbf A}_{M,k}{\mathbf B}_k{\mathbf A}_{A,k}\sqrt{p}[{\mathbf s_{k,b}}]_{:,t}+{\mathbf n}_{k,b}\\
+\frac{1}{\sqrt{p} N } \hat{{\mathbf A}}_N^H \left[{\mathbf y}_{k,b} \right]_{:,t} &\approx{\mathbf I}_L {\mathbf A}{\mathbf A}_M^H{\mathbf \Phi}_t{\mathbf A}_{M,k}{\mathbf B}_k{\mathbf A}_{A,k}[{\mathbf{s}}]_{:,t} + \frac{1}{\sqrt{p} N } \hat{{\mathbf A}}_N^H {\mathbf n}_{k,b}\\
+\frac{1}{\sqrt{p} N }{\mathbf A}^{-1} \hat{{\mathbf A}}_N^H \left[{\mathbf y}_{k,b} \right]_{:,t} &\approx{\mathbf A}_M^H{\mathbf \Phi}_t{\mathbf A}_{M,k}\underbrace{{\mathbf B}_k{\mathbf A}_{A,k}^H[{\mathbf{s}}]_{:,t}}_{\text{part 1}} + \frac{1}{\sqrt{p} N } {\mathbf A}^{-1} \hat{{\mathbf A}}_N^H {\mathbf n}_{k,b}
+\end{aligned}
+$$
+接下来介绍上行导频信号设计，从上面的公式可以看到，此时信道中的位置量已经只剩下上行信道中的RISAoD($\{ {\omega_1}, \dots,\omega_L\}$)和RIS处的AoA($\{ {\varphi}_1, \dots,\varphi_{J_k} \}$)，我们的思想是将接收信号表达式化简为只有$\{ {\varphi}_1, \dots,\varphi_{J_k} \}$和$\{ {\omega_1}, \dots,\omega_L\}$为变量的形式，即，等式右边除了${\mathbf A}_M^H$和${\mathbf A}_{M,k}$之外都是常数矩阵。因此，我们设置RIS反射阵列上的元件反射相位均为单位一，即，${\mathbf \Phi}_t = {\mathbf I}_M$，另外需要设计上式中的$\text{part}\ 1$为常矩阵：
+$$
+\begin{aligned}
+\text{part 1} &= {\mathbf B}_k{\mathbf A}_{A,k}^H[{\mathbf{s}}_{rb}]_{:,t}\\
+&=\left(
+\begin{matrix}
+\beta_{k,1} &  &\\
+& \beta_{k,2}\\
+&& \ddots \\
+&&& \beta_{k,J_k}
+\end{matrix}
+\right)
+\left(
+\begin{matrix}
+{\mathbf a}_{A}^H(\phi_{k,1})	\\
+{\mathbf a}_{A}^H(\phi_{k,2})	\\
+\vdots												\\
+{\mathbf a}_{A}^H(\phi_{k,J_k})
+\end{matrix}
+\right)
+[{\mathbf s}_{rb}]_{:,t}
+\\
+&=\left(
+\begin{matrix}
+\beta_{k,1}{\mathbf a}_{A}^H(\phi_{k,1})[{\mathbf s}_{rb}]_{:,t}	\\
+\beta_{k,2}{\mathbf a}_{A}^H(\phi_{k,2})[{\mathbf s}_{rb}]_{:,t}	\\
+\vdots												\\
+\beta_{k,J_k}{\mathbf a}_{A}^H(\phi_{k,J_k})[{\mathbf s}_{rb}]_{:,t}
+\end{matrix}
+\right)
 
+\end{aligned}
+$$
+正如 Lemma中提到的，$\{{\mathbf a}_A(\phi_{k,1}),\dots,{\mathbf a}_A(\phi_{k,J_k}) \}$在A非常的大时候近似正交，利用其正交性设计导频信号${\mathbf s}_{rb}$，为简化表示，令${\mathbf s}_t=[{\mathbf s}_{rb}]_{:,t}$，设计目标在于令part 1为常矩阵方便下一步估计，鉴于user处的AoD和各条路径对应path的路损已在phase 1中估计得知，则${\mathbf s}_t$可以按照以下规则设计：
+$$
+{\mathbf s}_t=\frac{1}{N\sqrt{||\sum_{j=1}^{J_k}\beta_{k,j}^{-1}{\mathbf a}_A(\phi_{k,j})||^2}}\cdot \sum_{j=1}^{J_k}\beta_{k,j}^{-1}{\mathbf a}_A(\phi_{k,j})
+$$
+则part 1中的每一项：
+$$
+\begin{aligned}
+\left[\text{part 1}\right]_{j,:}&=\beta_{k,j}{\mathbf a}_A^H(\phi_{k,j})\frac{1}{N\sqrt{||\sum_{j=1}^{J_k}\beta_{k,j}^{-1}{\mathbf a}_A(\phi_{k,j})||^2}}\cdot \sum_{j=1}^{J_k}\beta_{k,j}^{-1}{\mathbf a}_A(\phi_{k,j})\\
+&\approx \frac{{\mathbf a}_A^H(\phi_{k,j}) {\mathbf a}_A(\phi_{k,j})}{N\sqrt{||\sum_{j=1}^{J_k}\beta_{k,j}^{-1}{\mathbf a}_A(\phi_{k,j})||^2}}\\
+&\equiv \frac{1}{\sqrt{||\sum_{j=1}^{J_k}\beta_{k,j}^{-1}{\mathbf a}_A(\phi_{k,j})||^2}}
+\triangleq c_s
+\end{aligned}
+$$
+
+
+因此，通过对导频信号${\mathbf s}_t$的设计，$\text{part 1}$可以被归一化：
+$$
+\begin{aligned}
+\text{part 1} &= c_s\cdot 
+\left(
+\begin{matrix}
+1\\
+1\\
+\vdots \\
+1
+\end{matrix}
+\right)_{(J_k \times 1)}
+\end{aligned}
+$$
+则，BS端接收的导频信号可以被进一步表示为：
+$$
+\begin{aligned}
+
+\frac{1}{c_s\sqrt{p} N }{\mathbf A}^{-1} \hat{{\mathbf A}}_N^H \left[{\mathbf y}_{k,b} \right]_{:,t} &\approx{\mathbf A}_M^H{\mathbf A}_{M,k}{\mathbf v} + \frac{1}{c_s \sqrt{p} N } {\mathbf A}^{-1} \hat{{\mathbf A}}_N^H {\mathbf n}_{k,b}
+\end{aligned}
+$$
+其中${\mathbf v}=[1,1,\dots,1]^T \in {\mathbb R}^{J_k \times 1}$，$c_s=\frac{1}{\sqrt{||\sum_{j=1}^{J_k}\beta_{k,j}^{-1}{\mathbf a}_A(\phi_{k,j})||^2}}$
+
+接下来，为简化表示，使用${\mathbf y}_t\in L\times 1$表示$\frac{1}{c_s\sqrt{p} N }{\mathbf A}^{-1} \hat{{\mathbf A}}_N^H \left[{\mathbf y}_{k,b} \right]_{:,t} $。并且将噪声表示为：${\mathbf n}_t = \frac{1}{c_s \sqrt{p} N } {\mathbf A}^{-1} \hat{{\mathbf A}}_N^H {\mathbf n}_{k,b}$
+
+最后经过处理的接收信号可以写为：
+$$
+\begin{aligned}
+{\mathbf y}_t &\approx {\mathbf A}_M^H {\mathbf A}_{M,k}{\mathbf v} +{\mathbf n}_t \\
+&= {\mathbf A}_M^H{\mathbf a}_{M,k}^{\prime} + {\mathbf n}_t  \\
+&= \frac{1}{M}{\mathbf A}_M^H{\mathbf U}_{M}^H{\mathbf U}_M{\mathbf a}_M^{\prime}+{\mathbf n}_t\\
+&=\frac{1}{M}[{\mathbf A}_M^{D}]^H{\mathbf a}_M^D +{\mathbf n}_t\\
+&={\mathbf A}({\vec \omega}){\boldsymbol x}_t +{\mathbf n}_t
+\end{aligned}
+$$
+其中, ${\boldsymbol \omega} = \{\omega_1, \dots,\omega_L\}$
+$$
+\begin{aligned}
+{\mathbf A}({\boldsymbol \omega})&=\frac{1}{M}[{\mathbf U}_M {\mathbf a}_M(\omega_1),\dots,{\mathbf U}_M{\mathbf a}_M(\omega_L) ]^H \\
+&=\frac{1}{M}[{\mathbf a}_M^D(\omega_1), \dots, {\mathbf a}_M^D(\omega_L)]^H
+\in {\mathbb C}^{L\times M}
+
+\end{aligned}
+$$
+可以看到，${\mathbf A}({\boldsymbol \omega})$是行稀疏的，且行满秩
+$$
+{\boldsymbol x}_t=
+[\sum_{j=1}^{J_k}{\mathbf U}_M{\mathbf a}_{M}(\varphi_{k,j})]=[\sum_{j=1}^{J_k}{\mathbf a}_M^D(\varphi_{k,j})] \in {\mathbb C}^{M\times 1}
+$$
+可以看到，${\boldsymbol x}_t$是稀疏的，且由于mmWave信道的角度域稀疏性，其$M$个元素中只有$L$个显著元素
+
+这样，我们的级联信道估计问题就转换成了一个标准的CS问题。${\mathbf A}({\boldsymbol \omega})$为含有未知变参数${\boldsymbol \omega}$的data matrix，${\boldsymbol x}_t$ 为需要recovery 的sparse signal，${\boldsymbol y}_t$为measurements。
+
+<img src="draft.assets/image-20211020121730772.png" alt="image-20211020121730772" style="zoom:10%;" />
 
 
 
