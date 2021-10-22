@@ -458,33 +458,65 @@ $$
 
 接下来，为简化表示，使用${\mathbf y}_t\in L\times 1$表示$\frac{1}{c_s\sqrt{p} N }{\mathbf A}^{-1} \hat{{\mathbf A}}_N^H \left[{\mathbf y}_{k,b} \right]_{:,t} $。并且将噪声表示为：${\mathbf n}_t = \frac{1}{c_s \sqrt{p} N } {\mathbf A}^{-1} \hat{{\mathbf A}}_N^H {\mathbf n}_{k,b}$
 
-最后经过处理的接收信号可以写为：
+之后，我们将其写为压缩感知的形式：
 $$
 \begin{aligned}
-{\mathbf y}_t &\approx {\mathbf A}_M^H {\mathbf A}_{M,k}{\mathbf v} +{\mathbf n}_t \\
-&= {\mathbf A}_M^H{\mathbf a}_{M,k}^{\prime} + {\mathbf n}_t  \\
-&= \frac{1}{M}{\mathbf A}_M^H{\mathbf U}_{M}^H{\mathbf U}_M{\mathbf a}_M^{\prime}+{\mathbf n}_t\\
-&=\frac{1}{M}[{\mathbf A}_M^{D}]^H{\mathbf a}_M^D +{\mathbf n}_t\\
-&={\mathbf A}({\vec \omega}){\boldsymbol x}_t +{\mathbf n}_t
+{\boldsymbol y}_t & = {\mathbf A}_M^H \operatorname{Diag}({\mathbf \Phi}_t){\mathbf A}_{M,k}{\boldsymbol v}_k+{\boldsymbol n}_t\\
+& = {\mathbf A}_M^H \operatorname{Diag}({\mathbf A}_{M,k}{\boldsymbol v}_k){\mathbf \Phi}_t+{\boldsymbol n}_t
 \end{aligned}
 $$
-其中, ${\boldsymbol \omega} = \{\omega_1, \dots,\omega_L\}$
+我们通过共轭转置操作考虑${\boldsymbol y}_t^H \in {\mathbb C}^{1 \times L}$:
+$$
+{\boldsymbol y}_t^H = {\mathbf \Phi}_t^H \operatorname{Diag}({\mathbf A}^*_{M,k}{\boldsymbol v}_k^*){\mathbf A}_M + {\boldsymbol n}_t^H
+$$
+我们考虑其中$l-th$要素$[{\boldsymbol y}_t^H]_{:,l} \in {\mathbb C} $:
 $$
 \begin{aligned}
-{\mathbf A}({\boldsymbol \omega})&=\frac{1}{M}[{\mathbf U}_M {\mathbf a}_M(\omega_1),\dots,{\mathbf U}_M{\mathbf a}_M(\omega_L) ]^H \\
-&=\frac{1}{M}[{\mathbf a}_M^D(\omega_1), \dots, {\mathbf a}_M^D(\omega_L)]^H
-\in {\mathbb C}^{L\times M}
-
+{[{\boldsymbol y}_t^H]_{:,l}} & = {\mathbf \Phi}_t^H \operatorname{Diag}({\mathbf A}^*_{M,k}{\boldsymbol v}_k^*){\mathbf a}_M(\omega_l) + [{\boldsymbol n}_t^H]_{:,l} \\
+& = {\mathbf \Phi}_t^H \operatorname{Diag}({\mathbf a}_M(\omega_l)) {\mathbf A}^*_{M,k}{\boldsymbol v}_k^* + [{\boldsymbol n}_t^H]_{:,l}
 \end{aligned}
 $$
-可以看到，${\mathbf A}({\boldsymbol \omega})$是行稀疏的，且行满秩
+我们接下来定义一个measurement vector ${\boldsymbol p}_l \triangleq \left[\begin{matrix} [{\boldsymbol y }_1^H]_{:,l}\\ \vdots \\ {\boldsymbol y }_\tau^H]_{:,l} \end{matrix}\right] \in {\mathbb C}^{\tau \times 1}$ 
 $$
-{\boldsymbol x}_t=
-[\sum_{j=1}^{J_k}{\mathbf U}_M{\mathbf a}_{M}(\varphi_{k,j})]=[\sum_{j=1}^{J_k}{\mathbf a}_M^D(\varphi_{k,j})] \in {\mathbb C}^{M\times 1}
+\begin{aligned}
+{\boldsymbol p}_l & = {\mathbf \Phi}^H \operatorname{Diag}({\mathbf a}_M(\omega_l)) {\mathbf A}^*_{M,k}{\boldsymbol v}_k^* + \left[\begin{matrix} {\boldsymbol n}_1^H \\ \vdots \\ {\boldsymbol n}_\tau^H \end{matrix} \right]_{:,l} \\
+									& = {\mathbf \Phi}^H \operatorname{Diag}({\mathbf a}_M(\omega_l)) \frac{{\mathbf U}^H_M {\mathbf U}_M}{M} {\mathbf a}_M  ({\boldsymbol \varphi}) + {\boldsymbol n}_l
+\end{aligned}
 $$
-可以看到，${\boldsymbol x}_t$是稀疏的，且由于mmWave信道的角度域稀疏性，其$M$个元素中只有$L$个显著元素
 
-这样，我们的级联信道估计问题就转换成了一个标准的CS问题。${\mathbf A}({\boldsymbol \omega})$为含有未知变参数${\boldsymbol \omega}$的data matrix，${\boldsymbol x}_t$ 为需要recovery 的sparse signal，${\boldsymbol y}_t$为measurements。
+
+我们接下来考虑的压缩感知问题考虑在时域上的super sampling，所以
+
+
+
+> 最后经过处理的接收信号可以写为：
+> $$
+> \begin{aligned}
+> {\mathbf y}_t &\approx {\mathbf A}_M^H {\mathbf A}_{M,k}{\mathbf v} +{\mathbf n}_t \\
+> &= {\mathbf A}_M^H{\mathbf a}_{M,k}^{\prime} + {\mathbf n}_t  \\
+> &= \frac{1}{M}{\mathbf A}_M^H{\mathbf U}_{M}^H{\mathbf U}_M{\mathbf a}_M^{\prime}+{\mathbf n}_t\\
+> &=\frac{1}{M}[{\mathbf A}_M^{D}]^H{\mathbf a}_M^D +{\mathbf n}_t\\
+> &={\mathbf A}({\vec \omega}){\boldsymbol x}_t +{\mathbf n}_t
+> \end{aligned}
+> $$
+> 其中, ${\boldsymbol \omega} = \{\omega_1, \dots,\omega_L\}$
+> $$
+> \begin{aligned}
+> {\mathbf A}({\boldsymbol \omega})&=\frac{1}{M}[{\mathbf U}_M {\mathbf a}_M(\omega_1),\dots,{\mathbf U}_M{\mathbf a}_M(\omega_L) ]^H \\
+> &=\frac{1}{M}[{\mathbf a}_M^D(\omega_1), \dots, {\mathbf a}_M^D(\omega_L)]^H
+> \in {\mathbb C}^{L\times M}
+> 
+> \end{aligned}
+> $$
+> 可以看到，${\mathbf A}({\boldsymbol \omega})$是行稀疏的，且行满秩
+> $$
+> {\boldsymbol x}_t=
+> [\sum_{j=1}^{J_k}{\mathbf U}_M{\mathbf a}_{M}(\varphi_{k,j})]=[\sum_{j=1}^{J_k}{\mathbf a}_M^D(\varphi_{k,j})] \in {\mathbb C}^{M\times 1}
+> $$
+> 可以看到，${\boldsymbol x}_t$是稀疏的，且由于mmWave信道的角度域稀疏性，其$M$个元素中只有$L$个显著元素
+>
+> 这样，我们的级联信道估计问题就转换成了一个标准的CS问题。${\mathbf A}({\boldsymbol \omega})$为含有未知变参数${\boldsymbol \omega}$的data matrix，${\boldsymbol x}_t$ 为需要recovery 的sparse signal，${\boldsymbol y}_t$为measurements。
+>
 
 <img src="draft.assets/image-20211020121730772.png" alt="image-20211020121730772" style="zoom:10%;" />
 
