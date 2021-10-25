@@ -476,16 +476,23 @@ $$
 & = {\mathbf \Phi}_t^H \operatorname{Diag}({\mathbf a}_M(\omega_l)) {\mathbf A}^*_{M,k}{\boldsymbol v}_k^* + [{\boldsymbol n}_t^H]_{:,l}
 \end{aligned}
 $$
-我们接下来定义一个measurement vector ${\boldsymbol p}_l \triangleq \left[\begin{matrix} [{\boldsymbol y }_1^H]_{:,l}\\ \vdots \\ {\boldsymbol y }_\tau^H]_{:,l} \end{matrix}\right] \in {\mathbb C}^{\tau \times 1}$ 
+我们接下来考虑的压缩感知问题考虑在时域上的super sampling，所以我们接下来定义一个measurement vector ${\boldsymbol p}_l \triangleq \left[\begin{matrix} [{\boldsymbol y }_1^H]_{:,l}\\ \vdots \\ {\boldsymbol y }_\tau^H]_{:,l} \end{matrix}\right] \in {\mathbb C}^{\tau \times 1}$ 
 $$
 \begin{aligned}
 {\boldsymbol p}_l & = {\mathbf \Phi}^H \operatorname{Diag}({\mathbf a}_M(\omega_l)) {\mathbf A}^*_{M,k}{\boldsymbol v}_k^* + \left[\begin{matrix} {\boldsymbol n}_1^H \\ \vdots \\ {\boldsymbol n}_\tau^H \end{matrix} \right]_{:,l} \\
-									& = {\mathbf \Phi}^H \operatorname{Diag}({\mathbf a}_M(\omega_l)) \frac{{\mathbf U}^H_M {\mathbf U}_M}{M} {\mathbf a}_M  ({\boldsymbol \varphi}) + {\boldsymbol n}_l
+									& = {\mathbf \Phi}^H \operatorname{Diag}({\mathbf a}_M(\omega_l)) \frac{{\mathbf U}^H_M {\mathbf U}_M}{M} {\mathbf a}_M  ({\boldsymbol \varphi}) + {\mathbf N}_l\\
+									& = {\mathbf \Phi}^H {\mathbf V}({\omega_l}){\mathbf a}_M^{DFT}({\boldsymbol \varphi}) + {\mathbf N}_l
 \end{aligned}
 $$
 
 
-我们接下来考虑的压缩感知问题考虑在时域上的super sampling，所以
+此时该问题转化为了一个data matrix ${\mathbf V}(\omega_l) $含有未知参数${\omega_l}$的压缩感知问题[^1-4]，测量矩阵${\mathbf \Phi}^H \in {\mathbb C}^{\tau \times M}$可以通过调节不同时刻的RIS相位${\mathbf \Phi}_t$来进行更改，最后需要通过super Sample的${\boldsymbol p}_l \in {\mathbb C}^{\tau \times 1}$来恢复纬度较高的${\mathbf a}_M^{DFT}({\boldsymbol \varphi}) \in {\mathbb C}^{M \times 1}$。
+
+注意到，此时的data matrix :${\mathbf V}(\omega_l)={(1/M)} \cdot \operatorname{Diag}({\mathbf a}_M(\omega_l)) \cdot {\mathbf U}_M^H $，${\mathbf V}(\omega_l)^H \cdot  {\mathbf V}(\omega_l) = (1/M)\cdot {\mathbf I}_M$，其每一列正交
+
+
+
+
 
 
 
@@ -652,7 +659,9 @@ $$
 [^1-1]: Angular-domain selective channel tracking and doppler compensation for high-mobility mmWave massive MIMO
 [^1-2]: Cloud-Assisted Cooperative Localization for Vehicle Platoons: A Turbo Approach
 [^1-3]: FDD Massive MIMO Channel Estimation With Arbitrary 2D-Array Geometry
+[^1-4]: Robust Recovery of Structured Sparse Signals WithUncertain Sensing Matrix: A Turbo-VBI Approach
 [^1-5]: Virtual Angular-Domain Channel Estimation for FDD Based Massive MIMO Systems With
+
 Partial Orthogonal Pilot Design
 
 [^2-3]: Channel Estimation for IRS-Assisted Millimeter-Wave MIMO Systems：Sparsity-Inspired Approaches
