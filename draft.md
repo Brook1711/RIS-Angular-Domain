@@ -490,7 +490,7 @@ $$
 
 注意到，此时的data matrix :${\mathbf V}(\omega_l)={(1/M)} \cdot \operatorname{Diag}({\mathbf a}_M(\omega_l)) \cdot {\mathbf U}_M^H $，${\mathbf V}(\omega_l)^H \cdot  {\mathbf V}(\omega_l) = (1/M)\cdot {\mathbf I}_M$，其每一列正交
 
-
+对于一个标准CS问题，超采样的个数只需要$M={\mathcal O}(K{\operatorname log}N)$ [^1-8]即可（此时的$M$为超采样个数，K为稀疏个数，N为原信号维度）
 
 
 
@@ -664,6 +664,9 @@ $$
 
 Partial Orthogonal Pilot Design
 
+
+
+[^1-8]: [1-8] Spectral compressive sensing
 [^2-3]: Channel Estimation for IRS-Assisted Millimeter-Wave MIMO Systems：Sparsity-Inspired Approaches
 [^2-2]: Channel Estimation for RIS-Aided Multiuser Millimeter-Wave Massive MIMO Systems
 
