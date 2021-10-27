@@ -496,6 +496,8 @@ $$
 
 
 
+
+
 > 最后经过处理的接收信号可以写为：
 > $$
 > \begin{aligned}
@@ -531,11 +533,19 @@ $$
 
 
 
-## D. Doppler compensation for the second hoop
+## D. HMM（隐马尔可夫模型）
+
+
 
 
 
 ## E. Computational Complexity
+
+### BS到RIS的稀疏性建模
+
+上行链路中，BS的AoA ${\boldsymbol \psi} \triangleq [{\psi}_1,\dots,\psi_L ]\in {\mathbb C}^{L\times 1}$
+
+
 
 
 
