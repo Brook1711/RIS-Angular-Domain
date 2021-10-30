@@ -228,6 +228,8 @@ $$
 
 结论：本文使用的分步估计具有更好的估计精度
 
+## D. Structured Sparsity of the AoA/AoDs
+
 
 
 # channel estimation
@@ -533,23 +535,31 @@ $$
 
 
 
-## D. HMM（隐马尔可夫模型）
+## D. Model-based compress sensing
+
+由上面的推导可知，对于第k个用户，上行BS接收到的信号
+$$
+{\boldsymbol p}_{l,k} = {\mathbf \Phi}^H {\mathbf V}({\omega_l}){\mathbf a}_M^{DFT}({\boldsymbol \varphi}_{k}) + {\mathbf N}_l\ ,\forall l \in \{1,\dots,L\}
+$$
+由于${\mathbf a}_M^{DFT}({\boldsymbol \varphi}_{k})$ 是$J_k$个$M$-ULA阵列响应的线性叠加之后的$M$-DFT变换得到的结果，所以${\mathbf a}_M^{DFT}({\boldsymbol \varphi}_{k})$是一个$M$空间$J_k$稀疏的信号。那么问题就变成了通过接收信号${\boldsymbol p}_{l,k}$ 估计$J_k$稀疏的${\mathbf a}_M^{DFT}({\boldsymbol \varphi}_{k})$。
 
 
 
-
-
-## E. Computational Complexity
-
-### BS到RIS的稀疏性建模
-
-上行链路中，BS的AoA ${\boldsymbol \psi} \triangleq [{\psi}_1,\dots,\psi_L ]\in {\mathbb C}^{L\times 1}$
+ ${\boldsymbol \psi}_k^G \triangleq [{\psi}_1,\dots,\psi_M ]\in {\mathbb C}^{M\times 1}$
 
 
 
+# Algorithm
 
+## A. Reductant DFT
 
+ 从以上的推导可以看出，该问题是一个Spectral Compress Sensing 问题[^1-8]，我们在本文中使用Redundancy DFT提高估计精度。
 
+## B. 
+
+## . Computational Complexity
+
+### 
 
 # Simulation
 
