@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 # 定义函数D_N
 def D_N(N, x):
     
-    return cmath.exp(1j*x*(N+1)/2)*(cmath.sin(N*x/2))/(cmath.sin(x/2))
+    return cmath.exp(1j*x*(N-1)/2)*(cmath.sin((N)*x/2))/(cmath.sin(x/2))
 
 
 M = 16
@@ -58,7 +58,7 @@ D_N_3 = np.array([D_N(M, 2*cmath.pi *(m/M - 2/M + 0.025) ) +D_N(M, 2*cmath.pi *(
 plt.scatter(x, (abs(D_N_3)) )
 # plt.scatter(x, (abs(D_N_3)) )
 
-plt.scatter(x, np.abs(np.array(dftmtx * np.reshape(np.mat(arrayres_M_2),(M,-1)))))
+plt.scatter(x, 4*np.abs(np.array(dftmtx * np.reshape(np.mat(arrayres_M_2+arrayres_M_1),(M,-1)))))
 plt.figure(2)
 DFT_add = np.abs(np.array(
     dftmtx * np.reshape(np.mat(arrayres_M_2),(M,-1)) + dftmtx * np.reshape(np.mat(arrayres_M_1),(M,-1))

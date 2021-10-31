@@ -483,9 +483,33 @@ $$
 \begin{aligned}
 {\boldsymbol p}_l & = {\mathbf \Phi}^H \operatorname{Diag}({\mathbf a}_M(\omega_l)) {\mathbf A}^*_{M,k}{\boldsymbol v}_k^* + \left[\begin{matrix} {\boldsymbol n}_1^H \\ \vdots \\ {\boldsymbol n}_\tau^H \end{matrix} \right]_{:,l} \\
 									& = {\mathbf \Phi}^H \operatorname{Diag}({\mathbf a}_M(\omega_l)) \frac{{\mathbf U}^H_M {\mathbf U}_M}{M} {\mathbf a}_M  ({\boldsymbol \varphi}) + {\mathbf N}_l\\
-									& = {\mathbf \Phi}^H {\mathbf V}({\omega_l}){\mathbf a}_M^{DFT}({\boldsymbol \varphi}) + {\mathbf N}_l
+									& = {\mathbf \Phi}^H {\mathbf V}({\omega_l}){\mathbf a}_M^{DFT}({\boldsymbol \varphi}) + {\mathbf N}_l\\
+									& = {\mathbf \Phi}^H {\mathbf V}({\omega_l}){\mathbf D}_M({\Delta}{\boldsymbol \varphi}) {\boldsymbol x}_l+ {\mathbf N}_l 
 \end{aligned}
 $$
+
+为了将角域信号的稀疏性剥离出来，我们采用一个DTFT矩阵将${\mathbf a}_M^{DFT}({\boldsymbol \varphi})$分解：
+$$
+{\mathbf a}_M^{DFT}({\boldsymbol \varphi})={\mathbf D}_M(\Delta {\boldsymbol \varphi}){\boldsymbol x}_l
+$$
+其中${\mathbf D}_M(\Delta {\boldsymbol \varphi})= [D_M(\Delta \varphi_1),\dots,D_M(\Delta \varphi_M)] \in {\mathbb C}^{M\times M}$
+
+其每一列$D_M(\Delta {\varphi_m})$中的$m^{\prime}$-th元素的值为：
+$$
+D_M(\Delta {\varphi_1},m^{\prime})=\begin{cases}
+\begin{aligned}
+f_M({2\pi}(\frac{m^{\prime}-m} {M}+\Delta\varphi))\ &, \frac{m^{\prime}-1}{M} < 0.5 \\
+f_M({2\pi}(\frac{m^{\prime}-m+M} {M}+\Delta\varphi)) &, \frac{m^{\prime}-1}{M} \geq 0.5
+\end{aligned}
+
+\end{cases}
+$$
+where 
+$$
+f_M(x) = e^{jx(M-1)/2} \frac{\operatorname{sin}(Mx/2)}{\operatorname{sin}(x/2)}
+$$
+
+
 
 
 此时该问题转化为了一个data matrix ${\mathbf V}(\omega_l) $含有未知参数${\omega_l}$的压缩感知问题[^1-4]，测量矩阵${\mathbf \Phi}^H \in {\mathbb C}^{\tau \times M}$可以通过调节不同时刻的RIS相位${\mathbf \Phi}_t$来进行更改，最后需要通过super Sample的${\boldsymbol p}_l \in {\mathbb C}^{\tau \times 1}$来恢复纬度较高的${\mathbf a}_M^{DFT}({\boldsymbol \varphi}) \in {\mathbb C}^{M \times 1}$。
