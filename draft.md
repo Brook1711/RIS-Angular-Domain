@@ -484,13 +484,13 @@ $$
 {\boldsymbol p}_l & = {\mathbf \Phi}^H \operatorname{Diag}({\mathbf a}_M(\omega_l)) {\mathbf A}^*_{M,k}{\boldsymbol v}_k^* + \left[\begin{matrix} {\boldsymbol n}_1^H \\ \vdots \\ {\boldsymbol n}_\tau^H \end{matrix} \right]_{:,l} \\
 									& = {\mathbf \Phi}^H \operatorname{Diag}({\mathbf a}_M(\omega_l)) \frac{{\mathbf U}^H_M {\mathbf U}_M}{M} {\mathbf a}_M  ({\boldsymbol \varphi}) + {\mathbf N}_l\\
 									& = {\mathbf \Phi}^H {\mathbf V}({\omega_l}){\mathbf a}_M^{DFT}({\boldsymbol \varphi}) + {\mathbf N}_l\\
-									& = {\mathbf \Phi}^H {\mathbf V}({\omega_l}){\mathbf D}_M({\Delta}{\boldsymbol \varphi}) {\boldsymbol x}_l+ {\mathbf N}_l 
+									& = {\mathbf \Phi}^H {\mathbf V}({\omega_l}){\mathbf D}_M({\Delta}{\boldsymbol \varphi}) {\boldsymbol x}+ {\mathbf N}_l 
 \end{aligned}
 $$
 
 为了将角域信号的稀疏性剥离出来，我们采用一个DTFT矩阵将${\mathbf a}_M^{DFT}({\boldsymbol \varphi})$分解：
 $$
-{\mathbf a}_M^{DFT}({\boldsymbol \varphi})={\mathbf D}_M(\Delta {\boldsymbol \varphi}){\boldsymbol x}_l
+{\mathbf a}_M^{DFT}({\boldsymbol \varphi})={\mathbf D}_M(\Delta {\boldsymbol \varphi}){\boldsymbol x}
 $$
 其中${\mathbf D}_M(\Delta {\boldsymbol \varphi})= [D_M(\Delta \varphi_1),\dots,D_M(\Delta \varphi_M)] \in {\mathbb C}^{M\times M}$
 
@@ -504,25 +504,32 @@ f_M({2\pi}(\frac{m^{\prime}-m+M} {M}+\Delta\varphi)) &, \frac{m^{\prime}-1}{M} \
 
 \end{cases}
 $$
-where 
+where [^1-8]
 $$
-f_M(x) = e^{jx(M-1)/2} \frac{\operatorname{sin}(Mx/2)}{\operatorname{sin}(x/2)}
+f_M(x) = \frac{1}{\sqrt{M}}e^{jx(M-1)/2} \frac{\operatorname{sin}(Mx/2)}{\operatorname{sin}(x/2)}
 $$
-
-
-
-
 此时该问题转化为了一个data matrix ${\mathbf V}(\omega_l) $含有未知参数${\omega_l}$的压缩感知问题[^1-4]，测量矩阵${\mathbf \Phi}^H \in {\mathbb C}^{\tau \times M}$可以通过调节不同时刻的RIS相位${\mathbf \Phi}_t$来进行更改，最后需要通过super Sample的${\boldsymbol p}_l \in {\mathbb C}^{\tau \times 1}$来恢复纬度较高的${\mathbf a}_M^{DFT}({\boldsymbol \varphi}) \in {\mathbb C}^{M \times 1}$。
 
 注意到，此时的data matrix :${\mathbf V}(\omega_l)={(1/M)} \cdot \operatorname{Diag}({\mathbf a}_M(\omega_l)) \cdot {\mathbf U}_M^H $，${\mathbf V}(\omega_l)^H \cdot  {\mathbf V}(\omega_l) = (1/M)\cdot {\mathbf I}_M$，其每一列正交
 
 对于一个标准CS问题，超采样的个数只需要$M={\mathcal O}(K{\operatorname log}N)$ [^1-8]即可（此时的$M$为超采样个数，K为稀疏个数，N为原信号维度）
 
-
-
-
-
-
+注意到以上有L个${\boldsymbol p}_l$其中所有的未知量${\boldsymbol x}$均为一样的，只有$\omega_l$有L个，显然，对所有${\boldsymbol p}_l$都做一次压缩感知会显著提升计算复杂度，我们在本文中只进行一次压缩感知算法，估计出${\boldsymbol x}$和参数${\Delta \boldsymbol{\varphi}}$以及一个参照AoD ${\omega_r}$，并通过scaling的表示方法和correlation-based算法估计其他$\omega_l,\forall l\in\{1,\dots,L\}$。具体来讲，任意的$\omega_l,l\neq r$ 可以通过已知的$\omega_r$表示为：
+$$
+\omega_l = \omega_r + \Delta \omega_l
+$$
+then
+$$
+\begin{aligned}
+{\boldsymbol p}_l & ={\mathbf \Phi}^H \operatorname{Diag}({\mathbf a}_M(\Delta\omega_l)) \operatorname{Diag}({\mathbf a}_M({\boldsymbol \varphi})) {\mathbf a_M}({\omega_r})+{\mathbf N}_l \\
+				& = {\mathbf \Phi}^H \operatorname{Diag}({\hat{\boldsymbol h}}_r) {\mathbf a}_M(\Delta \omega_l)+{\mathbf N}_l\\
+				& = {\mathbf z}_r(\Delta \omega_l) + {\mathbf N}_l
+\end{aligned}
+$$
+其中，$\hat{\boldsymbol h}_r$为使用压缩感知得到的估计值，那么我们就可以用简单的correlation-based scheme 来估计$\omega_l$:
+$$
+\Delta\hat{\omega}_l=\text{arg} \max_{\Delta \omega \in [-1, 1]} \abs{\langle {\boldsymbol p}_l,{\boldsymbol z}_r(\Delta \omega) \rangle}
+$$
 
 > 最后经过处理的接收信号可以写为：
 > $$
@@ -573,9 +580,9 @@ $$
 
 
 
-# Algorithm
+# Turbo-VBI-EM
 
-## A. Reductant DFT
+## A. 
 
  从以上的推导可以看出，该问题是一个Spectral Compress Sensing 问题[^1-8]，我们在本文中使用Redundancy DFT提高估计精度。
 

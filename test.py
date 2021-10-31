@@ -8,11 +8,14 @@ import matplotlib.pyplot as plt
 
 # 定义函数D_N
 def D_N(N, x):
-    
-    return cmath.exp(1j*x*(N-1)/2)*(cmath.sin((N)*x/2))/(cmath.sin(x/2))
+    if abs(x) == 0:
+        return N
+    else:
+        return cmath.exp(1j*x*(N-1)/2)*(cmath.sin((N)*x/2))/(cmath.sin(x/2))
 
 
 M = 16
+sqrt_M = np.sqrt(M)
 x = np.array(range(M))
 varphi_list = [-0.1,0.1]
 varphi_all_grid = [(m+1 -1)/M - 0.5 for m in range(M)]
@@ -29,9 +32,9 @@ for i, varphi in enumerate(varphi_list):
             varphi_info[i]["offGrid"] = varphiGrid - varphi
 print(varphi_info)
 
-varphi_support_array = [1 if m in [varphi["gridIndex"] for varphi in varphi_info] else 0 for m in range(M)]
+varphi_support_array = np.array([1 if m in [varphi["gridIndex"] for varphi in varphi_info] else 0 for m in range(M)])
 print(varphi_support_array)
-
+varphi_support_matrix = np.mat(varphi_support_array.reshape((M,1)))
 arrayres_M_1 = np.exp(1j*2*np.pi*x*varphi_list[0])/np.power(M,1/2)
 arrayres_M_2 = np.exp(1j*2*np.pi*x*varphi_list[1])/np.power(M,1/2)
 
@@ -49,26 +52,22 @@ DFT2 = dftmtx * np.reshape(np.mat(arrayres_M_2),(M,-1))
 D_N_1 = np.array([(D_N(M, 2*cmath.pi *(m/M - 2/M + 0.025) )) for m in range(M)])
 D_N_2 = np.array([(D_N(M, 2*cmath.pi *(m/M - 14/M + 1 - 0.025) )) for m in range(M)])
 D_N_3 = np.array([D_N(M, 2*cmath.pi *(m/M - 2/M + 0.025) ) +D_N(M, 2*cmath.pi *(m/M - 14/M + 1 - 0.025) ) for m in range(M)])
-# print((D_N_1+D_N_2)[0] / np.abs(np.array(dftmtx * np.reshape(np.mat(sum_array),(M,-1))))[0])
-# print((D_N_1+D_N_2)[1] / np.abs(np.array(dftmtx * np.reshape(np.mat(sum_array),(M,-1))))[1])
-# plt.figure(2)
-# D_N_1 = np.array([abs(D_N(M, 2*cmath.pi * (m - M*0.1)/M )) for m in range(M)])
 
+Delta_varphi = [0 for m in range(M)]
+for varphi_info_i in varphi_info:
+    Delta_varphi[int(varphi_info_i['gridIndex'])] = varphi_info_i['offGrid']
 
+def generate_DM(Delta_varphi):
+    M_ = len(Delta_varphi)
+    DM = np.matrix([np.complex128(0) for m in range(M_ * M_)]).reshape((M_,M_))
+    for col in range(M_):
+        if col/M <0.5:
+            DM[:,col] = np.array([(D_N(M_, 2*cmath.pi *(m/M_ - col/M_ + Delta_varphi[col]) )) for m in range(M_)]).reshape(M_,1)
+        else:
+            DM[:,col] = np.array([(D_N(M_, 2*cmath.pi *(m/M_ - col/M_ + 1 + Delta_varphi[col]) )) for m in range(M_)]).reshape(M_,1)
+    return DM
+
+D_M = generate_DM(Delta_varphi)
 plt.scatter(x, (abs(D_N_3)) )
-# plt.scatter(x, (abs(D_N_3)) )
-
 plt.scatter(x, 4*np.abs(np.array(dftmtx * np.reshape(np.mat(arrayres_M_2+arrayres_M_1),(M,-1)))))
-plt.figure(2)
-DFT_add = np.abs(np.array(
-    dftmtx * np.reshape(np.mat(arrayres_M_2),(M,-1)) + dftmtx * np.reshape(np.mat(arrayres_M_1),(M,-1))
-    ))
-add_DFT = np.abs(np.array(
-    dftmtx * (np.reshape(np.mat(arrayres_M_2),(M,-1)) + np.reshape(np.mat(arrayres_M_1),(M,-1)))
-    ))
-plt.scatter(x, DFT_add)
-plt.scatter(x, add_DFT *0.5)
-
-plt.figure(3)
-plt.scatter(x, (abs(D_N_1)) )
-plt.scatter(x, 4*abs(np.array(DFT2)))
+plt.scatter(x, np.abs(np.array(D_M * varphi_support_matrix)))
