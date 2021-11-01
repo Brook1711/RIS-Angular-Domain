@@ -570,17 +570,22 @@ $$
 
 由上面的推导可知，对于第k个用户，上行BS接收到的信号
 $$
-{\boldsymbol p}_{l,k} = {\mathbf \Phi}^H {\mathbf V}({\omega_l}){\mathbf a}_M^{DFT}({\boldsymbol \varphi}_{k}) + {\mathbf N}_l\ ,\forall l \in \{1,\dots,L\}
+{\boldsymbol p}_{l,k} = {\mathbf \Phi}^H {\mathbf V}({\omega_l}){\mathbf D}_M({\Delta}{\boldsymbol \varphi}_k) {\boldsymbol x}_k
++ {\mathbf N}_l ,\forall l \in \{1,\dots,L\}
 $$
-由于${\mathbf a}_M^{DFT}({\boldsymbol \varphi}_{k})$ 是$J_k$个$M$-ULA阵列响应的线性叠加之后的$M$-DFT变换得到的结果，所以${\mathbf a}_M^{DFT}({\boldsymbol \varphi}_{k})$是一个$M$空间$J_k$稀疏的信号。那么问题就变成了通过接收信号${\boldsymbol p}_{l,k}$ 估计$J_k$稀疏的${\mathbf a}_M^{DFT}({\boldsymbol \varphi}_{k})$。
+由于${\mathbf a}_M^{DFT}({\boldsymbol \varphi}_{k})$ 是$J_k$个$M$-ULA阵列响应的线性叠加之后的$M$-DFT变换得到的结果，并且我们通过增加${\mathbf D}_M(\Delta {\boldsymbol \varphi}) \in {\mathbb C}^{M\times M}$ 将DTFT的结果中的旁瓣剥离，所以最终${\boldsymbol x}_k$是一个$M$空间$J_k$稀疏的信号。那么问题就变成了通过接收信号${\boldsymbol p}_{l,k}$ 估计$J_k$稀疏的${\boldsymbol x}_{k}$。需要注意的是Data矩阵中包含未知参数${\Delta {\boldsymbol \varphi}}_k \triangleq \{ \Delta{\varphi }_{k,1},\dots, \Delta{\varphi }_{k,M}\}$。注意到由于${\boldsymbol x}_k$的$J_k$-稀疏性，${\Delta{\boldsymbol \varphi}}_k$中只有$\{\Delta \varphi_{k,m}|m=1,\dots,J_k \}$会起作用，但是在算法中所有$M$个${\Delta {\boldsymbol \varphi}}_k$中的元素会一起进行处理。
+
+为了进一步降低算法的时间开销，我们可以利用${\boldsymbol x}_k$中的结构稀疏性提供的额外的先验信息[^1-8]对${\boldsymbol x}_k$中的子空间进行降维[^1-4][^1-1][^1-2][^1-3]。
 
 
 
- ${\boldsymbol \psi}_k^G \triangleq [{\psi}_1,\dots,\psi_M ]\in {\mathbb C}^{M\times 1}$
+ 
 
 
 
 # Turbo-VBI-EM
+
+
 
 ## A. 
 
