@@ -506,7 +506,7 @@ f_M({2\pi}(\frac{m^{\prime}-m+M} {M}+\Delta\varphi)) &, \frac{m^{\prime}-1}{M} \
 $$
 where [^1-8]
 $$
-f_M(x) = \frac{1}{\sqrt{M}}e^{jx(M-1)/2} \frac{\operatorname{sin}(Mx/2)}{\operatorname{sin}(x/2)}
+f_M(x) = \frac{1}{\sqrt{M}}e^{jx(M-1)/2} \frac{\operatorname{sin}(Mx/2)}{\operatorname{sin}(x/2)}
 $$
 此时该问题转化为了一个data matrix ${\mathbf V}(\omega_l) $含有未知参数${\omega_l}$的压缩感知问题[^1-4]，测量矩阵${\mathbf \Phi}^H \in {\mathbb C}^{\tau \times M}$可以通过调节不同时刻的RIS相位${\mathbf \Phi}_t$来进行更改，最后需要通过super Sample的${\boldsymbol p}_l \in {\mathbb C}^{\tau \times 1}$来恢复纬度较高的${\mathbf a}_M^{DFT}({\boldsymbol \varphi}) \in {\mathbb C}^{M \times 1}$。
 
@@ -531,6 +531,8 @@ $$
 \Delta\hat{\omega}_l=\text{arg} \max_{\Delta \omega \in [-1, 1]} \abs{\langle {\boldsymbol p}_l,{\boldsymbol z}_r(\Delta \omega) \rangle}
 $$
 
+> 
+>
 > 最后经过处理的接收信号可以写为：
 > $$
 > \begin{aligned}
@@ -587,11 +589,65 @@ $$
 
 
 
-## A. 
+## A. M-step
 
  从以上的推导可以看出，该问题是一个Spectral Compress Sensing 问题[^1-8]，我们在本文中使用Redundancy DFT提高估计精度。
+$$
+\begin{aligned}
+u(\boldsymbol{\xi} ; \dot{\boldsymbol{\xi}}) & \leq \ln p(\boldsymbol{p}, \dot{\boldsymbol{\xi}}), \quad \forall \boldsymbol{\xi} \\
+u(\dot{\boldsymbol{\xi}} ; \dot{\boldsymbol{\xi}}) &=\ln p(\boldsymbol{p}, \dot{\boldsymbol{\xi}}) \\
+\left.\frac{\partial u(\boldsymbol{\xi} ; \dot{\boldsymbol{\xi}})}{\partial \boldsymbol{\xi}}\right|_{\boldsymbol{\xi}=\dot{\boldsymbol{\xi}}} &=\left.\frac{\partial \ln p(\boldsymbol{p}, \boldsymbol{\xi})}{\partial \boldsymbol{\xi}}\right|_{\boldsymbol{\xi}=\dot{\boldsymbol{\xi}}}
+\end{aligned}
+$$
 
-## B. 
+$$
+\boldsymbol{\xi}_{j}^{(i+1)}=\underset{\boldsymbol{\xi}_{j}}{\operatorname{argmax}} u\left(\boldsymbol{\xi}_{j}, \boldsymbol{\xi}_{-j}^{(i)} ; \boldsymbol{\xi}_{j}^{(i)}, \boldsymbol{\xi}_{-j}^{(i)}\right)
+$$
+
+$$
+\boldsymbol{\xi}_{j}^{(i+1)}=\boldsymbol{\xi}_{j}^{(i)}+\left.\gamma^{(i)} \frac{\partial u\left(\boldsymbol{\xi}_{j}, \boldsymbol{\xi}_{-j}^{(i)} ; \boldsymbol{\xi}_{j}^{(i)}, \boldsymbol{\xi}_{-j}^{(i)}\right)}{\partial \boldsymbol{\xi}_{j}}\right|_{\boldsymbol{\xi}_{j}=\boldsymbol{\xi}_{j}^{(i)}}
+$$
+
+
+代理函数设计：
+$$
+u(\boldsymbol{\xi} ; \dot{\boldsymbol{\xi}})=u^{\mathrm{EM}}(\boldsymbol{\xi} ; \dot{\boldsymbol{\xi}})+\sum_{j \in \mathcal{J}_{c}^{1}} \tau_{j}\left\|\boldsymbol{\xi}_{j}-\dot{\boldsymbol{\xi}}_{j}\right\|^{2}
+$$
+其中，$u^{\mathrm{EM}}(\boldsymbol{\xi} ; \dot{\boldsymbol{\xi}})=\int p(\boldsymbol{v} \mid \boldsymbol{p}, \dot{\boldsymbol{\xi}}) \ln \frac{p(\boldsymbol{v}, \boldsymbol{p}, \boldsymbol{\xi})}{p(\boldsymbol{v} \mid \boldsymbol{p}, \dot{\boldsymbol{\xi}})} d \boldsymbol{v}$
+
+定义$p(\boldsymbol{x} \mid \boldsymbol{p}, \hat{\boldsymbol{\xi}}) \approx q(\boldsymbol{x} ; \hat{\boldsymbol{\xi}}) \text { and } p\left(s_{i} \mid \boldsymbol{p}, \hat{\boldsymbol{\xi}}\right) \approx q\left(s_{i} ; \hat{\boldsymbol{\xi}}\right)$
+
+
+
+## B. E-step
+
+定义近似的先验信息：
+$$
+\begin{aligned}
+\hat{p}(\boldsymbol{x}, \boldsymbol{\rho}, \boldsymbol{s}) &=\hat{p}(\boldsymbol{s}) p(\boldsymbol{\rho} \mid \boldsymbol{s}) p(\boldsymbol{x} \mid \boldsymbol{\rho}) \\
+\hat{p}(\boldsymbol{s}) &=\prod\left(\pi_{i}\right)^{s_{i}}\left(1-\pi_{i}\right)^{1-s_{i}}
+\end{aligned}
+$$
+
+$$
+\mathscr{A}_{\mathrm{VBI}}: q^{*}(\boldsymbol{v} ; \boldsymbol{\xi})=\arg \min _{q(\boldsymbol{v} ; \boldsymbol{\xi})} \int q(\boldsymbol{v} ; \boldsymbol{\xi}) \ln \frac{q(\boldsymbol{v} ; \boldsymbol{\xi})}{\hat{p}(\boldsymbol{v} \mid \boldsymbol{p}, \boldsymbol{\xi})} d \boldsymbol{v}
+$$
+definition 1 (stationary solution): $q^{*}(\boldsymbol{v})=\prod_{k \in \mathcal{H}} q^{*}\left(\boldsymbol{v}^{k}\right)$
+$$
+\begin{aligned}
+&q^{*}\left(\boldsymbol{v}^{k}\right) \\
+&\quad=\arg \min _{q\left(\boldsymbol{v}^{k}\right)} \int \prod_{l \neq k} q^{*}\left(\boldsymbol{v}^{l}\right) q\left(\boldsymbol{v}^{k}\right) \ln \frac{\prod_{l \neq k} q^{*}\left(\boldsymbol{v}^{l}\right) q\left(\boldsymbol{v}^{k}\right)}{\hat{p}(\boldsymbol{v} \mid \boldsymbol{p}, \boldsymbol{\xi})}
+\end{aligned}
+$$
+$\langle f(x)\rangle_{q(x)}=\int f(x) q(x) d x$ 
+
+ 
+
+Initialization of Sparse VBI: 
+
+
+
+
 
 ## . Computational Complexity
 
