@@ -76,8 +76,8 @@ class Evn():
         self.channel_init()
     
     def channel_init(self):
-        p10 = 0.8
-        p01 = 0.2
+        p10 = 0.3
+        p01 = 0.1
         p0 = p10/(p10+p01)
         p1 = 1-p0
 
@@ -99,6 +99,7 @@ class Evn():
         plt.scatter(range(self.RIS.ant_num), tmp_support_omega)
         plt.plot(range(self.RIS.ant_num), tmp_support_omega)
         plt.show()
+        print(0)
 #%%
 E0 = Evn()
 # %%
