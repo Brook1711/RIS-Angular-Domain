@@ -206,6 +206,11 @@ $$
 $$
 此时${\mathbf A}_N^D$每一列仅有一个非零元素，并且$n_l,\psi_l^g$之间的映射关系为：
 $$
+
+{\psi}_l^g=\frac{n_l-1}{N}-0.5
+$$
+
+$$
 \psi_l^g = 
 \begin{cases}
 \frac{n_l-1}{N}\quad &,\frac{n_l-1}{N} < 0.5 \\
@@ -213,6 +218,12 @@ $$
 \end{cases}
 $$
 同时由于是一一映射，也可以反过来写为：
+$$
+n_l = N(\psi^g_l+0.5)+1
+$$
+
+
+
 $$
 n_l=
 \begin{cases}
