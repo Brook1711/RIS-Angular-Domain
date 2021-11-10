@@ -506,6 +506,22 @@ $$
 
 其每一列$D_M(\Delta {\varphi_m})$中的$m^{\prime}$-th元素的值为：
 $$
+D_M(\Delta {\varphi_1},m^{\prime})=
+f_M({2\pi}(\frac{m^{\prime}-m} {M}+0.5+\Delta\varphi))\ 
+$$
+
+$$
+D_M(\Delta {\varphi_1},m^{\prime})=\begin{cases}
+\begin{aligned}
+f_M({2\pi}(\frac{m^{\prime}-m} {M} - 1+\Delta\varphi))\ &, \frac{m^{\prime}-1}{M} < 0.5 \\
+f_M({2\pi}(\frac{m^{\prime}-m} {M}+\Delta\varphi)) &, \frac{m^{\prime}-1}{M} \geq 0.5
+\end{aligned}
+
+\end{cases}
+$$
+
+
+$$
 D_M(\Delta {\varphi_1},m^{\prime})=\begin{cases}
 \begin{aligned}
 f_M({2\pi}(\frac{m^{\prime}-m} {M}+\Delta\varphi))\ &, \frac{m^{\prime}-1}{M} < 0.5 \\
@@ -642,7 +658,15 @@ $$
 $$
 \mathscr{A}_{\mathrm{VBI}}: q^{*}(\boldsymbol{v} ; \boldsymbol{\xi})=\arg \min _{q(\boldsymbol{v} ; \boldsymbol{\xi})} \int q(\boldsymbol{v} ; \boldsymbol{\xi}) \ln \frac{q(\boldsymbol{v} ; \boldsymbol{\xi})}{\hat{p}(\boldsymbol{v} \mid \boldsymbol{p}, \boldsymbol{\xi})} d \boldsymbol{v}
 $$
+
+
+
+
 definition 1 (stationary solution): $q^{*}(\boldsymbol{v})=\prod_{k \in \mathcal{H}} q^{*}\left(\boldsymbol{v}^{k}\right)$
+
+
+
+
 $$
 \begin{aligned}
 &q^{*}\left(\boldsymbol{v}^{k}\right) \\
