@@ -507,7 +507,7 @@ $$
 其每一列$D_M(\Delta {\varphi_m})$中的$m^{\prime}$-th元素的值为：
 $$
 D_M(\Delta {\varphi_1},m^{\prime})=
-f_M({2\pi}(\frac{m^{\prime}-m} {M}+0.5+\Delta\varphi))\ 
+f_M({2\pi}(\frac{m^{\prime}-m} {M}+0.5+\Delta\varphi))\
 $$
 
 $$
