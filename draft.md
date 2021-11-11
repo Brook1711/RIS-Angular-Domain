@@ -643,6 +643,15 @@ $$
 
 定义$p(\boldsymbol{x} \mid \boldsymbol{p}, \hat{\boldsymbol{\xi}}) \approx q(\boldsymbol{x} ; \hat{\boldsymbol{\xi}}) \text { and } p\left(s_{i} \mid \boldsymbol{p}, \hat{\boldsymbol{\xi}}\right) \approx q\left(s_{i} ; \hat{\boldsymbol{\xi}}\right)$
 
+其中，后验概率采用VBI近似，同时，联合概率${p(\boldsymbol{v}, \boldsymbol{p}, \boldsymbol{\xi})}$有以下表达形式：
+$$
+\begin{aligned}
+p({\boldsymbol y}, {\boldsymbol p};{\boldsymbol \xi}) & = p({\boldsymbol p}, {\boldsymbol x}, {\boldsymbol \gamma}, {\boldsymbol s}, {\boldsymbol c},{\boldsymbol \kappa})\\
+	&=p({\boldsymbol p} | {\boldsymbol x, \boldsymbol \kappa};{\boldsymbol \xi})p({\boldsymbol x} | {\boldsymbol \gamma}) p({\boldsymbol \kappa})p({\boldsymbol \gamma}|{\boldsymbol s})p({\boldsymbol c}, {\boldsymbol s};{\boldsymbol \xi})\\
+	&=\underbrace{p({\boldsymbol x} | {\boldsymbol \gamma}) p({\boldsymbol \kappa})p({\boldsymbol \gamma}|{\boldsymbol s})}_{\text{known distribution}} \ \ \underbrace{p({\boldsymbol p} | {\boldsymbol x, \boldsymbol \kappa};{\boldsymbol \xi})p({\boldsymbol c}, {\boldsymbol s};{\boldsymbol \xi})}_{\text{with unknown valuables}}
+
+\end{aligned}
+$$
 
 
 ## B. E-step
@@ -659,7 +668,7 @@ $$
 \mathscr{A}_{\mathrm{VBI}}: q^{*}(\boldsymbol{v} ; \boldsymbol{\xi})=\arg \min _{q(\boldsymbol{v} ; \boldsymbol{\xi})} \int q(\boldsymbol{v} ; \boldsymbol{\xi}) \ln \frac{q(\boldsymbol{v} ; \boldsymbol{\xi})}{\hat{p}(\boldsymbol{v} \mid \boldsymbol{p}, \boldsymbol{\xi})} d \boldsymbol{v}
 $$
 
-
+ 
 
 
 definition 1 (stationary solution): $q^{*}(\boldsymbol{v})=\prod_{k \in \mathcal{H}} q^{*}\left(\boldsymbol{v}^{k}\right)$
