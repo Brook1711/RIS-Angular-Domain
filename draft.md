@@ -492,7 +492,7 @@ $$
 $$
 \begin{aligned}
 {\boldsymbol p}_l & = {\mathbf \Phi}^H \operatorname{Diag}({\mathbf a}_M(\omega_l)) {\mathbf A}^*_{M,k}{\boldsymbol v}_k^* + \left[\begin{matrix} {\boldsymbol n}_1^H \\ \vdots \\ {\boldsymbol n}_\tau^H \end{matrix} \right]_{:,l} \\
-									& = {\mathbf \Phi}^H \operatorname{Diag}({\mathbf a}_M(\omega_l)) {{\mathbf U}^H_M {\mathbf U}_M} {\mathbf a}_M  ({\boldsymbol \varphi}) + {\mathbf N}_l\\
+									& = {\mathbf \Phi}^H \operatorname{Diag}({\mathbf a}_M(\omega_l)) \frac{{\mathbf U}^H_M {\mathbf U}_M}{M} {\mathbf a}_M  ({\boldsymbol \varphi}) + {\mathbf N}_l\\
 									& = {\mathbf \Phi}^H {\mathbf V}({\omega_l}){\mathbf a}_M^{DFT}({\boldsymbol \varphi}) + {\mathbf N}_l\\
 									& = {\mathbf \Phi}^H {\mathbf V}({\omega_l}){\mathbf D}_M({\Delta}{\boldsymbol \varphi}) {\boldsymbol x}+ {\mathbf N}_l 
 \end{aligned}
@@ -675,9 +675,7 @@ $$
 $$
 $\langle f(x)\rangle_{q(x)}=\int f(x) q(x) d x$ 
 
- 
-
-Initialization of Sparse VBI: 
+ Initialization of Sparse VBI: 
 
 
 
