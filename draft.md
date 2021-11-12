@@ -601,13 +601,54 @@ $$
 {\boldsymbol p}_{l,k} = {\mathbf \Phi}^H {\mathbf V}({\omega_l}){\mathbf D}_M({\Delta}{\boldsymbol \varphi}_k) {\boldsymbol x}_k
 + {\mathbf N}_l ,\forall l \in \{1,\dots,L\}
 $$
+
+$$
+{\boldsymbol p}_k = 
+\left[
+\begin{matrix}
+\mathbf{\Phi}^{H} \mathbf{V}\left(\omega_{1}\right) \mathbf{D}_{M}\left(\Delta \boldsymbol{\varphi}_{k}\right) \\
+ \vdots \\
+ \mathbf{\Phi}^{H} \mathbf{V}\left(\omega_{L}\right) \mathbf{D}_{M}\left(\Delta \boldsymbol{\varphi}_{k}\right)
+\end{matrix}
+\right]_{\tau \times M}{\boldsymbol x}_k+{\mathbf N}_k
+={\mathbf F}_k {\boldsymbol x}_k+{\mathbf N}_k
+$$
+${\boldsymbol p}=[{\boldsymbol p}_1^T,\dots,{\boldsymbol p}_K^T]^T$
+
+ ${\boldsymbol x}=[{\boldsymbol x}_1^T,\dots,{\boldsymbol x}_K^T]^T$
+
+由信号表达式可以得出信号${\boldsymbol p}_k$的概率分布：
+$$
+p({\boldsymbol p_k \mid {\boldsymbol x}_{k} ; {\boldsymbol \xi}})=CN({\boldsymbol p}_k;{\mathbf F}_k{\boldsymbol x}_k, \operatorname{Diag}({\boldsymbol \kappa}_k)^{-1})
+$$
+
+$$
+p({\boldsymbol p} \mid {\boldsymbol x};{\boldsymbol \xi})=\prod_k^Kp({\boldsymbol p_k \mid {\boldsymbol x}_{k} ; {\boldsymbol \xi}})
+$$
+
+
+
 由于${\mathbf a}_M^{DFT}({\boldsymbol \varphi}_{k})$ 是$J_k$个$M$-ULA阵列响应的线性叠加之后的$M$-DFT变换得到的结果，并且我们通过增加${\mathbf D}_M(\Delta {\boldsymbol \varphi}) \in {\mathbb C}^{M\times M}$ 将DTFT的结果中的旁瓣剥离，所以最终${\boldsymbol x}_k$是一个$M$空间$J_k$稀疏的信号。那么问题就变成了通过接收信号${\boldsymbol p}_{l,k}$ 估计$J_k$稀疏的${\boldsymbol x}_{k}$。需要注意的是Data矩阵中包含未知参数${\Delta {\boldsymbol \varphi}}_k \triangleq \{ \Delta{\varphi }_{k,1},\dots, \Delta{\varphi }_{k,M}\}$。注意到由于${\boldsymbol x}_k$的$J_k$-稀疏性，${\Delta{\boldsymbol \varphi}}_k$中只有$\{\Delta \varphi_{k,m}|m=1,\dots,J_k \}$会起作用，但是在算法中所有$M$个${\Delta {\boldsymbol \varphi}}_k$中的元素会一起进行处理。
 
 为了进一步降低算法的时间开销，我们可以利用${\boldsymbol x}_k$中的结构稀疏性提供的额外的先验信息[^1-8]对${\boldsymbol x}_k$中的子空间进行降维[^1-4][^1-1][^1-2][^1-3]。
 
+这里我们采用HMM信道建模[^1-4] [^1-5] :
+$$
+\begin{aligned}
+p(\boldsymbol{x} \mid \boldsymbol{\gamma})&=\prod_k^K\prod_m^Mp(x_{k,m} \mid \gamma_{k,m})
 
+\end{aligned}
+$$
 
- 
+其中，${\boldsymbol \gamma}$为信道精度，$p(x_{k,m} \mid \gamma_{k,m})=CN(x_{k,m};0;\gamma_{k,m}^{-1})$
+$$
+p({\boldsymbol \gamma} \mid {\boldsymbol s}) = \prod_k^K\prod_m^M p(\gamma_{k,m} \mid s_{k,m})
+$$
+其中，${\boldsymbol s}$ 为channel support：$p(\gamma_{k,m} \mid s_{k,m})= \Gamma(\gamma_{k,m};a_{k},b_{k})^{s_{k,m}}\Gamma(\gamma_{k,m};\overline{a}_{k},\overline{b}_{k})^{1-s_{k,m}}$ 
+
+当$s_{k,m}$为1时，$\frac{a_{k}}{b_{k}}=E[\gamma_{k,m}]=PL_{k}^{-1}$,其中$PL_k$为RIS-User k的LoS链路的路损。$\overline{a}_{k,m},\overline{b}_{k,m}$
+
+需要满足：$\frac{\overline{a}_{k,m}}{\overline{b}_{k,m}}=E[\gamma_{k,m}] \gg 1$  
 
 
 
@@ -642,32 +683,25 @@ $$
 其中，
 $$
 \begin{aligned}
-u^{\mathrm{EM}}(\boldsymbol{\xi} ; \dot{\boldsymbol{\xi}})&=\int p(\boldsymbol{v} \mid \boldsymbol{p}, \dot{\boldsymbol{\xi}}) \ln \frac{p(\boldsymbol{v}, \boldsymbol{p}, \boldsymbol{\xi})}{p(\boldsymbol{v} \mid \boldsymbol{p}, \dot{\boldsymbol{\xi}})} d \boldsymbol{v} \\
-	&\approx \int q(\boldsymbol{v} ; \dot{\boldsymbol{\xi}}) \ln \frac{p(\boldsymbol{v}, \boldsymbol{p}, \boldsymbol{\xi})}{q(\boldsymbol{v} ; \dot{\boldsymbol{\xi}})} d \boldsymbol{v}
+u^{\mathrm{EM}}(\boldsymbol{\xi} ; \dot{\boldsymbol{\xi}})&=\int p(\boldsymbol{v} \mid \boldsymbol{p}; \dot{\boldsymbol{\xi}}) \ln \frac{p(\boldsymbol{v}, \boldsymbol{p}; \boldsymbol{\xi})}{p(\boldsymbol{v} \mid \boldsymbol{p}; \dot{\boldsymbol{\xi}})} d \boldsymbol{v} \\
+	&\approx \int q(\boldsymbol{v} ; \dot{\boldsymbol{\xi}}) \ln \frac{p(\boldsymbol{v}, \boldsymbol{p}; \boldsymbol{\xi})}{q(\boldsymbol{v} ; \dot{\boldsymbol{\xi}})} d \boldsymbol{v}
 	
 \end{aligned}
 $$
 
 
-定义$p(\boldsymbol{x} \mid \boldsymbol{p}, \hat{\boldsymbol{\xi}}) \approx q(\boldsymbol{x} ; \hat{\boldsymbol{\xi}}) \text { and } p\left(s_{i} \mid \boldsymbol{p}, \hat{\boldsymbol{\xi}}\right) \approx q\left(s_{i} ; \hat{\boldsymbol{\xi}}\right)$
+定义$p(\boldsymbol{x} \mid \boldsymbol{p}; \hat{\boldsymbol{\xi}}) \approx q(\boldsymbol{x} ; \hat{\boldsymbol{\xi}}) \text { and } p\left(s_{i} \mid \boldsymbol{p}, \hat{\boldsymbol{\xi}}\right) \approx q\left(s_{i} ; \hat{\boldsymbol{\xi}}\right)$
 
 其中，后验概率采用VBI近似，同时，联合概率${p(\boldsymbol{v}, \boldsymbol{p}, \boldsymbol{\xi})}$有以下表达形式：
 $$
 \begin{aligned}
-p({\boldsymbol y}, {\boldsymbol p};{\boldsymbol \xi}) & = p({\boldsymbol p}, {\boldsymbol x}, {\boldsymbol \gamma}, {\boldsymbol s}, {\boldsymbol c},{\boldsymbol \kappa})\\
+p({\boldsymbol v}, {\boldsymbol p};{\boldsymbol \xi}) & = p({\boldsymbol p}, {\boldsymbol x}, {\boldsymbol \gamma}, {\boldsymbol s}, {\boldsymbol c},{\boldsymbol \kappa})\\
 	&=p({\boldsymbol p} | {\boldsymbol x, \boldsymbol \kappa};{\boldsymbol \xi})p({\boldsymbol x} | {\boldsymbol \gamma}) p({\boldsymbol \kappa})p({\boldsymbol \gamma}|{\boldsymbol s})p({\boldsymbol c}, {\boldsymbol s};{\boldsymbol \xi})\\
 	&=\underbrace{p({\boldsymbol x} | {\boldsymbol \gamma}) p({\boldsymbol \kappa})p({\boldsymbol \gamma}|{\boldsymbol s})}_{\text{known distribution}} \ \ \underbrace{p({\boldsymbol p} | {\boldsymbol x, \boldsymbol \kappa};{\boldsymbol \xi})p({\boldsymbol c}, {\boldsymbol s};{\boldsymbol \xi})}_{\text{with unknown valuables}}
 
 \end{aligned}
 $$
 
-这里我们采用HMM信道建模[^1-4] [^1-5] :
-$$
-\begin{aligned}
-p(\boldsymbol{x} \mid \boldsymbol{\gamma})&=
-
-\end{aligned}
-$$
 
 
 ## B. E-step
