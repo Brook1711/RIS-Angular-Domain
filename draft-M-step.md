@@ -76,14 +76,17 @@ $$
 \frac{\partial}{\partial \omega_l} \operatorname{ln}p({\boldsymbol y} \mid {\boldsymbol x},{\boldsymbol \kappa}; {\omega_l }, {\boldsymbol \xi}_{1,-\omega_l}^{(i)}) &= \frac{\partial}{\partial \omega_l}\sum_{k=1}^{K}\sum_{l=1}^{L}\sum_{t=1}^{\tau}\operatorname{ln}\big [\mathcal{ CN}(y_{k,l,t};{\mathbf F}_{k,l,t}{\boldsymbol x}_k, { \kappa_{k,t}^{-1}}) \big] \\
 
  &= \frac{\partial}{\partial \omega_l}\sum_{k=1}^{K}\sum_{t=1}^{\tau}\operatorname{ln}\big [\mathcal{ CN}(y_{k,l,t};{\mathbf F}_{k,l,t}{\boldsymbol x}_k, { \kappa_{k,t}^{-1}}) \big] \\
+ &=\sum_{k=1}^{K}\sum_{t=1}^{\tau} \frac{\partial}{\partial \omega_l} \operatorname{ln}\big [\mathcal{ CN}(y_{k,l,t};{\mathbf F}_{k,l,t}{\boldsymbol x}_k, { \kappa_{k,t}^{-1}}) \big] \\
+ &=\sum_{k=1}^{K}\sum_{t=1}^{\tau} \frac{\partial}{\partial ({\mathbf F}_{k,l,t} {\boldsymbol x}_k)} \operatorname{ln}\big [\mathcal{ CN}(y_{k,l,t};{\mathbf F}_{k,l,t}{\boldsymbol x}_k, { \kappa_{k,t}^{-1}}) \big] \frac{\partial}{\partial \omega_l}\left({\mathbf F}_{k,l,t} {\boldsymbol x}_k \right)
  
 \end{aligned}
 $$
 接下来将被求和项目展开，其中
 $$
 \begin{aligned}
-{\mathbf F}_{k,l,t}& =\Big [{\mathbf \Phi}^H {\mathbf V}(\omega_l){\mathbf D}_M(\Delta {\boldsymbol \varphi}) \Big]_{t,:} \\
-	&=\Big [{\mathbf \Phi}^H  \Big]_{t,:}{\mathbf V}(\omega_l){\mathbf D}_M(\Delta {\boldsymbol \varphi})\\
+{\mathbf F}_{k,l,t}{\boldsymbol x}_k& =\Big [{\mathbf \Phi}^H {\mathbf V}(\omega_l){\mathbf D}_M(\Delta {\boldsymbol \varphi}) \Big]_{t,:} {\boldsymbol x}_k\\
+
+	&=\Big [{\mathbf \Phi}^H  \Big]_{t,:}{\mathbf V}(\omega_l){\mathbf D}_M(\Delta {\boldsymbol \varphi}){\boldsymbol x}_k\\
 	& = \left[
 	\begin{matrix}
 	e^{j \vartheta_{t,1}} & \cdots & e^{j \vartheta_{t,M}}
@@ -96,10 +99,24 @@ $$
 	\vdots \\ 
 	{\mathbf a}_M(\omega_l)_M [{\mathbf U}_M]_{M,:}
 	\end{matrix}
-	\right] {\mathbf D}_M(\Delta {\boldsymbol \varphi}) \\
-	&=\sum_{m=1}^M e^{j \vartheta_{t,m}}{\mathbf{a}_M(\omega_l)_m[{\mathbf U}_M]_{m,:}} {\mathbf D}_M(\Delta {\boldsymbol \varphi})
-
+	\right] {\mathbf D}_M(\Delta {\boldsymbol \varphi}){\boldsymbol x}_k \\
+	&=\sum_{m=1}^M e^{j \vartheta_{t,m}}{\mathbf{a}_M(\omega_l)_m[{\mathbf U}_M]_{m,:}} {\mathbf D}_M(\Delta {\boldsymbol \varphi}){\boldsymbol x}_k\\
+	&=\sum_{m=1}^M e^{j \vartheta_{t,m}}e^{-j2\pi(M-1)\omega_l}[{\mathbf U}_M]_{m,:} {\mathbf D}_M(\Delta {\boldsymbol \varphi}){\boldsymbol x}_k\\
+\frac{\partial}{\partial \omega_l} {\mathbf F}_{k,l,t}{\boldsymbol x}_k &=\sum_{m=1}^M e^{j \vartheta_{t,m}}\frac{\partial}{\partial \omega_l}(e^{-j2\pi(M-1)\omega_l})[{\mathbf U}_M]_{m,:} {\mathbf D}_M(\Delta {\boldsymbol \varphi}){\boldsymbol x}_k\\
+	&=\sum_{m=1}^M e^{j \vartheta_{t,m}}
+	\big(-j2\pi(M-1)\big)e^{-j2\pi(M-1)\omega_l}
+	[{\mathbf U}_M]_{m,:} {\mathbf D}_M(\Delta {\boldsymbol \varphi}){\boldsymbol x}_k
 \end{aligned}
 $$
 
 
+现在考虑$\frac{\partial}{\partial\left(\mathbf{F}_{k, l, t} \boldsymbol{x}_{k}\right)} \ln \left[\mathcal{C} \mathcal{N}\left(y_{k, l, t} ; \mathbf{F}_{k, l, t} \boldsymbol{x}_{k}, \kappa_{k, t}^{-1}\right)\right]$
+
+化简模型：$\frac{\partial }{\partial \mu} \operatorname{ln}\left[{\mathcal{CN} }\left(y; \mu, \kappa^{-1}\right) \right]$
+$$
+\begin{aligned}
+\frac{\partial }{\partial \mu} \operatorname{ln}\Big[{\mathcal{CN} }\big(y; \mu, \kappa^{-1}\big) \Big]  &= \frac{\partial }{\partial \Big[{\mathcal{CN} }\big(y; \mu, \kappa^{-1}\big) \Big]}\bigg\{\operatorname{ln}\Big[{\mathcal{CN} }\big(y; \mu, \kappa^{-1}\big) \Big] \bigg\} \frac{\partial }{\partial \mu}\Big[ \mathcal{CN}\big( y;\mu, \kappa^{-1} \big) \Big] \\
+	&=\frac{1}{{\mathcal{CN} }\big(y; \mu, \kappa^{-1}\big)}
+\frac{\partial }{\partial \mu}\Big[ \mathcal{CN}\big( y;\mu, \kappa^{-1} \big) \Big]
+\end{aligned}
+$$
