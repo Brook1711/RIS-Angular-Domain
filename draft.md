@@ -610,7 +610,7 @@ $$
  \vdots \\
  \mathbf{\Phi}^{H} \mathbf{V}\left(\omega_{L}\right) \mathbf{D}_{M}\left(\Delta \boldsymbol{\varphi}_{k}\right)
 \end{matrix}
-\right]_{\tau \times M}{\boldsymbol x}_k+{\mathbf N}_k
+\right]_{\tau L \times M}{\boldsymbol x}_k+{\mathbf N}_k
 ={\mathbf F}_k {\boldsymbol x}_k+{\mathbf N}_k
 $$
 ${\boldsymbol y}=[{\boldsymbol y}_1^T,\dots,{\boldsymbol y}_K^T]^T$
@@ -619,11 +619,15 @@ ${\boldsymbol y}=[{\boldsymbol y}_1^T,\dots,{\boldsymbol y}_K^T]^T$
 
 由信号表达式可以得出信号${\boldsymbol y}_k$的概率分布：
 $$
-p({\boldsymbol y_k \mid {\boldsymbol x}_{k} ; {\boldsymbol \xi}})=CN({\boldsymbol y}_k;{\mathbf F}_k{\boldsymbol x}_k, \operatorname{Diag}({\boldsymbol \kappa}_k)^{-1})
+p({\boldsymbol y_{k,l} \mid {\boldsymbol x}_{k} ; {\boldsymbol \xi}})=\prod_{t=1}^\tau CN({\boldsymbol y}_{k,l,t};[{{\mathbf F}_{k,l}}]_{t,:} {\boldsymbol x}_k, \operatorname{Diag}({\boldsymbol \kappa}_k)^{-1})
 $$
 
 $$
-p({\boldsymbol y} \mid {\boldsymbol x};{\boldsymbol \xi})=\prod_k^Kp({\boldsymbol y_k \mid {\boldsymbol x}_{k} ; {\boldsymbol \xi}})
+\begin{aligned}
+p({\boldsymbol y} \mid {\boldsymbol x};{\boldsymbol \xi})&=\prod_k^Kp({\boldsymbol y_k \mid {\boldsymbol x}_{k} ; {\boldsymbol \xi}})\\
+&=\prod_{k=1}^K \prod_{l=1}^L p({\boldsymbol y_{k,l} \mid {\boldsymbol x}_{k} ; {\boldsymbol \xi}}) \\
+&=\prod_{k=1}^K \prod_{l=1}^L \prod_{t=1}^\tau CN({\boldsymbol y}_{k,l,t};[{{\mathbf F}_{k,l}}]_{t,:} {\boldsymbol x}_k, \operatorname{Diag}({\boldsymbol \kappa}_k)^{-1})
+\end{aligned}
 $$
 
 
