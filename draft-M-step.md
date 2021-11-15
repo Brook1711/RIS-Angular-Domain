@@ -4,7 +4,9 @@ ${\boldsymbol \xi}_1 = \left\{ \omega_1,\dots,\omega_L  \right\}$
 
 ${\boldsymbol \xi}_2= \left\{ \Delta\varphi_1, \dots,\Delta \varphi_M \right\}$
 
-${\boldsymbol \xi}_3 =\left\{\lambda^c,p^c_{01}, p^c_{10}, \mu^s_1,\sigma^s_1,\dots, \mu^s_k,\sigma^s_k\right\}$
+${\boldsymbol \xi}_3=\left\{ {\kappa_{1,1}},\dots,\kappa_{k,t}, \dots,\kappa_{K,\tau} \right\}$
+
+${\boldsymbol \xi}_4 =\left\{\lambda^c,p^c_{01}, p^c_{10}, \mu^s_1,\sigma^s_1,\dots, \mu^s_k,\sigma^s_k\right\}$
 
 ${\boldsymbol v} \triangleq \left\{ {\boldsymbol x} ,  {\boldsymbol \gamma}, {\boldsymbol c}, {\boldsymbol s}\right\}$
 
@@ -39,24 +41,24 @@ $$
 \begin{aligned}
 p({\boldsymbol v}, {\boldsymbol y};{\boldsymbol \xi}_j,{\boldsymbol \xi}_{-j}^{(i)}) &= \underbrace{p(\boldsymbol{x} \mid \boldsymbol{\gamma}) p(\boldsymbol{\kappa}) p(\boldsymbol{\gamma} \mid \boldsymbol{s})}_{\text {known distribution }} \underbrace{p(\boldsymbol{y} \mid \boldsymbol{x}, \boldsymbol{\kappa} ; \boldsymbol{\xi}) p(\boldsymbol{c}, \boldsymbol{s} ; \boldsymbol{\xi})}_{\text {with unknown valuables }}  \\
 \operatorname{ln}p({\boldsymbol v}, {\boldsymbol y};{\boldsymbol \xi}_j,{\boldsymbol \xi}_{-j}^{(i)}) &=\operatorname{ln}p(\boldsymbol{x} \mid \boldsymbol{\gamma})+\operatorname{ln} p(\boldsymbol{\kappa}) +\operatorname{ln}p(\boldsymbol{\gamma} \mid \boldsymbol{s})\\
-		&+\operatorname{ln}p(\boldsymbol{y} \mid \boldsymbol{x}, \boldsymbol{\kappa} ; \boldsymbol{\xi}_{1,2})+\operatorname{ln}p(\boldsymbol{c}, \boldsymbol{s} ; \boldsymbol{\xi}_3)
+		&+\operatorname{ln}p(\boldsymbol{y} \mid \boldsymbol{x}, \boldsymbol{\kappa} ; \boldsymbol{\xi}_{1,2,3})+\operatorname{ln}p(\boldsymbol{c}, \boldsymbol{s} ; \boldsymbol{\xi}_4)
 \end{aligned}
 $$
 将其带入上式可得：
 $$
 \begin{aligned}
 \frac{\partial}{\partial \boldsymbol{\xi}_{j}} \hat{u}^{E M}\left(\boldsymbol{\xi}_{j}, \boldsymbol{\xi}_{-j}^{(i)} ; \boldsymbol{\xi}_{j}^{(i)}, \boldsymbol{\xi}_{-j}^{(i)}\right) &= \int q({\boldsymbol v};{\boldsymbol \xi}_j^{(i)},{\boldsymbol \xi}_{-j}^{(i)})\frac{\partial}{\partial {\boldsymbol \xi}_j} \left[ \operatorname{ln}p({\boldsymbol v},{\boldsymbol y};{\boldsymbol \xi}_j,{\boldsymbol \xi}_{-j}^{(i)}) \right] d{\boldsymbol v}\\
-&=\int q({\boldsymbol v};{\boldsymbol \xi}_j^{(i)},{\boldsymbol \xi}_{-j}^{(i)})\frac{\partial}{\partial {\boldsymbol \xi}_j} \left[ \operatorname{ln}p(\boldsymbol{y} \mid \boldsymbol{x}, \boldsymbol{\kappa} ; \boldsymbol{\xi}_{1,2})+\operatorname{ln}p(\boldsymbol{c}, \boldsymbol{s} ; \boldsymbol{\xi}_3) \right] d{\boldsymbol v} \\
+&=\int q({\boldsymbol v};{\boldsymbol \xi}_j^{(i)},{\boldsymbol \xi}_{-j}^{(i)})\frac{\partial}{\partial {\boldsymbol \xi}_j} \left[ \operatorname{ln}p(\boldsymbol{y} \mid \boldsymbol{x}, \boldsymbol{\kappa} ; \boldsymbol{\xi}_{1,2,3})+\operatorname{ln}p(\boldsymbol{c}, \boldsymbol{s} ; \boldsymbol{\xi}_4) \right] d{\boldsymbol v} \\
 
 &=
 \begin{cases}
-\int q({\boldsymbol v};{\boldsymbol \xi}_j^{(i)},{\boldsymbol \xi}_{-j}^{(i)})\frac{\partial}{\partial {\boldsymbol \xi}_j}\operatorname{ln}p(\boldsymbol{y} \mid \boldsymbol{x}, \boldsymbol{\kappa} ; \boldsymbol{\xi}_{1,2})d{\boldsymbol v} &, j\in \left\{1,2\right\}\\
-\int q({\boldsymbol v};{\boldsymbol \xi}_j^{(i)},{\boldsymbol \xi}_{-j}^{(i)})\frac{\partial}{\partial {\boldsymbol \xi}_j} \operatorname{ln}p(\boldsymbol{c}, \boldsymbol{s} ; \boldsymbol{\xi}_3) d{\boldsymbol v} &,j=3
+\int q({\boldsymbol v};{\boldsymbol \xi}_j^{(i)},{\boldsymbol \xi}_{-j}^{(i)})\frac{\partial}{\partial {\boldsymbol \xi}_j}\operatorname{ln}p(\boldsymbol{y} \mid \boldsymbol{x}, \boldsymbol{\kappa} ; \boldsymbol{\xi}_{1,2,3})d{\boldsymbol v} &, j\in \left\{1,2\right\}\\
+\int q({\boldsymbol v};{\boldsymbol \xi}_j^{(i)},{\boldsymbol \xi}_{-j}^{(i)})\frac{\partial}{\partial {\boldsymbol \xi}_j} \operatorname{ln}p(\boldsymbol{c}, \boldsymbol{s} ; \boldsymbol{\xi}_3) d{\boldsymbol v} &,j=4
 \end{cases}\\
 &=
 \begin{cases}
-\int q({\boldsymbol x};{\boldsymbol \xi}_j^{(i)},{\boldsymbol \xi}_{-j}^{(i)})\frac{\partial}{\partial {\boldsymbol \xi}_j}\operatorname{ln}p(\boldsymbol{y} \mid \boldsymbol{x}, \boldsymbol{\kappa} ; \boldsymbol{\xi}_{1,2})d{\boldsymbol x} &, j\in \left\{1,2\right\}\\
-\int q({\boldsymbol c},{\boldsymbol s};{\boldsymbol \xi}_j^{(i)},{\boldsymbol \xi}_{-j}^{(i)})\frac{\partial}{\partial {\boldsymbol \xi}_j} \operatorname{ln}p(\boldsymbol{c}, \boldsymbol{s} ; \boldsymbol{\xi}_3) d{\boldsymbol c}d{\boldsymbol s} &,j=3
+\int q({\boldsymbol x};{\boldsymbol \xi}_j^{(i)},{\boldsymbol \xi}_{-j}^{(i)})\frac{\partial}{\partial {\boldsymbol \xi}_j}\operatorname{ln}p(\boldsymbol{y} \mid \boldsymbol{x}, \boldsymbol{\kappa} ; \boldsymbol{\xi}_{1,2,3})d{\boldsymbol x} &, j\in \left\{1,2\right\}\\
+\int q({\boldsymbol c},{\boldsymbol s};{\boldsymbol \xi}_j^{(i)},{\boldsymbol \xi}_{-j}^{(i)})\frac{\partial}{\partial {\boldsymbol \xi}_j} \operatorname{ln}p(\boldsymbol{c}, \boldsymbol{s} ; \boldsymbol{\xi}_3) d{\boldsymbol c}d{\boldsymbol s} &,j=4
 \end{cases}
 
 \end{aligned}
@@ -71,7 +73,31 @@ $$
 其中：
 $$
 \begin{aligned}
-\frac{\partial}{\partial \omega_l} \operatorname{ln}p({\boldsymbol y} \mid {\boldsymbol x},{\boldsymbol \kappa}; {\omega_l }, {\boldsymbol \xi}_{1,-\omega_l}^{(1)}) &=  \\
+\frac{\partial}{\partial \omega_l} \operatorname{ln}p({\boldsymbol y} \mid {\boldsymbol x},{\boldsymbol \kappa}; {\omega_l }, {\boldsymbol \xi}_{1,-\omega_l}^{(i)}) &= \frac{\partial}{\partial \omega_l}\sum_{k=1}^{K}\sum_{l=1}^{L}\sum_{t=1}^{\tau}\operatorname{ln}\big [\mathcal{ CN}(y_{k,l,t};{\mathbf F}_{k,l,t}{\boldsymbol x}_k, { \kappa_{k,t}^{-1}}) \big] \\
+
+ &= \frac{\partial}{\partial \omega_l}\sum_{k=1}^{K}\sum_{t=1}^{\tau}\operatorname{ln}\big [\mathcal{ CN}(y_{k,l,t};{\mathbf F}_{k,l,t}{\boldsymbol x}_k, { \kappa_{k,t}^{-1}}) \big] \\
+ 
+\end{aligned}
+$$
+接下来将被求和项目展开，其中
+$$
+\begin{aligned}
+{\mathbf F}_{k,l,t}& =\Big [{\mathbf \Phi}^H {\mathbf V}(\omega_l){\mathbf D}_M(\Delta {\boldsymbol \varphi}) \Big]_{t,:} \\
+	&=\Big [{\mathbf \Phi}^H  \Big]_{t,:}{\mathbf V}(\omega_l){\mathbf D}_M(\Delta {\boldsymbol \varphi})\\
+	& = \left[
+	\begin{matrix}
+	e^{j \vartheta_{t,1}} & \cdots & e^{j \vartheta_{t,M}}
+	\end{matrix}
+	\right]
+	
+	\left[
+	\begin{matrix}
+	{\mathbf a}_M(\omega_l)_1 [{\mathbf U}_M]_{1,:} \\ 
+	\vdots \\ 
+	{\mathbf a}_M(\omega_l)_M [{\mathbf U}_M]_{M,:}
+	\end{matrix}
+	\right] {\mathbf D}_M(\Delta {\boldsymbol \varphi}) \\
+	&=\sum_{m=1}^M e^{j \vartheta_{t,m}}{\mathbf{a}_M(\omega_l)_m[{\mathbf U}_M]_{m,:}} {\mathbf D}_M(\Delta {\boldsymbol \varphi})
 
 \end{aligned}
 $$

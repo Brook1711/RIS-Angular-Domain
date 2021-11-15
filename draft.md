@@ -602,6 +602,7 @@ $$
 + {\mathbf N}_l ,\forall l \in \{1,\dots,L\}
 $$
 
+Where ${\mathbf F}_{k,l} \triangleq {\mathbf \Phi}^H {\mathbf V}(\omega_l){\mathbf D}_M(\Delta {\boldsymbol \varphi_k})$ and ${\mathbf F}_{k,l,t} \triangleq [{{\mathbf F}_{k,l}}]_{t,:}$
 $$
 {\boldsymbol y}_k = 
 \left[
@@ -619,14 +620,14 @@ ${\boldsymbol y}=[{\boldsymbol y}_1^T,\dots,{\boldsymbol y}_K^T]^T$
 
 由信号表达式可以得出信号${\boldsymbol y}_k$的概率分布：
 $$
-p({\boldsymbol y_{k,l} \mid {\boldsymbol x}_{k} ; {\boldsymbol \xi}})=\prod_{t=1}^\tau CN({\boldsymbol y}_{k,l,t};[{{\mathbf F}_{k,l}}]_{t,:} {\boldsymbol x}_k, \operatorname{Diag}({\boldsymbol \kappa}_k)^{-1})
+p({\boldsymbol y_{k,l} \mid {\boldsymbol x}_{k} ; {\boldsymbol \xi}})=\prod_{t=1}^\tau CN({\boldsymbol y}_{k,l,t};[{{\mathbf F}_{k,l}}]_{t,:} {\boldsymbol x}_k, { \kappa}_{k,t}^{-1})
 $$
 
 $$
 \begin{aligned}
 p({\boldsymbol y} \mid {\boldsymbol x};{\boldsymbol \xi})&=\prod_k^Kp({\boldsymbol y_k \mid {\boldsymbol x}_{k} ; {\boldsymbol \xi}})\\
 &=\prod_{k=1}^K \prod_{l=1}^L p({\boldsymbol y_{k,l} \mid {\boldsymbol x}_{k} ; {\boldsymbol \xi}}) \\
-&=\prod_{k=1}^K \prod_{l=1}^L \prod_{t=1}^\tau CN({\boldsymbol y}_{k,l,t};[{{\mathbf F}_{k,l}}]_{t,:} {\boldsymbol x}_k, \operatorname{Diag}({\boldsymbol \kappa}_k)^{-1})
+&=\prod_{k=1}^K \prod_{l=1}^L \prod_{t=1}^\tau CN({\boldsymbol y}_{k,l,t};[{{\mathbf F}_{k,l}}]_{t,:} {\boldsymbol x}_k, { \kappa}_{k,t}^{-1})
 \end{aligned}
 $$
 
