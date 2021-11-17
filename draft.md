@@ -627,7 +627,7 @@ $$
 \begin{aligned}
 p({\boldsymbol y} \mid {\boldsymbol x};{\boldsymbol \xi})&=\prod_k^Kp({\boldsymbol y_k \mid {\boldsymbol x}_{k} ; {\boldsymbol \xi}})\\
 &=\prod_{k=1}^K \prod_{l=1}^L p({\boldsymbol y_{k,l} \mid {\boldsymbol x}_{k} ; {\boldsymbol \xi}}) \\
-&=\prod_{k=1}^K \prod_{l=1}^L \prod_{t=1}^\tau CN({\boldsymbol y}_{k,l,t};[{{\mathbf F}_{k,l}}]_{t,:} {\boldsymbol x}_k, { \kappa}_{k,t}^{-1})
+&=\prod_{k=1}^K \prod_{l=1}^L \prod_{t=1}^\tau CN({ y}_{k,l,t};[{{\mathbf F}_{k,l}}]_{t,:} {\boldsymbol x}_k, { \kappa}_{k,t}^{-1})
 \end{aligned}
 $$
 
