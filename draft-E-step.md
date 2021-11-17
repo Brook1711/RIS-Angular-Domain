@@ -59,4 +59,27 @@ p(\boldsymbol{c}, \boldsymbol{s} ; \boldsymbol{\xi}) &=p(\boldsymbol{c}) \prod_{
 \end{aligned}
 $$
 
+## Factor Graph
+
+[Factor graph - Wikipedia](https://en.wikipedia.org/wiki/Factor_graph)
+
+A factor graph is a [bipartite graph](https://en.wikipedia.org/wiki/Bipartite_graph) representing the [factorization](https://en.wikipedia.org/wiki/Factorization) of a function. Given a factorization of a function ${\displaystyle g(X_{1},X_{2},\dots ,X_{n})}$
+$$
+g\left(X_{1}, X_{2}, \ldots, X_{n}\right)=\prod_{j=1}^{m} f_{j}\left(S_{j}\right)
+$$
+where $S_{j} \subseteq\left\{X_{1}, X_{2}, \ldots, X_{n}\right\}$, the corresponding factor graph $G=(X, F, E)$ consists of variable vertices $X=\left\{X_{1}, X_{2}, \ldots, X_{n}\right\}$, factor vertices $F=\left\{f_{1}, f_{2}, \ldots, f_{m}\right\}$, and edges $E .$ The edges depend on the factorization as follows: there is an undirected edge between factor vertex $f_{j}$ and variable vertex $X_{k}$ if $X_{k} \in S_{j}$. The function is tacitly assumed to be realvalued: $g\left(X_{1}, X_{2}, \ldots, X_{n}\right) \in \mathbb{R}$
+
+Factor graphs can be combined with message passing algorithms to efficiently compute certain characteristics of the function $g\left(X_{1}, X_{2}, \ldots, X_{n}\right)$, such as the marginal distributions.
+
+**message passing algorithms are usually exact for trees, but only approximate for graphs with cycles.**
+
+## Message passing
+
+
+
+
+
+### Sum-product rule
+
+
 
