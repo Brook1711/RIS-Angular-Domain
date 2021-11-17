@@ -75,11 +75,15 @@ Factor graphs can be combined with message passing algorithms to efficiently com
 
 ## Message passing
 
+[Variational message passing - Wikipedia](https://en.wikipedia.org/wiki/Variational_message_passing)
 
+> **Variational message passing** (**VMP**) is an [approximate inference](https://en.wikipedia.org/wiki/Approximate_inference) technique for continuous- or discrete-valued [Bayesian networks](https://en.wikipedia.org/wiki/Bayesian_networks), with [conjugate-exponential](https://en.wikipedia.org/wiki/Conjugate_exponents) parents, developed by John Winn. VMP was developed as a means of generalizing the approximate [variational methods](https://en.wikipedia.org/wiki/Variational_Bayesian_methods) used by such techniques as [Latent Dirichlet allocation](https://en.wikipedia.org/wiki/Latent_Dirichlet_allocation) and works by updating an approximate distribution at each node through messages in the node's [Markov blanket](https://en.wikipedia.org/wiki/Markov_blanket).
 
 
 
 ### Sum-product rule
+
+[Belief propagation - Wikipedia](https://en.wikipedia.org/wiki/Belief_propagation)
 
 
 
