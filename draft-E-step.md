@@ -14,6 +14,45 @@ In the former purpose (that of approximating a posterior probability), variation
 
 
 
+根据 变分：[Variational Bayesian methods - Wikipedia](https://en.wikipedia.org/wiki/Variational_Bayesian_methods)
+$$
+\begin{aligned}
+q^*_{\boldsymbol v_i}({\boldsymbol v}_i)&=\frac{\operatorname{exp}(\int_{-{\boldsymbol v}_i}q({\boldsymbol v}) q({\boldsymbol v},{\boldsymbol y}) )  }{\int_{\boldsymbol v_i} \operatorname{exp}\Big(\int_{-{\boldsymbol v}_i}q({\boldsymbol v}) q({\boldsymbol v},{\boldsymbol y}) \Big)  } \\
+	&\propto \operatorname{exp}\Bigg(\int_{-{\boldsymbol v}_i}q({\boldsymbol v}) q({\boldsymbol v},{\boldsymbol y}) \Bigg)  
+\end{aligned}
+$$
+
+
+
+
+## Update ${\boldsymbol x}_k$
+
+
+
+update for $q({\boldsymbol x})\triangleq \prod_{k=1}^K q_k({\boldsymbol x}_k)$
+$$
+q_{{\boldsymbol x}_k}({\boldsymbol x}_k) = \mathcal{CN}({\boldsymbol x}_k; {\boldsymbol \mu}_k,{\boldsymbol \Sigma}_k)
+$$
+
+$$
+{\mathbf \Sigma}_k = \Bigg( \operatorname{diag}\Big( \left\langle \frac{\widetilde{a}_{k,1}}{\widetilde{b}_{k,1}},\dots,\frac{\widetilde{a}_{k,M}}{\widetilde{b}_{k,M}} \right\rangle \Big) +{\mathbf F}_k^H\operatorname{diag}(\boldsymbol{\kappa}) {\mathbf F}_k\Bigg)^{-1}
+$$
+
+$$
+{\boldsymbol \mu}_k = {\mathbf \Sigma}_k{\mathbf F}_k^H\operatorname{diag}({\boldsymbol \kappa}){\boldsymbol y}_k
+$$
+
+## Update for ${\boldsymbol \gamma}_k$
+
+update for $q({\boldsymbol \gamma})\triangleq \prod_{k=1}^K q({\boldsymbol \gamma}_k)$
+$$
+q({\boldsymbol \gamma}_k) = \prod_{m=1}^M\Gamma({\gamma}_{k,m};\widetilde{a}_{k,m},\widetilde{b}_{k,m})
+$$
+
+$$
+\widetilde{a}_{k,m}=\left\langle s_{k,m} \right\rangle a_{k,m}+ \left\langle 1-s_{k,m} \right\rangle 
+$$
+
 
 
 
@@ -79,11 +118,59 @@ Factor graphs can be combined with message passing algorithms to efficiently com
 
 > **Variational message passing** (**VMP**) is an [approximate inference](https://en.wikipedia.org/wiki/Approximate_inference) technique for continuous- or discrete-valued [Bayesian networks](https://en.wikipedia.org/wiki/Bayesian_networks), with [conjugate-exponential](https://en.wikipedia.org/wiki/Conjugate_exponents) parents, developed by John Winn. VMP was developed as a means of generalizing the approximate [variational methods](https://en.wikipedia.org/wiki/Variational_Bayesian_methods) used by such techniques as [Latent Dirichlet allocation](https://en.wikipedia.org/wiki/Latent_Dirichlet_allocation) and works by updating an approximate distribution at each node through messages in the node's [Markov blanket](https://en.wikipedia.org/wiki/Markov_blanket).
 
+定义观测变量${\boldsymbol y }$,隐变量${\boldsymbol v}$，
+
+首先有观测变量本身的似然函数：
+$$
+\begin{aligned}
+\operatorname{ln}p({\boldsymbol y}) &=\int_{\boldsymbol v} q({\boldsymbol v})\operatorname{ln }\Big(\frac{p({\boldsymbol v},{\boldsymbol y})}{p({\boldsymbol v} \mid {\boldsymbol y})}\Big)\\
+	&=\int_{\boldsymbol v}q({\boldsymbol v})\bigg[ \operatorname{ln}\frac{p({\boldsymbol v},{\boldsymbol y})}{q({\boldsymbol v})}-\operatorname{ln}\frac{p({\boldsymbol v} \mid {\boldsymbol y})}{q({\boldsymbol v})} \bigg] \\
+&= \int_{\boldsymbol v}q({\boldsymbol v})\operatorname{ln}\frac{p({\boldsymbol v},{\boldsymbol y})}{q({\boldsymbol v})}+ \underbrace{(-1) \int_{\boldsymbol v}q({\boldsymbol v})\operatorname{ln}{q({\boldsymbol v})}}_{\text{relative entropy (non-negative)}} \\
+	
+\end{aligned}
+$$
+所以有$\operatorname{ln}p({\boldsymbol y})$	的下界(ELOB)：
+$$
+\int_{\boldsymbol v}q({\boldsymbol v})\operatorname{ln}\frac{p({\boldsymbol v},{\boldsymbol y})}{q({\boldsymbol v})}
+$$
+
+当$q({\boldsymbol v})$ 可以被分解为：
+$$
+q({\boldsymbol v})= \prod_{i} q_i({\boldsymbol v}_i)
+$$
+where ${\boldsymbol v}_i$ is a disjoint part of the graphical model
+
+This is the key: We can maximize ELOB, or $\mathcal{L}(q)$, by minimizing this special $\mathrm{KL}$ divergence, where we can find approximate and optimal $q_{i}^{*}\left({\boldsymbol v}_{i}\right)$, such that:
+$$
+\operatorname{ln}q^*_i({\boldsymbol v}_i)=E_{-{\boldsymbol v}_i}[\operatorname{ln}p({\boldsymbol v},{\boldsymbol y})]
+$$
+
+
+
+
 
 
 ### Sum-product rule
 
 [Belief propagation - Wikipedia](https://en.wikipedia.org/wiki/Belief_propagation)
 
+It calculates the [marginal distribution](https://en.wikipedia.org/wiki/Marginal_distribution) for each unobserved node (or variable), conditional on any observed nodes (or variables). 
 
 
+$$
+p(\mathbf{x})=\prod_{a \in F} f_{a}\left(\mathbf{x}_{a}\right)
+$$
+The algorithm works by passing real valued functions called ***messages*** along with the edges between the hidden nodes. 
+
+More precisely, if *v* is a variable node and *a* is a factor node connected to *v* in the factor graph, the messages from *v* to *a*, (denoted by ${\displaystyle \mu _{v\to a}}$and from *a* to *v* (${\displaystyle \mu _{a\to v}}$), are real-valued functions whose domain is Dom(*v*), the set of values that can be taken by the random variable associated with *v*. These messages contain the "influence" that one variable exerts on another. The messages are computed differently depending on whether the node receiving the message is a variable node or a factor node. Keeping the same notation:
+
+
+$$
+\forall x_{v} \in \operatorname{Dom}(v), \mu_{v \rightarrow a}\left(x_{v}\right)=\prod_{a^{*} \in N(v) \backslash\{a\}} \mu_{a^{*} \rightarrow v}\left(x_{v}\right)
+$$
+
+
+
+$$
+\forall x_{v} \in \operatorname{Dom}(v), \mu_{a \rightarrow v}\left(x_{v}\right)=\sum_{\mathbf{x}_{a}^{\prime}: x_{v}^{\prime}=x_{v}} f_{a}\left(\mathbf{x}_{a}^{\prime}\right) \prod_{v^{*} \in N(a) \backslash\{v\}} \mu_{v^{*} \rightarrow a}\left(x_{v^{*}}^{\prime}\right)
+$$

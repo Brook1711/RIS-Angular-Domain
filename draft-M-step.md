@@ -166,14 +166,14 @@ $$
 \begin{aligned}
 \frac{\partial}{\partial \mu} \operatorname{ln} \mathcal{CN}(y;\mu,\sigma^2) &=\frac{1}{4\pi\sigma^4}e^{-\frac{(y-\mu)^2}{2\sigma^2}}( y^*-\mu^* )\cdot \mathcal{CN}(y;\mu,\sigma^2)^{-1}\\
 	&=\frac{1}{4\pi\sigma^4}e^{-\frac{(y-\mu)^2}{2\sigma^2}}( y^*-\mu^* )\cdot {2\pi\sigma^2}e^{\frac{(y-\mu)^2}{2\sigma^2}}\\
-	&=\frac{1}{2\pi\sigma^2}( y^*-\mu^* )
+	&=\frac{1}{2\sigma^2}( y^*-\mu^* )
 
 \end{aligned}
 $$
 则$\sigma^2=\kappa_{k,t}^{-1}, \mu = {\mathbf F}_{k,l,t}{\boldsymbol x}_k$：
 $$
 \begin{aligned}
-\frac{\partial}{\partial\left(\mathbf{F}_{k, l, t} \boldsymbol{x}_{k}\right)} \ln \left[\mathcal{C} \mathcal{N}\left(y_{k, l, t} ; \mathbf{F}_{k, l, t} \boldsymbol{x}_{k}, \kappa_{k, t}^{-1}\right)\right]&= \underbrace{\frac{\kappa_{k,t}}{2\pi}(y_{k,l,t}^*-({{\mathbf F}_{k,l,t}{\boldsymbol x}_k})^*)}_{\text{part 1}}
+\frac{\partial}{\partial\left(\mathbf{F}_{k, l, t} \boldsymbol{x}_{k}\right)} \ln \left[\mathcal{C} \mathcal{N}\left(y_{k, l, t} ; \mathbf{F}_{k, l, t} \boldsymbol{x}_{k}, \kappa_{k, t}^{-1}\right)\right]&= \underbrace{\frac{\kappa_{k,t}}{2}(y_{k,l,t}^*-({{\mathbf F}_{k,l,t}{\boldsymbol x}_k})^*)}_{\text{part 1}}
 
 \end{aligned}
 $$
@@ -198,7 +198,7 @@ ${\mathbf F}_2 \triangleq \sum_{m=1}^M e^{j\vartheta_{t,m}}\big( -j2\pi(M-1) \bi
 
 ${\mathbf F}_3 \triangleq {\mathbf F}_1^H {\mathbf F}_2$
 
-$c_1 = \frac{\kappa_{k,t}}{2\pi}$, $c_2= y_{k,l,t}^*$
+$c_1 = \frac{\kappa_{k,t}}{2}$, $c_2= y_{k,l,t}^*$
 
 则，偏导可以表示为： 
 $$
@@ -426,7 +426,7 @@ $$
 
 其中：
 
-$c_1 = \frac{\kappa_{k,t}}{2\pi}$, $c_2= y_{k,l,t}^*$
+$c_1 = \frac{\kappa_{k,t}}{2}$, $c_2= y_{k,l,t}^*$
 
 ${\mathbf F}_1 \triangleq {\mathbf F}_{k,l,t}$, 
 
@@ -446,7 +446,7 @@ $$
 
 其中：
 
-$c_1 = \frac{\kappa_{k,t}}{2\pi}$, $c_2= y_{k,l,t}^*$
+$c_1 = \frac{\kappa_{k,t}}{2}$, $c_2= y_{k,l,t}^*$
 $$
 \begin{aligned}
 {\mathbf F}_4 = \underbrace{\Big [{\mathbf \Phi}^H  \Big]_{t,:}{\mathbf V}(\omega_l)}_{(1\times M)} 
