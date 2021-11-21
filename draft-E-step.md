@@ -22,7 +22,9 @@ q^*_{\boldsymbol v_i}({\boldsymbol v}_i)&=\frac{\operatorname{exp}(\int_{-{\bold
 \end{aligned}
 $$
 
-
+$$
+q(\boldsymbol v)=
+$$
 
 
 ## Update ${\boldsymbol x}_k$
@@ -33,7 +35,7 @@ update for $q({\boldsymbol x})\triangleq \prod_{k=1}^K q_k({\boldsymbol x}_k)$
 $$
 q_{{\boldsymbol x}_k}({\boldsymbol x}_k) = \mathcal{CN}({\boldsymbol x}_k; {\boldsymbol \mu}_k,{\boldsymbol \Sigma}_k)
 $$
-
+那么本轮计算过后$q_{\boldsymbol {x}_k}^*({\boldsymbol {x}_k})$中的参数更新为：
 $$
 {\mathbf \Sigma}_k = \Bigg( \operatorname{diag}\Big( \left\langle \frac{\widetilde{a}_{k,1}}{\widetilde{b}_{k,1}},\dots,\frac{\widetilde{a}_{k,M}}{\widetilde{b}_{k,M}} \right\rangle \Big) +{\mathbf F}_k^H\operatorname{diag}(\boldsymbol{\kappa}) {\mathbf F}_k\Bigg)^{-1}
 $$
@@ -41,6 +43,16 @@ $$
 $$
 {\boldsymbol \mu}_k = {\mathbf \Sigma}_k{\mathbf F}_k^H\operatorname{diag}({\boldsymbol \kappa}){\boldsymbol y}_k
 $$
+
+
+
+开始证明：
+$$
+q^*_{{\boldsymbol x}_k}({\boldsymbol x}_k)=\int_{-\boldsymbol {x}_k}q({\boldsymbol v}) \operatorname{ln}p({\boldsymbol v},{\boldsymbol y})\ d{\boldsymbol v}
+$$
+
+
+
 
 ## Update for ${\boldsymbol \gamma}_k$
 
@@ -129,7 +141,7 @@ $$
 	
 \end{aligned}
 $$
-所以有$\operatorname{ln}p({\boldsymbol y})$	的下界(ELOB)：
+所以有$\operatorname{ln}p({\boldsymbol y})$	的下界(ELBO)：
 $$
 \int_{\boldsymbol v}q({\boldsymbol v})\operatorname{ln}\frac{p({\boldsymbol v},{\boldsymbol y})}{q({\boldsymbol v})}
 $$
@@ -169,8 +181,53 @@ $$
 \forall x_{v} \in \operatorname{Dom}(v), \mu_{v \rightarrow a}\left(x_{v}\right)=\prod_{a^{*} \in N(v) \backslash\{a\}} \mu_{a^{*} \rightarrow v}\left(x_{v}\right)
 $$
 
-
-
 $$
 \forall x_{v} \in \operatorname{Dom}(v), \mu_{a \rightarrow v}\left(x_{v}\right)=\sum_{\mathbf{x}_{a}^{\prime}: x_{v}^{\prime}=x_{v}} f_{a}\left(\mathbf{x}_{a}^{\prime}\right) \prod_{v^{*} \in N(a) \backslash\{v\}} \mu_{v^{*} \rightarrow a}\left(x_{v^{*}}^{\prime}\right)
 $$
+![image-20211121103813880](draft-E-step.assets/image-20211121103813880.png)
+
+
+
+upon convergence
+
+1. 每个v节点的发生概率有：
+
+$$
+p_{X_{v}}\left(x_{v}\right) \propto \prod_{a \in N(v)} \mu_{a \rightarrow v}\left(x_{v}\right)
+$$
+
+
+
+2. 每个函数节点的输出概率有：
+
+$$
+p_{X_{a}}\left(\mathbf{x}_{a}\right) \propto f_{a}\left(\mathbf{x}_{a}\right) \prod_{v \in N(a)} \mu_{v \rightarrow a}\left(x_{v}\right)
+$$
+
+当概率图为tree的时候，可以分部更新，但是当概率图含有loop时，就不一定收敛
+
+
+
+## varitional bayes
+
+
+$$
+\operatorname{ln}p({\boldsymbol y})=\underbrace{D_{KL}(q\Vert p)}_{\text{target: minimization}}+\underbrace{\mathcal{L}(q)}_{\text{equivalence: maximization}}
+$$
+ELBO：
+$$
+{\mathcal L}(q)= \int_{\boldsymbol v}q({\boldsymbol v})\operatorname{ln}\frac{p({\boldsymbol v},{\boldsymbol y})}{q({\boldsymbol v})}
+$$
+
+### Mean field approximation
+
+Factorize $q({\boldsymbol v})$ 
+$$
+q(\boldsymbol{v})=\prod_{i=1}^{\mathcal Q} q_i({\boldsymbol v}_i\mid {\boldsymbol y})
+$$
+
+$$
+\operatorname{ln}q_j^*({\boldsymbol v}_j)=\operatorname{E}_{-{\boldsymbol v}_j}\big[ \operatorname{ln}p({\boldsymbol v},{\boldsymbol y}) \big] + \operatorname{constant}
+$$
+
+the expectation $\operatorname{E}_{-{\boldsymbol v}_j}\big[ \operatorname{ln}p({\boldsymbol v},{\boldsymbol y}) \big]$  can usually be simplified into a function of the fixed [hyperparameters](https://en.wikipedia.org/wiki/Hyperparameter) of the [prior distributions](https://en.wikipedia.org/wiki/Prior_distribution) over the latent variables and of expectations (and sometimes higher [moments](https://en.wikipedia.org/wiki/Moment_(mathematics)) such as the [variance](https://en.wikipedia.org/wiki/Variance)) of latent variables not in the current partition (i.e. latent variables not included in
