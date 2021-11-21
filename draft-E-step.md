@@ -22,9 +22,17 @@ q^*_{\boldsymbol v_i}({\boldsymbol v}_i)&=\frac{\operatorname{exp}(\int_{-{\bold
 \end{aligned}
 $$
 
+
+隐变量先验概率为：
 $$
-q(\boldsymbol v)=
+\hat{p}(\boldsymbol v)=p({\boldsymbol x} \mid {\boldsymbol \gamma})p({\boldsymbol \kappa})p({\boldsymbol \gamma} \mid {\boldsymbol s})p({\boldsymbol c}, {\boldsymbol s};{\boldsymbol \xi})
 $$
+隐变量后验概率，通过Mean Field approximation 分解为：
+$$
+q({\boldsymbol v})=q(\boldsymbol{x},\boldsymbol{\gamma}, \boldsymbol{c},\boldsymbol{s})=q(\boldsymbol{x})q(\boldsymbol{\gamma})q( \boldsymbol{c})q(\boldsymbol{s})
+$$
+注意不要搞混了。
+
 
 
 ## Update ${\boldsymbol x}_k$
@@ -48,7 +56,11 @@ $$
 
 开始证明：
 $$
-q^*_{{\boldsymbol x}_k}({\boldsymbol x}_k)=\int_{-\boldsymbol {x}_k}q({\boldsymbol v}) \operatorname{ln}p({\boldsymbol v},{\boldsymbol y})\ d{\boldsymbol v}
+\begin{aligned}
+\operatorname{ln}q^*_{{\boldsymbol x}_k}({\boldsymbol x}_k)&=\int_{-\boldsymbol {x}_k}q({\boldsymbol v}) \operatorname{ln}p({\boldsymbol v},{\boldsymbol y})\ d{\boldsymbol v} +\text{constant}\\
+	&=\int_{-\boldsymbol{x}_k} \prod_{k^\prime \neq k}\Big[q(\boldsymbol{x}_{k^\prime})\Big]q(\boldsymbol{\gamma})q( \boldsymbol{c})q(\boldsymbol{s}) \Bigg\{ \operatorname{ln}p(\boldsymbol{x}\mid \boldsymbol{\gamma})+\operatorname{ln}p(\boldsymbol{\kappa})+\operatorname{ln}p(\boldsymbol{\gamma } \mid \boldsymbol{s})\\&+\operatorname{ln}p(\boldsymbol{y} \mid \boldsymbol{x}, \boldsymbol{\kappa};\boldsymbol{\xi})+\operatorname{ln}p(\boldsymbol{c},\boldsymbol{s};\boldsymbol{\xi})  \Bigg\}\\
+	&=
+\end{aligned}
 $$
 
 
@@ -231,3 +243,112 @@ $$
 $$
 
 the expectation $\operatorname{E}_{-{\boldsymbol v}_j}\big[ \operatorname{ln}p({\boldsymbol v},{\boldsymbol y}) \big]$  can usually be simplified into a function of the fixed [hyperparameters](https://en.wikipedia.org/wiki/Hyperparameter) of the [prior distributions](https://en.wikipedia.org/wiki/Prior_distribution) over the latent variables and of expectations (and sometimes higher [moments](https://en.wikipedia.org/wiki/Moment_(mathematics)) such as the [variance](https://en.wikipedia.org/wiki/Variance)) of latent variables not in the current partition (i.e. latent variables not included in
+
+
+
+# New basic
+
+[The variational approximation for Bayesian inference | IEEE Journals & Magazine | IEEE Xplore](https://ieeexplore.ieee.org/abstract/document/4644060)
+
+
+$$
+\hat{\boldsymbol{\theta}}_{\mathrm{ML}}=\arg \max _{\boldsymbol{\theta}} p(\mathbf{x} ; \boldsymbol{\theta}) \tag{1}
+$$
+$p(\mathbf{x} ; \boldsymbol{\theta})$ is usually impossible to compute directly 
+
+此时引入隐变量$\mathbf {z}$
+
+they brought enough information for oobservations so that $p(\mathbf{x}\mid \mathbf{z})$ is easy to solve
+
+那么，就可以通过边缘概率求解原来难以解决的$p(\mathbf{x};\mathbf{\theta})$
+$$
+p(\mathbf{x} ; \boldsymbol{\theta})=\int p(\mathbf{x}, \mathbf{z} ; \boldsymbol{\theta}) d \mathbf{z}=\int p(\mathbf{x} \mid \mathbf{z} ; \boldsymbol{\theta}) p(\mathbf{z} ; \boldsymbol{\theta}) d \mathbf{z} \tag{2}
+$$
+如果上式可以解决，那么隐变量的后验概率也可以得到：
+$$
+p(\mathbf{z} \mid \mathbf{x} ; \boldsymbol{\theta})=\frac{p(\mathbf{x} \mid \mathbf{z} ; \boldsymbol{\theta}) p(\mathbf{z} ; \boldsymbol{\theta})}{p(\mathbf{x} ; \boldsymbol{\theta})}\tag{3}
+$$
+尽管$(3)$中的形式看起来很简单，但是在一般情况下$(2)$中的积分都是不可解的。因此，接下来的目的在于绕过$(2)$中的积分
+
+绕过的方式有两种主要的大类：
+
+1. Monte Carlo 方法
+
+2. deterministic approximations
+
+3. maximum posteriori （MAP）
+
+   is an extention of ML
+
+
+
+VBI -> approximate posterior
+
+## Illustration of EM algthrithm
+
+$$
+\ln p(\mathrm{x} ; \boldsymbol{\theta})=F(q, \boldsymbol{\theta})+K L(q \| p)
+$$
+
+ELBO:
+$$
+F(q, \boldsymbol{\theta})=\int q(\mathbf{z}) \ln \left(\frac{p(\mathbf{x}, \mathbf{z} ; \boldsymbol{\theta})}{q(\mathbf{z})}\right) d \mathbf{z}
+$$
+KLD:
+$$
+\mathrm{KL}(q \| p)=-\int q(\mathbf{z}) \ln \left(\frac{p(\mathbf{z} \mid \mathbf{x} ; \boldsymbol{\theta})}{q(\mathbf{z})}\right) d \mathbf{z}
+$$
+Problem formulation:
+$$
+\max_{q,\mathbf{\theta}}F(q,\boldsymbol{\theta})
+$$
+EM framework:
+$$
+\begin{array}{ll}
+\text { E-step : } & \text { Compute } & p\left(\mathbf{z} \mid \mathbf{x} ; \boldsymbol{\theta}^{\mathrm{OLD}}\right) \\
+\text { M-step : } & \text { Evaluate } & \boldsymbol{\theta}^{\mathrm{NEW}}=\underset{\boldsymbol{\theta}}{\arg \max } Q\left(\boldsymbol{\theta}, \boldsymbol{\theta}^{\mathrm{OLD}}\right)
+\end{array}
+$$
+Obviercely, EM framework requires that the posterior $p(\mathbf{z}\mid\mathbf{x} ;\boldsymbol{\theta})$ is explicitly know or at least able to compute the integration $\langle\ln p(\mathbf{z} \mid \mathbf{x} ; \boldsymbol{\theta})\rangle_{p\left(\mathbf{z} \mid \mathbf{x} ; \boldsymbol{\theta}^{\text {OLD }}\right)}$
+
+## Variational EM 
+
+一般来讲，估计$q(\mathbf{z})$，需要先假设其公式已知，然后推导其参数$\boldsymbol{\omega}$，即，先写为$q(\mathbf{z};\boldsymbol{\omega})$
+
+那么问题就化简为：
+$$
+\max_{\boldsymbol{\omega},\mathbf{\theta}}F(\boldsymbol{\omega},\boldsymbol{\theta})
+$$
+这样的变分估计有一个很成功的变种：$\text{factorized approximation}$
+$$
+q(\mathbf{z})=\prod_{i=1}^{M} q_{i}\left(z_{i}\right)
+$$
+那么将ELBO写为：
+$$
+\begin{aligned}
+F(q,\boldsymbol{\theta})&=\int\prod_i q_i\Big[\operatorname{ln}p(\mathbf{x},\mathbf{z};\boldsymbol{\theta})-\sum_i \operatorname{ln} q_i \Big]d\mathbf{z}\\
+
+&=\int\prod_{i} q_i \operatorname{ln} p(\mathbf{x}, \mathbf{z};\boldsymbol{\theta})\prod_i d z_i -\sum_i \int \prod_j q_j \operatorname{ln} q_i dz_i \\
+
+& = \int q_{j}\left[\ln p\left(\mathrm{x}, \mathrm{z} ; \theta \right)\prod_{i \neq j}\left(q_{i} d z_{i}\right)\right] d z_{j} - \int q_{j} \ln q_{j} d z_{j}-\sum_{i \neq j} \int q_{i} \ln q_{i} d z_{i}\\
+
+&= \int q_{j} \ln q_{j} d z_{j}-\sum_{i \neq j} \int q_{i} \ln q_{i} d z_{i}\\
+&\quad-\sum_{i \neq j} \int q_{i} \ln q_{i} d z_{i}\\
+
+&=-\mathrm{KL}\left(q_{j} \| \tilde{p}\right)-\sum_{i \neq j} \int q_{i} \ln q_{i} d z
+
+\end{aligned}
+$$
+Where:
+$$
+\ln \tilde{p}\left(\mathbf{x}, z_{j} ; \boldsymbol{\theta}\right)=\langle\ln p(\mathbf{x}, \mathbf{z} ; \boldsymbol{\theta})\rangle_{i \neq j}=\int \ln p(\mathbf{x}, \mathbf{z} ; \boldsymbol{\theta}) \prod_{i \neq j}\left(q_{i} d z_{i}\right)
+$$
+最优情况是KLD为0:
+$$
+\ln q_{j}^{*}\left(z_{j}\right)=\langle\ln p(\mathbf{x}, \mathbf{z} ; \boldsymbol{\theta})\rangle_{i \neq j}+\text { const. }
+$$
+
+$$
+q_{j}^{*}\left(z_{j}\right)=\frac{\exp \left(\langle\ln p(\mathbf{x}, \mathbf{z} ; \boldsymbol{\theta})\rangle_{i \neq j}\right)}{\int \exp \left(\langle\ln p(\mathbf{x}, \mathbf{z} ; \boldsymbol{\theta})\rangle_{i \neq j}\right) d z_{j}}
+$$
+
