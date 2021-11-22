@@ -57,9 +57,7 @@ $$
 开始证明：
 $$
 \begin{aligned}
-\operatorname{ln}q^*_{{\boldsymbol x}_k}({\boldsymbol x}_k)&=\int_{-\boldsymbol {x}_k}q({\boldsymbol v}) \operatorname{ln}p({\boldsymbol v},{\boldsymbol y})\ d{\boldsymbol v} +\text{constant}\\
-	&=\int_{-\boldsymbol{x}_k} \prod_{k^\prime \neq k}\Big[q(\boldsymbol{x}_{k^\prime})\Big]q(\boldsymbol{\gamma})q( \boldsymbol{c})q(\boldsymbol{s}) \Bigg\{ \operatorname{ln}p(\boldsymbol{x}\mid \boldsymbol{\gamma})+\operatorname{ln}p(\boldsymbol{\kappa})+\operatorname{ln}p(\boldsymbol{\gamma } \mid \boldsymbol{s})\\&+\operatorname{ln}p(\boldsymbol{y} \mid \boldsymbol{x}, \boldsymbol{\kappa};\boldsymbol{\xi})+\operatorname{ln}p(\boldsymbol{c},\boldsymbol{s};\boldsymbol{\xi})  \Bigg\}\\
-	&=
+q(\boldsymbol{x}_k)=
 \end{aligned}
 $$
 
@@ -352,3 +350,17 @@ $$
 q_{j}^{*}\left(z_{j}\right)=\frac{\exp \left(\langle\ln p(\mathbf{x}, \mathbf{z} ; \boldsymbol{\theta})\rangle_{i \neq j}\right)}{\int \exp \left(\langle\ln p(\mathbf{x}, \mathbf{z} ; \boldsymbol{\theta})\rangle_{i \neq j}\right) d z_{j}}
 $$
 
+
+
+# New basic - Factor graph
+
+[Factor graphs and the sum-product algorithm | IEEE Journals & Magazine | IEEE Xplore](https://ieeexplore.ieee.org/document/910572/citations?tabFilter=papers)
+
+
+
+Vari
+
+
+$$
+S=A_{1} \times A_{2} \times \cdots \times A_{n}
+$$
