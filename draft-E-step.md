@@ -358,9 +358,35 @@ $$
 
 
 
-Vari
+Variables: $x_1,x_2, \dots, x_n$
 
+domain (or alphabet) $A_1, A_2, \dots, A_n$
 
+R-valued function $g(x_1,x_2, \dots, x_n)$
+
+domain of function $g(x_1,x_2, \dots, x_n)$ , $S\ (\it{configuration\ space})$
 $$
 S=A_{1} \times A_{2} \times \cdots \times A_{n}
 $$
+$codomain\ R$
+
+"not sum" concept
+
+$g(x_1,x_2,\dots,x_n)$ Factors into a product of several $\it{local\ functions}$ 
+$$
+g(x_1,x_2,\dots,x_n)=\prod_{j\in \mathcal{J}} f_j(\it{X}_j)
+$$
+Then a $\it{factor\ graph}$ can be given to illustrate the construction of factorlization of $g$
+
+in many cases, we are interested in computing the marginal probability $g_i(x_i)$
+
+$\it{The\ key}:$ when a factor graph is cycle-free, the factor graph not only encodes in its structure the factorization of the global function, but also encodes arithmetic expressions by which the marginal functions associated with the global function may be computed.
+
+$\ding{1}$ 
+
+$\circled{1}$
+$$
+
+$$
+
+
