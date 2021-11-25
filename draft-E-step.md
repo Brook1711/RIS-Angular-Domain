@@ -45,84 +45,84 @@ $$
 
 Module A 
 
-![image-20211125133235673](draft-E-step.assets/image-20211125133235673.png)
+![image-20211125135805588](draft-E-step.assets/image-20211125135805588.png)
 
 为了加快计算和绕过带有loop的factor graph，我们将整个factor graph 分为两部分，其中：
 $$
 \begin{aligned}
-h^A_{k,n}(s_{k,n})&\triangleq \nu^{out}_{k,n}(s_{k,n})\\
-h^B_{k,n}(s_{k,n})&\triangleq \nu_{\eta_{k,n}\to s_{k,n}}(s_{k,n})
+h^A_{k,m}(s_{k,m})&\triangleq \nu^{out}_{k,m}(s_{k,m})\\
+h^B_{k,m}(s_{k,m})&\triangleq \nu_{\eta_{k,m}\to s_{k,m}}(s_{k,m})
 \end{aligned}
 $$
 
 
 Model B 中传递给module A的消息可以使用sum-product-rule[^factor]来计算：
 
-为了更高效地利用forward/backward 方法[^factor]计算HMM中的相关性，我们利用一个综合的factor node $g_n$ 来刻画 $c_n,c_{n+1},s_{k,n}$ 的相关性：
+为了更高效地利用forward/backward 方法[^factor]计算HMM中的相关性，我们利用一个综合的factor node $g_m$ 来刻画 $c_m,c_{m+1},s_{k,m}$ 的相关性：
 $$
 \begin{aligned}
-g_n(c_{n+1},c_n, s_{1,n},\dots,s_{K,n}) & \triangleq p(c_{n+1}\mid c_n) p(s_{1,n},\dots ,s_{K,n} \mid c_n) p(c_n)\\
-& = p(c_{n+1}\mid c_n )p(c_n) \prod_k^K p(s_{k,n} \mid c_n)
+g_m(c_{m+1},c_m, s_{1,m},\dots,s_{K,m}) & \triangleq p(c_{m+1}\mid c_m) p(s_{1,m},\dots ,s_{K,m} \mid c_m) p(c_m)\\
+& = p(c_{m+1}\mid c_m )p(c_m) \prod_k^K p(s_{k,m} \mid c_m)
 
 \end{aligned}
 $$
-图中 $\nu_{k,n}^{in} (s_{k,n})$ 的值相等于 model A到 model B 的消息 $h^B_{k,n}(s_{k,n})\triangleq \nu_{\eta_{k,n} \to s_{k,n}}(s_{k,n})$ ，然而 model A 为了提高算法效率，并避开带有loop的factor graph 求解，使用了 VBI，那么module A 处只能计算出 $s_{k,n}$ 的后验概率 $q(s_{k,n})$ 而不能直接得到 $\nu_{\eta_{k,n}\to s_{k,n}}(s_{k,n})$ ， 根据message 的定义：
+图中 $\nu_{k,m}^{in} (s_{k,m})$ 的值相等于 model A到 model B 的消息 $h^B_{k,m}(s_{k,m})\triangleq \nu_{\eta_{k,m} \to s_{k,m}}(s_{k,m})$ ，然而 model A 为了提高算法效率，并避开带有loop的factor graph 求解，使用了 VBI，那么module A 处只能计算出 $s_{k,m}$ 的后验概率 $q(s_{k,m})$ 而不能直接得到 $\nu_{\eta_{k,m}\to s_{k,m}}(s_{k,m})$ ， 根据message 的定义：
 $$
 \begin{aligned}
-& \nu_{\eta_{k,n}\to s_{k,n}}(s_{k,n})\cdot\nu_{h \to s_{k,n}}(s_{k,n})=p^{m}(s_{k,n}) \propto q(s_{k,n}) \\
-& \Longrightarrow \nu_{k,n}^{in} (s_{k,n}) = \nu_{\eta_{k,n}\to s_{k,n}}(s_{k,n}) \propto \frac{q(s_{k,n})}{\nu_{h\to s_{k,n}}(s_{k,n})}
+& \nu_{\eta_{k,m}\to s_{k,m}}(s_{k,m})\cdot\nu_{h \to s_{k,m}}(s_{k,m})=p^{m}(s_{k,m}) \propto q(s_{k,m}) \\
+& \Longrightarrow \nu_{k,m}^{in} (s_{k,m}) = \nu_{\eta_{k,m}\to s_{k,m}}(s_{k,m}) \propto \frac{q(s_{k,m})}{\nu_{h\to s_{k,m}}(s_{k,m})}
 \end{aligned}
 $$
-其中，$\nu_{h\to s_{k,n}}$ 是上一次运算循环中 model B 传递给 model A的消息。
+其中，$\nu_{h\to s_{k,m}}$ 是上一次运算循环中 model B 传递给 model A的消息。
 
-为了保证算法能够正常运行，我们需要将消息赋予一个确定的值，而不是一个正比关系，那么我们定义归一化的消息 $\bar{\nu}_{k,n}^{in} (s_{k,n})$：
+为了保证算法能够正常运行，我们需要将消息赋予一个确定的值，而不是一个正比关系，那么我们定义归一化的消息 $\bar{\nu}_{k,m}^{in} (s_{k,m})$：
 $$
-\bar{\nu}_{k,n}^{in} (s_{k,n})=\frac{q(s_{k.n})\cdot \nu_{h\to s_{k,n}}(s_{k,n})}{\sum_{s_{k,n}}q(s_{k.n})\cdot \nu_{h\to s_{k,n}}(s_{k,n})}
+\bar{\nu}_{k,m}^{in} (s_{k,m})=\frac{q(s_{k,m})\cdot \nu_{h\to s_{k,m}}(s_{k,m})}{\sum_{s_{k,m}}q(s_{k,m})\cdot \nu_{h\to s_{k,m}}(s_{k,m})}
 $$
 
 
-接下来定义前向消息（Farward）$\alpha(c_n)$：
-$$
-\begin{aligned}
-\alpha\left(c_{n}\right)& =\sum_{-c_{n}}\left\{g_{n}\left(c_{n+1}, c_{n}, s_{1, n}, \ldots, s_{K, n}\right) \cdot \alpha\left(c_{n-1}\right) \cdot \prod_{k} \lambda_{k, n}\left(s_{k, n}\right)\right\} \\
-
-&\propto \sum_{-c_{n}}\left\{ p(c_{n+1}\mid c_n )p(c_n) \prod_k^K p(s_{k,n} \mid c_n)\cdot \alpha(c_{n-1}) \cdot \prod_k \bar{\nu}_{k,n}^{in}(s_{k,n}) \right\}
-
-\end{aligned}
-$$
-接下来定义后向消息（Backward） $\beta(c_{n-1})$：
+接下来定义前向消息（Farward）$\alpha(c_m)$：
 $$
 \begin{aligned}
-\beta\left(c_{n-1}\right)&=\sum_{-c_{n-1}}\left\{g_{n}\left(c_{n+1}, c_{n}, s_{1, n}, \ldots, s_{K, n}\right) \cdot \beta\left(c_{n}\right) \cdot \prod_{k} \lambda_{k, n}\left(s_{k, n}\right)\right\} \\
+\alpha\left(c_{m}\right)& =\sum_{-c_{m}}\left\{g_{m}\left(c_{m+1}, c_{m}, s_{1, m}, \ldots, s_{K, m}\right) \cdot \alpha\left(c_{m-1}\right) \cdot \prod_{k} \lambda_{k, m}\left(s_{k, m}\right)\right\} \\
 
-&\propto\sum_{-c_n} \left\{ p(c_{n+1}\mid c_n )p(c_n) \prod_k^K p(s_{k,n} \mid c_n)\cdot \beta(c_n) \cdot \prod_k \bar{\nu}_{k,n}^{in}(s_{k,n}) \right\}
+&\propto \sum_{-c_{m}}\left\{ p(c_{m+1}\mid c_m )p(c_m) \prod_k^K p(s_{k,m} \mid c_m)\cdot \alpha(c_{m-1}) \cdot \prod_k \bar{\nu}_{k,m}^{in}(s_{k,m}) \right\}
 
 \end{aligned}
 $$
-同样，$\alpha(c_n),\beta(c_n)$的确切值是无法求解的，但是这并不影响输出，我们定义归一化的$\bar{\alpha}(c_n),\bar{\beta}(c_n)$：
+接下来定义后向消息（Backward） $\beta(c_{m-1})$：
 $$
 \begin{aligned}
-\bar{\alpha}(c_n) &=\frac{\alpha(c_n)}{\sum_{c_n}\alpha(c_n)} \\
+\beta\left(c_{m-1}\right)&=\sum_{-c_{m-1}}\left\{g_{m}\left(c_{m+1}, c_{m}, s_{1, m}, \ldots, s_{K, m}\right) \cdot \beta\left(c_{m}\right) \cdot \prod_{k} \lambda_{k, m}\left(s_{k, m}\right)\right\} \\
 
-\bar{\beta}(c_n) &=\frac{\beta(c_n)}{\sum_{c_n}\beta(c_n)}
-\end{aligned}
-$$
-最终，Module B传递给Module A的消息 $\nu_{h\to s_{k,n}} = \nu_{k,n}^{out}$，
-$$
-\begin{aligned}
-v_{k, n}^{o u t}&=\delta_{k, n} \triangleq v_{g_{n} \rightarrow s_{k, n}}\\
-
-&\propto \sum_{-s_{k, n}}\left\{g_{n}\left(c_{n+1}, c_{n}, s_{1, n}, \ldots, s_{K, n}\right) \cdot \bar{\alpha}\left(c_{n-1}\right) \bar{\beta}\left(c_{n}\right) \prod_{-k} \bar{\nu}_{k,n}^{in}(s_{k,n}) \right\}
+&\propto\sum_{-c_m} \left\{ p(c_{m+1}\mid c_m )p(c_m) \prod_k^K p(s_{k,m} \mid c_m)\cdot \beta(c_m) \cdot \prod_k \bar{\nu}_{k,m}^{in}(s_{k,m}) \right\}
 
 \end{aligned}
 $$
-同理，$\bar{\nu}_{h\to s_{k,n}} = \bar{\nu}_{k,n}^{out}$:
+同样，$\alpha(c_m),\beta(c_m)$的确切值是无法求解的，但是这并不影响输出，我们定义归一化的$\bar{\alpha}(c_m),\bar{\beta}(c_m)$：
 $$
-\bar{\nu}_{k,n}^{out}(s_{k,n})=\frac{{\nu}_{k,n}^{out}(s_{k,n})}{\sum_{s_{k,n}}{\nu}_{k,n}^{out}(s_{k,n})}
+\begin{aligned}
+\bar{\alpha}(c_m) &=\frac{\alpha(c_m)}{\sum_{c_m}\alpha(c_m)} \\
+
+\bar{\beta}(c_m) &=\frac{\beta(c_m)}{\sum_{c_m}\beta(c_m)}
+\end{aligned}
 $$
-同时，根据Factor Graph 的定义，module B提供给A的$s_{k,n}$的先验概率可以表示为 $\delta _{k,n}(s_{k,n}) \propto \nu_{k,n}^{out}(s_{k,n})$:
+最终，Module B传递给Module A的消息 $\nu_{h\to s_{k,m}} = \nu_{k,m}^{out}$，
 $$
-\pi_{k,n}=\bar{\nu}_{k,n}^{out}(s_{k,n})
+\begin{aligned}
+v_{k, m}^{o u t}&=\delta_{k, m} \triangleq v_{g_{m} \rightarrow s_{k, m}}\\
+
+&\propto \sum_{-s_{k, m}}\left\{g_{m}\left(c_{m+1}, c_{m}, s_{1, m}, \ldots, s_{K, m}\right) \cdot \bar{\alpha}\left(c_{m-1}\right) \bar{\beta}\left(c_{m}\right) \prod_{-k} \bar{\nu}_{k,m}^{in}(s_{k,m}) \right\}
+
+\end{aligned}
+$$
+同理，$\bar{\nu}_{h\to s_{k,m}} = \bar{\nu}_{k,m}^{out}$:
+$$
+\bar{\nu}_{k,m}^{out}(s_{k,m})=\frac{{\nu}_{k,m}^{out}(s_{k,m})}{\sum_{s_{k,m}}{\nu}_{k,m}^{out}(s_{k,m})}
+$$
+同时，根据Factor Graph 的定义，module B提供给A的$s_{k,m}$的先验概率可以表示为 $\delta _{k,m}(s_{k,m}) \propto \nu_{k,m}^{out}(s_{k,m})$:
+$$
+\pi_{k,m}=\bar{\nu}_{k,m}^{out}(s_{k,m})
 $$
 
 
@@ -147,14 +147,18 @@ $$
 {\boldsymbol \mu}_k = {\mathbf \Sigma}_k{\mathbf F}_k^H\operatorname{diag}({\boldsymbol \kappa}){\boldsymbol y}_k
 $$
 
-
-
-开始证明：
+接下来开始给出出处：
 $$
 \begin{aligned}
-q(\boldsymbol{x}_k)=
+\operatorname{ln}p(\boldsymbol{x}_k) &\propto \int \operatorname{ln}p(\boldsymbol{v},\boldsymbol{y};\boldsymbol{\xi}) 
+d\boldsymbol{\kappa}d\boldsymbol{\gamma}d\boldsymbol{s}d\boldsymbol{c}
+\prod_{-\boldsymbol{x}_k} d\boldsymbol{x}_{k^{\prime}} \\
+
+&\propto \int \operatorname{ln} p(\boldsymbol{x}\mid \boldsymbol{\gamma}) \prod_{-\boldsymbol{x}_k} d\boldsymbol{x}_{k^{\prime}} d \boldsymbol{\gamma}\ + \ 
+
 \end{aligned}
 $$
+
 
 
 
@@ -166,9 +170,37 @@ $$
 q({\boldsymbol \gamma}_k) = \prod_{m=1}^M\Gamma({\gamma}_{k,m};\widetilde{a}_{k,m},\widetilde{b}_{k,m})
 $$
 
+Shape parameters:
 $$
-\widetilde{a}_{k,m}=\left\langle s_{k,m} \right\rangle a_{k,m}+ \left\langle 1-s_{k,m} \right\rangle 
+\begin{aligned}
+\widetilde{a}_{k,m}&=\left\langle s_{k,m} \right\rangle a_{k,m}+ \left\langle 1-s_{k,m} \right\rangle \bar{a}_{k,m} + 1\\ 
+
+&= \widetilde{\pi}_{k,m}a_{k,m} + (1-\widetilde{\pi}_{k,m})\bar{a}_{k,m}+1
+\end{aligned}
 $$
+
+rate parameters：
+$$
+\begin{aligned}
+\widetilde{b}_{k,m} &= \left\langle\left|x_{k,m}\right|^{2}\right\rangle+\left\langle s_{k,m}\right\rangle b_{k,m}+\left\langle 1-s_{k,m}\right\rangle \bar{b}_{k,m}
+\\
+&=\left|\mu_{k,m}\right|^{2}+\Sigma_{k,m}+\widetilde{\pi}_{k,m}b_{k,m}+(1-\widetilde{\pi}_{k,m})\bar{b}_{k,m}
+
+\end{aligned}
+$$
+
+
+## Update $s_{k,m}$
+
+
+$$
+q(\boldsymbol{s}_k)=\prod_{m=1}^{M}\left(\tilde{\pi}_{k,m}\right)^{s_{k,m}}\left(1-\tilde{\pi}_{k,m}\right)^{1-s_{k,m}}
+$$
+Update:
+$$
+\tilde{\pi}_{k,m}=\frac{1}{C} \frac{\pi_{k,m} b_{k,m}^{a_{k,m}}}{\Gamma\left(a_{k,m}\right)} e^{\left(a_{k,m}-1\right)\left\langle\ln \gamma_{k,m}\right\rangle-b_{k,m}\left\langle\gamma_{k,m}\right\rangle}
+$$
+
 
 
 

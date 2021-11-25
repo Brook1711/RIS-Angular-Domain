@@ -787,7 +787,7 @@ $\langle f(x)\rangle_{q(x)}=\int f(x) q(x) d x$
 
 ## . Computational Complexity
 
-### 
+
 
 # Simulation
 
