@@ -37,15 +37,15 @@ $$
 
 ## Model A and Model B
 
-![image-20211125102010749](C:\Users\brook1711\AppData\Roaming\Typora\typora-user-images\image-20211125102010749.png)
+
+
+![image-20211125133302643](draft-E-step.assets/image-20211125133302643.png)
 
 
 
 Module A 
 
-
-
-![image-20211125100518695](C:\Users\brook1711\AppData\Roaming\Typora\typora-user-images\image-20211125100518695.png)
+![image-20211125133235673](draft-E-step.assets/image-20211125133235673.png)
 
 为了加快计算和绕过带有loop的factor graph，我们将整个factor graph 分为两部分，其中：
 $$
