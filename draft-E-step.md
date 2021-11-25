@@ -35,6 +35,101 @@ $$
 
 
 
+## Model A and Model B
+
+![image-20211125102010749](C:\Users\brook1711\AppData\Roaming\Typora\typora-user-images\image-20211125102010749.png)
+
+
+
+Module A 
+
+
+
+![image-20211125100518695](C:\Users\brook1711\AppData\Roaming\Typora\typora-user-images\image-20211125100518695.png)
+
+为了加快计算和绕过带有loop的factor graph，我们将整个factor graph 分为两部分，其中：
+$$
+\begin{aligned}
+h^A_{k,n}(s_{k,n})&\triangleq \nu^{out}_{k,n}(s_{k,n})\\
+h^B_{k,n}(s_{k,n})&\triangleq \nu_{\eta_{k,n}\to s_{k,n}}(s_{k,n})
+\end{aligned}
+$$
+
+
+Model B 中传递给module A的消息可以使用sum-product-rule[^factor]来计算：
+
+为了更高效地利用forward/backward 方法[^factor]计算HMM中的相关性，我们利用一个综合的factor node $g_n$ 来刻画 $c_n,c_{n+1},s_{k,n}$ 的相关性：
+$$
+\begin{aligned}
+g_n(c_{n+1},c_n, s_{1,n},\dots,s_{K,n}) & \triangleq p(c_{n+1}\mid c_n) p(s_{1,n},\dots ,s_{K,n} \mid c_n) p(c_n)\\
+& = p(c_{n+1}\mid c_n )p(c_n) \prod_k^K p(s_{k,n} \mid c_n)
+
+\end{aligned}
+$$
+图中 $\nu_{k,n}^{in} (s_{k,n})$ 的值相等于 model A到 model B 的消息 $h^B_{k,n}(s_{k,n})\triangleq \nu_{\eta_{k,n} \to s_{k,n}}(s_{k,n})$ ，然而 model A 为了提高算法效率，并避开带有loop的factor graph 求解，使用了 VBI，那么module A 处只能计算出 $s_{k,n}$ 的后验概率 $q(s_{k,n})$ 而不能直接得到 $\nu_{\eta_{k,n}\to s_{k,n}}(s_{k,n})$ ， 根据message 的定义：
+$$
+\begin{aligned}
+& \nu_{\eta_{k,n}\to s_{k,n}}(s_{k,n})\cdot\nu_{h \to s_{k,n}}(s_{k,n})=p^{m}(s_{k,n}) \propto q(s_{k,n}) \\
+& \Longrightarrow \nu_{k,n}^{in} (s_{k,n}) = \nu_{\eta_{k,n}\to s_{k,n}}(s_{k,n}) \propto \frac{q(s_{k,n})}{\nu_{h\to s_{k,n}}(s_{k,n})}
+\end{aligned}
+$$
+其中，$\nu_{h\to s_{k,n}}$ 是上一次运算循环中 model B 传递给 model A的消息。
+
+为了保证算法能够正常运行，我们需要将消息赋予一个确定的值，而不是一个正比关系，那么我们定义归一化的消息 $\bar{\nu}_{k,n}^{in} (s_{k,n})$：
+$$
+\bar{\nu}_{k,n}^{in} (s_{k,n})=\frac{q(s_{k.n})\cdot \nu_{h\to s_{k,n}}(s_{k,n})}{\sum_{s_{k,n}}q(s_{k.n})\cdot \nu_{h\to s_{k,n}}(s_{k,n})}
+$$
+
+
+接下来定义前向消息（Farward）$\alpha(c_n)$：
+$$
+\begin{aligned}
+\alpha\left(c_{n}\right)& =\sum_{-c_{n}}\left\{g_{n}\left(c_{n+1}, c_{n}, s_{1, n}, \ldots, s_{K, n}\right) \cdot \alpha\left(c_{n-1}\right) \cdot \prod_{k} \lambda_{k, n}\left(s_{k, n}\right)\right\} \\
+
+&\propto \sum_{-c_{n}}\left\{ p(c_{n+1}\mid c_n )p(c_n) \prod_k^K p(s_{k,n} \mid c_n)\cdot \alpha(c_{n-1}) \cdot \prod_k \bar{\nu}_{k,n}^{in}(s_{k,n}) \right\}
+
+\end{aligned}
+$$
+接下来定义后向消息（Backward） $\beta(c_{n-1})$：
+$$
+\begin{aligned}
+\beta\left(c_{n-1}\right)&=\sum_{-c_{n-1}}\left\{g_{n}\left(c_{n+1}, c_{n}, s_{1, n}, \ldots, s_{K, n}\right) \cdot \beta\left(c_{n}\right) \cdot \prod_{k} \lambda_{k, n}\left(s_{k, n}\right)\right\} \\
+
+&\propto\sum_{-c_n} \left\{ p(c_{n+1}\mid c_n )p(c_n) \prod_k^K p(s_{k,n} \mid c_n)\cdot \beta(c_n) \cdot \prod_k \bar{\nu}_{k,n}^{in}(s_{k,n}) \right\}
+
+\end{aligned}
+$$
+同样，$\alpha(c_n),\beta(c_n)$的确切值是无法求解的，但是这并不影响输出，我们定义归一化的$\bar{\alpha}(c_n),\bar{\beta}(c_n)$：
+$$
+\begin{aligned}
+\bar{\alpha}(c_n) &=\frac{\alpha(c_n)}{\sum_{c_n}\alpha(c_n)} \\
+
+\bar{\beta}(c_n) &=\frac{\beta(c_n)}{\sum_{c_n}\beta(c_n)}
+\end{aligned}
+$$
+最终，Module B传递给Module A的消息 $\nu_{h\to s_{k,n}} = \nu_{k,n}^{out}$，
+$$
+\begin{aligned}
+v_{k, n}^{o u t}&=\delta_{k, n} \triangleq v_{g_{n} \rightarrow s_{k, n}}\\
+
+&\propto \sum_{-s_{k, n}}\left\{g_{n}\left(c_{n+1}, c_{n}, s_{1, n}, \ldots, s_{K, n}\right) \cdot \bar{\alpha}\left(c_{n-1}\right) \bar{\beta}\left(c_{n}\right) \prod_{-k} \bar{\nu}_{k,n}^{in}(s_{k,n}) \right\}
+
+\end{aligned}
+$$
+同理，$\bar{\nu}_{h\to s_{k,n}} = \bar{\nu}_{k,n}^{out}$:
+$$
+\bar{\nu}_{k,n}^{out}(s_{k,n})=\frac{{\nu}_{k,n}^{out}(s_{k,n})}{\sum_{s_{k,n}}{\nu}_{k,n}^{out}(s_{k,n})}
+$$
+同时，根据Factor Graph 的定义，module B提供给A的$s_{k,n}$的先验概率可以表示为 $\delta _{k,n}(s_{k,n}) \propto \nu_{k,n}^{out}(s_{k,n})$:
+$$
+\pi_{k,n}=\bar{\nu}_{k,n}^{out}(s_{k,n})
+$$
+
+
+
+
+
+
 ## Update ${\boldsymbol x}_k$
 
 
@@ -389,4 +484,5 @@ $$
 
 $$
 
+[^factor]: Factor_graphs_and_the_sum-product_algorithm
 
