@@ -37,9 +37,7 @@ $$
 
 ## Model A and Model B
 
-
-
-![image-20211125133302643](draft-E-step.assets/image-20211125133302643.png)
+![image-20211128211203869](draft-E-step.assets/image-20211128211203869.png)
 
 
 
@@ -77,7 +75,7 @@ $$
 
 为了保证算法能够正常运行，我们需要将消息赋予一个确定的值，而不是一个正比关系，那么我们定义归一化的消息 $\bar{\nu}_{k,m}^{in} (s_{k,m})$：
 $$
-\bar{\nu}_{k,m}^{in} (s_{k,m})=\frac{q(s_{k,m})\cdot \nu_{h\to s_{k,m}}(s_{k,m})}{\sum_{s_{k,m}}q(s_{k,m})\cdot \nu_{h\to s_{k,m}}(s_{k,m})}
+\bar{\nu}_{k,m}^{in} (s_{k,m})=\frac{q(s_{k,m})\cdot \nu_{h\to s_{k,m}}(s_{k,m})}{\sum_{s_{k,m}}q(s_{k,m})\cdot \nu_{h\to s_{k,m}}(s_{k,m})}=\frac{q(s_{k,m})\cdot \bar{\nu}_{h\to s_{k,m}}(s_{k,m})}{\sum_{s_{k,m}}q(s_{k,m})\cdot \bar{\nu}_{h\to s_{k,m}}(s_{k,m})}
 $$
 
 
