@@ -120,9 +120,9 @@ $$
 $$
 \bar{\nu}_{k,m}^{out}(s_{k,m})=\frac{{\nu}_{k,m}^{out}(s_{k,m})}{\sum_{s_{k,m}}{\nu}_{k,m}^{out}(s_{k,m})}
 $$
-同时，根据Factor Graph 的定义，module B提供给A的$s_{k,m}$的先验概率可以表示为 $\delta _{k,m}(s_{k,m}) \propto \nu_{k,m}^{out}(s_{k,m})$:
+同时，根据Factor Graph 的定义，module B提供给A的$s_{k,m}$的先验概率可以表示为 $\pi_{k,m}(s_{k,m}) \propto \nu_{k,m}^{out}(s_{k,m})$:
 $$
-\pi_{k,m}=\bar{\nu}_{k,m}^{out}(s_{k,m})
+\pi_{k,m}(s_{k,m})=\bar{\nu}_{k,m}^{out}(s_{k,m})
 $$
 
 
