@@ -199,6 +199,26 @@ $$
 \tilde{\pi}_{k,m}=\frac{1}{C} \frac{\pi_{k,m} b_{k,m}^{a_{k,m}}}{\Gamma\left(a_{k,m}\right)} e^{\left(a_{k,m}-1\right)\left\langle\ln \gamma_{k,m}\right\rangle-b_{k,m}\left\langle\gamma_{k,m}\right\rangle}
 $$
 
+Where $C$ is the normalization parameter 
+$$
+\begin{aligned}
+C=&\frac{\pi_{k,m} b_{k,m}^{a_{k,m}}}{\Gamma\left(a_{k,m}\right)} e^{\left(a_{k,m}-1\right)\left\langle\ln \gamma_{k,m}\right\rangle-b_{k,m}\left\langle\gamma_{k,m}\right\rangle}+ \\
+& \frac{(1-\pi_{k,m}) \bar{b}_{k,m}^{\bar{a}_{k,m}}}{\Gamma\left(\bar{a}_{k,m}\right)} e^{\left(\bar{a}_{k,m}-1\right)\left\langle\ln \gamma_{k,m}\right\rangle-\bar{b}_{k,m}\left\langle\gamma_{k,m}\right\rangle}
+\end{aligned}
+$$
+Where, 
+$$
+\left\langle\ln \rho_{k,m}\right\rangle=\psi\left(\tilde{a}_{k,m}\right)-\ln \left(\tilde{b}_{k,m}\right)
+$$
+$\psi (x)\triangleq \frac{d}{dx} \operatorname{ln}(\Gamma(x))$, is the digamma function
+
+```python
+from scipy.special import gamma
+from scipy.special import digamma
+```
+
+
+
 
 
 
