@@ -479,8 +479,8 @@ class E_step():
         
         self.input_from_M = 0
 
-        self.FB_MP_loops = 10
-        self.VBI_loops = 10
+        self.FB_MP_loops = 20
+        self.VBI_loops = 20
 
         # preperation
         ## parameters of q(x)
