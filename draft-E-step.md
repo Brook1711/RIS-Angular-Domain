@@ -208,7 +208,7 @@ C=&\frac{\pi_{k,m} b_{k,m}^{a_{k,m}}}{\Gamma\left(a_{k,m}\right)} e^{\left(a_{k,
 $$
 Where, 
 $$
-\left\langle\ln \rho_{k,m}\right\rangle=\psi\left(\tilde{a}_{k,m}\right)-\ln \left(\tilde{b}_{k,m}\right)
+\left\langle\ln \gamma_{k,m}\right\rangle=\psi\left(\tilde{a}_{k,m}\right)-\ln \left(\tilde{b}_{k,m}\right)
 $$
 $\psi (x)\triangleq \frac{d}{dx} \operatorname{ln}(\Gamma(x))$, is the digamma function
 
