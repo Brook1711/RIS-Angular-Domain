@@ -217,7 +217,7 @@ from scipy.special import gamma
 from scipy.special import digamma
 ```
 
-
+To reduce the computational complexity, set $a_{k,m} = \bar{a}_{k,m}=1$
 
 
 
