@@ -111,7 +111,7 @@ $$
 $$
 
 
-现在考虑$\frac{\partial}{\partial\left(\mathbf{F}_{k, l, t} \boldsymbol{x}_{k}\right)} \ln \left[\mathcal{C} \mathcal{N}\left(y_{k, l, t} ; \mathbf{F}_{k, l, t} \boldsymbol{x}_{k}, \kappa_{k, t}^{-1}\right)\right]$
+现在考虑$\frac{\partial}{\partial\left(\mathbf{F}_{k, l, t} \boldsymbol{x}_{k}\right)} \ln \left[\mathcal{C} \mathcal{N}\left(y_{k, l, t} ; \mathbf{F}_{k, l, t} \boldsymbol{x}_{k}, \kappa_{k,l, t}^{-1}\right)\right]$
 
 化简模型：$\frac{\partial }{\partial \mu} \operatorname{ln}\left[{\mathcal{CN} }\left(y; \mu, \kappa^{-1}\right) \right]$
 
@@ -170,10 +170,10 @@ $$
 
 \end{aligned}
 $$
-则$\sigma^2=\kappa_{k,t}^{-1}, \mu = {\mathbf F}_{k,l,t}{\boldsymbol x}_k$：
+则$\sigma^2=\kappa_{k,l,t}^{-1}, \mu = {\mathbf F}_{k,l,t}{\boldsymbol x}_k$：
 $$
 \begin{aligned}
-\frac{\partial}{\partial\left(\mathbf{F}_{k, l, t} \boldsymbol{x}_{k}\right)} \ln \left[\mathcal{C} \mathcal{N}\left(y_{k, l, t} ; \mathbf{F}_{k, l, t} \boldsymbol{x}_{k}, \kappa_{k, t}^{-1}\right)\right]&= \underbrace{\frac{\kappa_{k,t}}{2}(y_{k,l,t}^*-({{\mathbf F}_{k,l,t}{\boldsymbol x}_k})^*)}_{\text{part 1}}
+\frac{\partial}{\partial\left(\mathbf{F}_{k, l, t} \boldsymbol{x}_{k}\right)} \ln \left[\mathcal{C} \mathcal{N}\left(y_{k, l, t} ; \mathbf{F}_{k, l, t} \boldsymbol{x}_{k}, \kappa_{k,l, t}^{-1}\right)\right]&= \underbrace{\frac{\kappa_{k,l,t}}{2}(y_{k,l,t}^*-({{\mathbf F}_{k,l,t}{\boldsymbol x}_k})^*)}_{\text{part 1}}
 
 \end{aligned}
 $$
@@ -198,7 +198,7 @@ ${\mathbf F}_2 \triangleq \sum_{m=1}^M e^{j\vartheta_{t,m}}\big( -j2\pi(M-1) \bi
 
 ${\mathbf F}_3 \triangleq {\mathbf F}_1^H {\mathbf F}_2$
 
-$c_1 = \frac{\kappa_{k,t}}{2}$, $c_2= y_{k,l,t}^*$
+$c_1 = \frac{\kappa_{k,l,t}}{2}$, $c_2= y_{k,l,t}^*$
 
 则，偏导可以表示为： 
 $$
@@ -418,7 +418,9 @@ $$
 \begin{aligned}
 \frac{\partial}{\partial \omega_l}&\hat{u}^{EM}\left( {\omega}_{l}, \boldsymbol{\xi}_{-\omega_l}^{(i)} ; {\omega}_{l}^{(i)}, \boldsymbol{\xi}_{-{\omega}_{l}}^{(i)} \right) = \\
 
-&\sum_{k=1}^K \sum_{t=1}^{\tau} \Big( c_1c_2{\mathbf F}_2 {\boldsymbol \mu}_k-c_1 \big( \operatorname{Tr}(\mathbf{F}_3 \boldsymbol{\Sigma}_k)+\boldsymbol{\mu}_k^{H} \mathbf{F}_3\boldsymbol{\mu}_k \big) \Big) 
+&\sum_{k=1}^K \sum_{t=1}^{\tau} \Big( c_1c_2{\mathbf F}_2 {\boldsymbol \mu}_k-c_1 \big( \operatorname{Tr}(\mathbf{F}_3 \boldsymbol{\Sigma}_k)+\boldsymbol{\mu}_k^{H} \mathbf{F}_3\boldsymbol{\mu}_k \big) \Big) \\
+
+\propto & \sum_{k=1}^K \sum_{t=1}^{\tau} \Big( c_2{\mathbf F}_2 {\boldsymbol \mu}_k-  \operatorname{Tr}(\mathbf{F}_3 \boldsymbol{\Sigma}_k)-\boldsymbol{\mu}_k^{H} \mathbf{F}_3\boldsymbol{\mu}_k  \Big)
 
 
 \end{aligned}
@@ -426,7 +428,7 @@ $$
 
 其中：
 
-$c_1 = \frac{\kappa_{k,t}}{2}$, $c_2= y_{k,l,t}^*$
+$c_1 = \frac{\kappa_{k,l,t}}{2}$, $c_2= y_{k,l,t}^*$
 
 ${\mathbf F}_1 \triangleq {\mathbf F}_{k,l,t}$, 
 
@@ -439,14 +441,16 @@ ${\mathbf F}_3 \triangleq {\mathbf F}_1^H {\mathbf F}_2$
 $$
 \begin{aligned}
 \frac{\partial}{\partial \Delta {\varphi}_m}&\hat{u}^{EM}\left( {\Delta\varphi_m}, \boldsymbol{\xi}_{-\Delta\varphi_m}^{(i)} ; \Delta\varphi_m^{(i)}, \boldsymbol{\xi}_{-\Delta\varphi_m}^{(i)} \right) =\\
-&\sum_{k=1}^K \sum_{t=1}^{\tau}\Big\{ c_1c_2{\mathbf F}_4{\boldsymbol \mu}_k-c_1 \big( \operatorname{Tr}(\mathbf{F}_5 \boldsymbol{\Sigma}_k)+\boldsymbol{\mu}_k^{H} \mathbf{F}_5\boldsymbol{\mu}_k \big) \Big\}
+&\sum_{k=1}^K \sum_{t=1}^{\tau}\Big\{ c_1c_2{\mathbf F}_4{\boldsymbol \mu}_k-c_1 \big( \operatorname{Tr}(\mathbf{F}_5 \boldsymbol{\Sigma}_k)+\boldsymbol{\mu}_k^{H} \mathbf{F}_5\boldsymbol{\mu}_k \big) \Big\}\\
+
+\propto & \sum_{k=1}^K \sum_{t=1}^{\tau}\Big\{ c_2{\mathbf F}_4{\boldsymbol \mu}_k- \operatorname{Tr}(\mathbf{F}_5 \boldsymbol{\Sigma}_k)-\boldsymbol{\mu}_k^{H} \mathbf{F}_5\boldsymbol{\mu}_k \Big\}
 
 \end{aligned}
 $$
 
 其中：
 
-$c_1 = \frac{\kappa_{k,t}}{2}$, $c_2= y_{k,l,t}^*$
+$c_1 = \frac{\kappa_{k,l,t}}{2}$, $c_2= y_{k,l,t}^*$
 $$
 \begin{aligned}
 {\mathbf F}_4 = \underbrace{\Big [{\mathbf \Phi}^H  \Big]_{t,:}{\mathbf V}(\omega_l)}_{(1\times M)} 
