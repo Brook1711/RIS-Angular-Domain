@@ -261,9 +261,9 @@ $$
 其中：
 $$
 \begin{aligned}
-\frac{\partial}{\partial \Delta {\varphi}_m} \operatorname{ln}p({\boldsymbol y} \mid {\boldsymbol x},{\boldsymbol \kappa}; {\omega_l }, {\boldsymbol \xi}_{1,-\omega_l}^{(i)}) 
+\frac{\partial}{\partial \Delta {\varphi}_m}& \operatorname{ln}p({\boldsymbol y} \mid {\boldsymbol x},{\boldsymbol \kappa}; {\Delta\varphi_m }, {\boldsymbol \xi}_{2,-{\Delta\varphi_m }}^{(i)}) \\
 
- &=\sum_{k=1}^{K}\sum_{t=1}^{\tau} \underbrace{\frac{\partial}{\partial ({\mathbf F}_{k,l,t} {\boldsymbol x}_k)} \operatorname{ln}\big [\mathcal{ CN}(y_{k,l,t};{\mathbf F}_{k,l,t}{\boldsymbol x}_k, { \kappa_{k,t}^{-1}}) \big]}_{\text{Partial derivative 1}} \underbrace{\frac{\partial}{\partial \Delta {\varphi}_m}\left({\mathbf F}_{k,l,t} {\boldsymbol x}_k \right)}_{\text{Partial derivative 2}}
+ &=\sum_{k=1}^{K}\sum_{l=1}^L\sum_{t=1}^{\tau} \underbrace{\frac{\partial}{\partial ({\mathbf F}_{k,l,t} {\boldsymbol x}_k)} \operatorname{ln}\big [\mathcal{ CN}(y_{k,l,t};{\mathbf F}_{k,l,t}{\boldsymbol x}_k, { \kappa_{k,t}^{-1}}) \big]}_{\text{Partial derivative 1}} \underbrace{\frac{\partial}{\partial \Delta {\varphi}_m}\left({\mathbf F}_{k,l,t} {\boldsymbol x}_k \right)}_{\text{Partial derivative 2}}
  
 \end{aligned}
 $$
@@ -337,7 +337,7 @@ $$
 对其求偏导：（$(u \pm v)^{\prime}=u^{\prime} \pm v^{\prime}$，$\left(\frac{u}{v}\right)^{\prime}=\frac{u^{\prime} v-u v^{\prime}}{v^{2}}$），$(u v)^{\prime}=u^{\prime} v+v^{\prime} u$ 
 $$
 \begin{aligned}
-f^{\prime}_M(x) & \triangleq \frac{\partial}{\partial x} f_M(x)=\frac{1}{\sqrt{M}} \frac{j(M-1)}{2}e^{jx(M-1)/2}\frac{\operatorname{sin}(Mx/2)}{\operatorname{sin}(x/2)}\\&+\frac{1}{\sqrt{M}}e^{jx(M-1)/2}\frac{\frac{M}{2}\operatorname{cos}(Mx/2) \operatorname{sin}(x/2)-\frac{1}{2}\operatorname{cos}(x/2)\operatorname{sin}(M/2) }{\operatorname{sin}^2(x/2)}
+f^{\prime}_M(x) & \triangleq \frac{\partial}{\partial x} f_M(x)=\frac{1}{\sqrt{M}} \frac{j(M-1)}{2}e^{jx(M-1)/2}\frac{\operatorname{sin}(Mx/2)}{\operatorname{sin}(x/2)}\\&+\frac{1}{\sqrt{M}}e^{jx(M-1)/2}\frac{\frac{M}{2}\operatorname{cos}(Mx/2) \operatorname{sin}(x/2)-\frac{1}{2}\operatorname{cos}(x/2)\operatorname{sin}(Mx/2) }{\operatorname{sin}^2(x/2)}
 \end{aligned}
 $$
 
@@ -381,9 +381,9 @@ $$
 对其进行积分有：
 $$
 \begin{aligned}
-\int& q({\boldsymbol x})\frac{\partial}{\partial \Delta\varphi_m} \operatorname{ln}p({\boldsymbol y} \mid {\boldsymbol x},{\boldsymbol \kappa}; {\Delta\varphi_m }, {\boldsymbol \xi}_{1,-\Delta\varphi_m}^{(i)})d{\boldsymbol x} \\&= \sum_{k=1}^K\int q({\boldsymbol x}_k) \sum_{t=1}^\tau \Big(c_1c_2{\mathbf F}_4{\boldsymbol x}_k - c_1 {\boldsymbol x}_k^H {\mathbf F}_1^H {\mathbf F}_4 {\boldsymbol x}_k \Big )d{\boldsymbol x}_k\\
+\int& q({\boldsymbol x})\frac{\partial}{\partial \Delta\varphi_m} \operatorname{ln}p({\boldsymbol y} \mid {\boldsymbol x},{\boldsymbol \kappa}; {\Delta\varphi_m }, {\boldsymbol \xi}_{1,-\Delta\varphi_m}^{(i)})d{\boldsymbol x} \\&= \sum_{k=1}^K\sum_{l=1}^L\sum_{t=1}^\tau\int q({\boldsymbol x}_k)  \Big(c_1c_2{\mathbf F}_4{\boldsymbol x}_k - c_1 {\boldsymbol x}_k^H {\mathbf F}_1^H {\mathbf F}_4 {\boldsymbol x}_k \Big )d{\boldsymbol x}_k\\
 
-&=\sum_{k=1}^K \sum_{t=1}^\tau \Big\{ c_1 c_2 \underbrace{{\mathbf F}_4 \int q({\boldsymbol x}_k){\boldsymbol x}_k \cdot d{\boldsymbol x}_k}_{\text{integration 1}} - c_1 \underbrace{\int q({\boldsymbol x}_k) {\boldsymbol x}_k^H {\mathbf F}_5 {\boldsymbol x}_k \cdot d{\boldsymbol x}_k }_{\text{integration 2}} \Big\}
+&=\sum_{k=1}^K \sum_{l=1}^L \sum_{t=1}^\tau \Big\{ c_1 c_2 \underbrace{{\mathbf F}_4 \int q({\boldsymbol x}_k){\boldsymbol x}_k \cdot d{\boldsymbol x}_k}_{\text{integration 1}} - c_1 \underbrace{\int q({\boldsymbol x}_k) {\boldsymbol x}_k^H {\mathbf F}_5 {\boldsymbol x}_k \cdot d{\boldsymbol x}_k }_{\text{integration 2}} \Big\}
 \end{aligned}
 $$
 对于integration 1来说：
@@ -405,7 +405,7 @@ $$
 $$
 \begin{aligned}
 \frac{\partial}{\partial \Delta {\varphi}_m}&\hat{u}^{EM}\left( {\Delta\varphi_m}, \boldsymbol{\xi}_{-\Delta\varphi_m}^{(i)} ; \Delta\varphi_m^{(i)}, \boldsymbol{\xi}_{-\Delta\varphi_m}^{(i)} \right) =\\
-&\sum_{k=1}^K \sum_{t=1}^{\tau}\Big\{ c_1c_2{\mathbf F}_4{\boldsymbol \mu}_k-c_1 \big( \operatorname{Tr}(\mathbf{F}_5 \boldsymbol{\Sigma}_k)+\boldsymbol{\mu}_k^{H} \mathbf{F}_5\boldsymbol{\mu}_k \big) \Big\}
+&\sum_{k=1}^K\sum_{l=1}^L \sum_{t=1}^{\tau}\Big\{ c_1c_2{\mathbf F}_4{\boldsymbol \mu}_k-c_1 \big( \operatorname{Tr}(\mathbf{F}_5 \boldsymbol{\Sigma}_k)+\boldsymbol{\mu}_k^{H} \mathbf{F}_5\boldsymbol{\mu}_k \big) \Big\}
 
 \end{aligned}
 $$
@@ -441,9 +441,9 @@ ${\mathbf F}_3 \triangleq {\mathbf F}_1^H {\mathbf F}_2$
 $$
 \begin{aligned}
 \frac{\partial}{\partial \Delta {\varphi}_m}&\hat{u}^{EM}\left( {\Delta\varphi_m}, \boldsymbol{\xi}_{-\Delta\varphi_m}^{(i)} ; \Delta\varphi_m^{(i)}, \boldsymbol{\xi}_{-\Delta\varphi_m}^{(i)} \right) =\\
-&\sum_{k=1}^K \sum_{t=1}^{\tau}\Big\{ c_1c_2{\mathbf F}_4{\boldsymbol \mu}_k-c_1 \big( \operatorname{Tr}(\mathbf{F}_5 \boldsymbol{\Sigma}_k)+\boldsymbol{\mu}_k^{H} \mathbf{F}_5\boldsymbol{\mu}_k \big) \Big\}\\
+&\sum_{k=1}^K\sum_{l=1}^L \sum_{t=1}^{\tau}\Big\{ c_1c_2{\mathbf F}_4{\boldsymbol \mu}_k-c_1 \big( \operatorname{Tr}(\mathbf{F}_5 \boldsymbol{\Sigma}_k)+\boldsymbol{\mu}_k^{H} \mathbf{F}_5\boldsymbol{\mu}_k \big) \Big\}\\
 
-\propto & \sum_{k=1}^K \sum_{t=1}^{\tau}\Big\{ c_2{\mathbf F}_4{\boldsymbol \mu}_k- \operatorname{Tr}(\mathbf{F}_5 \boldsymbol{\Sigma}_k)-\boldsymbol{\mu}_k^{H} \mathbf{F}_5\boldsymbol{\mu}_k \Big\}
+\propto & \sum_{k=1}^K\sum_{l=1}^L \sum_{t=1}^{\tau}\Big\{ c_2{\mathbf F}_4{\boldsymbol \mu}_k- \operatorname{Tr}(\mathbf{F}_5 \boldsymbol{\Sigma}_k)-\boldsymbol{\mu}_k^{H} \mathbf{F}_5\boldsymbol{\mu}_k \Big\}
 
 \end{aligned}
 $$
@@ -468,3 +468,19 @@ $$
 $$
 ${\mathbf F}_5 \triangleq {\mathbf F}_1^H{\mathbf F}_4$
 
+where:
+$$
+\begin{aligned}
+\frac{\partial}{\partial \Delta \varphi_m}D_M(\Delta \varphi_m, m^{\prime} )=\begin{cases}
+2\pi f^{\prime}_M(x)|_{x=2\pi(\frac{m^{\prime}-m}{M}-1+\Delta \varphi_m )}	&,\frac{m^{\prime}-1}{M}<0.5 \\
+2\pi f^{\prime}_M(x)|_{x=2\pi(\frac{m^{\prime}-m}{M}+\Delta \varphi_m )}	&,\frac{m^{\prime}-1}{M} \geq 0.5 
+
+\end{cases}
+\end{aligned}
+$$
+and
+$$
+\begin{aligned}
+f^{\prime}_M(x) & \triangleq \frac{\partial}{\partial x} f_M(x)=\frac{1}{\sqrt{M}} \frac{j(M-1)}{2}e^{jx(M-1)/2}\frac{\operatorname{sin}(Mx/2)}{\operatorname{sin}(x/2)}\\&+\frac{1}{\sqrt{M}}e^{jx(M-1)/2}\frac{\frac{M}{2}\operatorname{cos}(Mx/2) \operatorname{sin}(x/2)-\frac{1}{2}\operatorname{cos}(x/2)\operatorname{sin}(Mx/2) }{\operatorname{sin}^2(x/2)}
+\end{aligned}
+$$
