@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[21]:
+# In[1]:
 
 
 import numpy as np
@@ -28,7 +28,7 @@ L = 4
 # ${\boldsymbol x}_k \in {\mathbb R}^{M\times 1}$  ${\boldsymbol x}_{k,m} \in \{ 0,1\}$
 # 
 
-# In[22]:
+# In[2]:
 
 
 ## generate channel support
@@ -62,7 +62,7 @@ plt.plot(range(M), common_support_varphi)
 plt.legend(['common_support_varphi'])
 
 
-# In[23]:
+# In[3]:
 
 
 np.random.seed(3)
@@ -118,7 +118,7 @@ for k in range(K):
 # 
 # $\mathbf{a}_{M,k}^{D F T}(\boldsymbol{\varphi})=\mathbf{D}_{M}(\Delta \boldsymbol{\varphi}) \boldsymbol{x}_k = \sum_{j}^{J_k} \beta_{k,j} {\mathbf a}_M(\varphi_{k,j})$
 
-# In[24]:
+# In[4]:
 
 
 def array_response(M, x):
@@ -196,7 +196,7 @@ plt.legend(['non-activate', 'activate (unit expectation)', 'random (activate)'])
 # $$
 # 
 
-# In[25]:
+# In[5]:
 
 
 ## generate D_M
@@ -205,6 +205,17 @@ def f_N(N, x):
         return N
     else:
         return 1/np.sqrt(N)*cmath.exp(1j*x*(N-1)/2)*(cmath.sin((N)*x/2))/(cmath.sin(x/2))
+
+def f_M_prime(M, x):
+    part1 = np.power(M, -0.5) * 1j * (M-1) / 2 * np.exp(1j * x * (M-1) / 2) * np.sin(M*x/2) / np.sin(x/2)
+    part2 = np.power(M, -0.5) * np.exp(1j * x * (M-1) / 2) * (M/2 * np.cos(M*x/2) * np.sin(x/2) - 1/2 * np.cos(x/2) * np.sin(M * x/2)) / np.power(np.sin(x/2), 2)
+    return part1 + part2
+
+def DM_PD_Delta_varphi(Delta_varphi_m, m, m_prime):
+    if m_prime < 0.5:
+        return 2* np.pi * f_M_prime(M, 2*np.pi * ( (m_prime - m)/M -1 + Delta_varphi_m ))
+    else:
+        return 2* np.pi * f_M_prime(M, 2*np.pi * ( (m_prime - m)/M + Delta_varphi_m ))
 
 def generate_DM(M, Delta_varphi):
     DM = np.matrix([np.complex128(0) for m in range(M * M)]).reshape((M,M))
@@ -234,7 +245,7 @@ plt.subplot(1,2,2)
 # 
 # ${\mathbf V}({\omega_l}) = \operatorname{Diag}({\mathbf{a}_M({\omega_l})}) {\mathbf U}_M^H$
 
-# In[26]:
+# In[6]:
 
 
 np.random.seed(4)
@@ -302,7 +313,7 @@ Phi_H = generate_Phi_H(M, tau=tau, mode='random')
 # \mathbf{\Phi}^{H} \mathbf{V}\left(\omega_{L}\right) \mathbf{D}_{M}\left(\Delta \varphi_{k}\right)
 # \end{array}\right]_{\tau L \times M}$
 
-# In[27]:
+# In[7]:
 
 
 # generate 2D object list P_lk
@@ -430,39 +441,22 @@ print(np.shape(FK[0]))
 # $$
 # 
 
-# In[28]:
+# In[ ]:
 
 
-import numpy as np
-from scipy import integrate
-import sympy
-import matplotlib.pyplot as plt
 
-class M_step():
-    def __init__(self, E_step):
-        self.name = 'default'
-        self.E_step = E_step
-        self.Xi = 0
-        self.count = 0
-        pass
 
-    def surrogate_function(self, xi, xi_dot):
-        integrate.quad(E_step.q_function)
-        return 0
-    
-    def joint_distribution(self, v, y, xi):
 
-        return 0
-    
-    def update_Xi(self):
+# In[ ]:
 
-        pass
+
+
 
 
 # # E step algrithm
 # ![image-20211128211203869](Alg.assets/image-20211128211203869.png)
 
-# In[44]:
+# In[8]:
 
 
 class E_step():
@@ -479,38 +473,38 @@ class E_step():
         
         self.input_from_M = 0
 
-        self.FB_MP_loops = 20
-        self.VBI_loops = 20
+        self.FB_MP_loops = 10
+        self.VBI_loops = 10
 
-        # preperation
+        # preparation
         ## parameters of q(x)
         self.Sigma = [np.mat(np.zeros((M,M), dtype = np.complex128)) for k in range(K)]          # is a list of complex matrix, K X (M, M)
-        self.Mu = [np.zeros((M), dtype = np.complex128) for k in range(K)]             # is a list of complex vecter, K X (M, )
+        self.Mu = [np.zeros((M), dtype = np.complex128) for k in range(K)]             # is a list of complex vector, K X (M, )
         ## parameters of q(gamma)
         self.widetilde_ab = [np.mat(np.zeros((M,2) ) ) for k in range(K)]   # is a list of real-valued matrix, K X (M, 2)
-        ## parameters of q(s), postierior
-        self.widetilde_pi = [np.zeros((M)) for k in range(K)]   # is a list of real-valued vector, K X (M, )
+        ## parameters of q(s), posterior
+        self.widetilde_pi = [np.zeros(M) for k in range(K)]   # is a list of real-valued vector, K X (M, )
         ## parameters of p(s), prior               
-        self.prior_pi = [np.array([0.5 for m in range(M)]) for k in range(K)]       # is a list of real-valued vector, K X (M, )
+        self.prior_pi = [np.array([0.001 for m in range(M)]) for k in range(K)]       # is a list of real-valued vector, K X (M, )
         ## the massages passing component
-        self.bar_nu_h_to_s = [np.ones((M))/2 for k in range(K)]      # is a list of real-valued vector, K X (M, ), B pass to A
-        self.bar_nu_eta_to_s = [np.ones((M))/2 for k in range(K)]    # is a list of real-valued vector, K X (M, ), A pass to B
+        self.bar_nu_h_to_s = [np.ones(M) / 2 for k in range(K)]      # is a list of real-valued vector, K X (M, ), B pass to A
+        self.bar_nu_eta_to_s = [np.ones(M) / 2 for k in range(K)]    # is a list of real-valued vector, K X (M, ), A pass to B
         self.Forward_messages = np.array([0.5 for m in range(M)])
         self.Backward_messages = np.array([0.5 for m in range(M)])
         
         pass
 
     def begin(self):
-        # An outer-iterration 
+        # An outer-iteration
         for FB_MP_step in range(self.FB_MP_loops):
-            # An inter-iterration
+            # An inter-iteration
             self.initialization_of_module_A(FB_MP_step)
             for VBI_step in range(self.VBI_loops):
                 self.VBI_module_A()
             self.MP_module_B()
 
     def initialization_of_module_A(self, outer_iteration_index):
-        # in the first outer iteration, initialize the postierior to be the prior
+        # in the first outer iteration, initialize the posterior to be the prior
         if outer_iteration_index == 0:
             # initialize q(s)
             for k in range(K):
@@ -725,8 +719,6 @@ class E_step():
                 P_Skm_ConditionedOn_Cm_cumprod = np.cumprod(P_Skm_ConditionedOn_Cm)[-1]
                 return P_cm1_cm * P_Skm_ConditionedOn_Cm_cumprod
 
-    
-
 
 # # HMM Model
 # ![HMM Model](Alg.assets/HMM.png)
@@ -734,7 +726,7 @@ class E_step():
 
 # # Gamma Function & Digamma Function
 
-# In[45]:
+# In[9]:
 
 
 from scipy.stats import gamma
@@ -744,6 +736,8 @@ np.random.seed(1)
 x = np.linspace(0,10,1000)
 alpha_0, alpha_1 = 1, 1
 beta_0, beta_1 = 0.001, 1
+# alpha_0, alpha_1 = 1000, 1
+# beta_0, beta_1 = 1, 1
 
 plt.figure(figsize = (10,4))
 plt.subplot(1,2,1)
@@ -765,7 +759,7 @@ plt.legend(['gamma_function', 'digamma'])
 
 # # Test out module A (VBI step)
 
-# In[46]:
+# In[10]:
 
 
 # given the true parameters \xi and the true hidden and observations, test out q(s)
@@ -788,21 +782,270 @@ for k in range(K):
 # # perform the E step
 # 
 
-# In[48]:
+# In[11]:
 
 
 E_step_instance = E_step(
+    # in the E-step process, FK can be directly given
+    # However, in the AO-EM methed, FK(contained xi) should be estimated in M-step and passed by M
     FK = FK, 
-    kappa= np.zeros(tau * L),
+    kappa= np.ones(L*tau)*0.5,
     YK = YK, 
     trans_pro_C=trans_pro_C, 
     trans_pro_CS = trans_pro_CS
 )
 E_step_instance.begin()
+perfect_Mu=E_step_instance.Mu.copy()
+perfect_Sigma=E_step_instance.Sigma.copy()
 
 
-# In[ ]:
+# ## Show the q(x)
+
+# In[12]:
 
 
+plt.figure(figsize=(15,4))
+for k in range(K):
+    plt.subplot(2,K,k+1)
+    plt.scatter(np.array(range(M)), channel_support_for_all_users[k] * (1-0.05*k), color=color_list[k])
+    plt.ylim(0.8, 1.05)
+    plt.subplot(2,K,K + k+1)
+    plt.scatter(np.array(range(M)), E_step_instance.widetilde_pi[k], color=color_list[k])
+    plt.ylim(-0.1, 1.05)
 
 
+plt.figure(figsize=(15,4))
+# print(np.array(np.reshape(E_step_instance.Mu[0],(1,-1)))[0])
+for k in range(K):
+    plt.subplot(2,K,k+1)
+    plt.title(r'Real $\beta_{k,m}$ in channel')
+    plt.scatter(np.array(range(M)), np.abs(np.array(channel_support_for_all_users[k]) * Beta_true), color = color_list[k] )
+    plt.subplot(2,K,K+k+1)
+    plt.title(r'Estimated $\beta_{k,m}$ in channel')
+    plt.scatter(np.array(range(M)), np.abs(np.array(np.reshape(E_step_instance.Mu[k],(1,-1)))[0]), color=color_list[k])
+    plt.subplots_adjust(left=0.125,
+                    bottom=0.1, 
+                    right=0.9, 
+                    top=0.9, 
+                    wspace=0.2, 
+                    hspace=0.5)
+
+
+# # M step class
+
+# In[87]:
+
+
+import numpy as np
+from scipy import integrate
+import sympy
+import matplotlib.pyplot as plt
+# Input: YK
+# Output: the M step estimate the omega_l and delta_m
+# and calculate the FK
+class M_step:
+    def __init__(self,Phi_H, YK, Mu, Sigma, kappa_klt,step_1 = 1, value_1 = 1, step_2 = 1, value_2 = 1):
+        self.name = 'default'
+        self.Phi_H = Phi_H
+        self.YK = YK
+        self.Mu = Mu
+        self.step_1 = step_1
+        self.value_1 = value_1
+        self.step_2 = step_2
+        self.value_2 = value_2
+        self.Sigma = Sigma
+        self.kappa_klt = kappa_klt
+        self.Omega_L = np.zeros(L)/(2*M)
+        # self.Omega_L = np.array([0.1289528494122413, 0.3777057097108742, -0.36879843745466045, -0.1106502650134412])
+        # self.Delta_varphi = np.ones(M)/(2*M)
+        self.Delta_varphi = Delta_varphi
+        self.U_M = DFT_matrix(M)
+        self.D_M = generate_DM(M, self.Delta_varphi)
+        # self.XK = Mu
+        self.Iteration_count = 0
+        self.hist_data = {
+            'omega':[],
+            'Delta_varphi':[]
+            }
+        pass
+
+    def update(self,Mu = 0, Sigma = 0):
+        # first update input
+        # self.Mu = Mu
+        # self.Sigma = Sigma
+        self.D_M = generate_DM(M, self.Delta_varphi)
+        # begin
+        self.last_Omega_L = self.Omega_L.copy()
+        self.last_Delta_varphi = self.Delta_varphi.copy()
+        self.update_Omega_L()
+        # self.update_Delta_varphi()
+        pass
+
+    def update_Omega_L(self):
+        for l in range(L):
+            PD_omega_l = 0
+            for t in range(tau):
+                F_2 = np.mat(np.zeros((1,M)),dtype=np.complex128)
+                for m in range(M):
+                    F_2 +=(Phi_H[t,m] * (-1j * 2 * np.pi * m) * np.exp(-1j * 2 * np.pi * m * self.last_Omega_L[l]) * self.U_M[m,:] * self.D_M)
+                for k in range(K):
+                    c_2 = YK[k][t+l*tau].H[0,0]
+                    F_1 = FK[k][t+l*tau,:]
+                    F_3 = F_1.H * F_2
+                    # c_2, F_2, F_3 = self.calculate_parameters_for_Omega(k,l,t)
+                    PD_omega_l += (c_2 * F_2 * self.Mu[k])[0,0] - np.trace(F_3 * self.Sigma[k]) - (self.Mu[k].H * F_3 * self.Mu[k])[0,0]
+            step_value = np.real(PD_omega_l)
+            # self.Omega_L[l] += self.step_1 * np.arctan(self.value_1 * step_value) * 2 / np.pi
+            self.Omega_L[l] += self.step_1 * step_value
+            self.hist_data['omega'].append(self.value_1 * step_value)
+            # if step_value > 0 :
+            #     self.Omega_L[l] += np.log(step_value)
+            # else:
+            #     self.Omega_L[l] += - np.log(-step_value)
+        pass
+
+    def update_Delta_varphi(self):
+        for m in range(M):
+            PD_Delta_varphi = 0
+            partial_F_4 = self.D_M.copy()
+            for m_prime in range(M):
+                partial_F_4[m_prime, m] = DM_PD_Delta_varphi(self.last_Delta_varphi[m], m, m_prime)
+            for k in range(K):
+                for l in range(L):
+                    V_wl =  generate_V_wl(M, self.last_Omega_L[l])
+                    for t in range(tau):
+                        c_2 = YK[k][t+l*tau].H[0,0]
+                        F_4 = Phi_H[t, :] *  V_wl * partial_F_4
+                        F_5 = FK[k][t+l*tau,:].H * F_4
+                        PD_Delta_varphi += (c_2 * F_4 * self.Mu[k])[0,0] - np.trace(F_5 * self.Sigma[k]) - (self.Mu[k].H * F_5 * self.Mu[k])[0,0]
+            step_value = np.real(PD_Delta_varphi)
+            # self.Delta_varphi[m] += self.step_2 * np.arctan(self.value_2 * step_value) * 2 / np.pi
+            self.Delta_varphi[m] += self.step_2 * step_value
+            self.hist_data['Delta_varphi'].append(self.value_2 * step_value)
+
+        pass
+
+    def calculate_parameters_for_Omega(self, k, l, t):
+        # c_2, (F_1, F_2 --> F_3)
+        c_2 = YK[k][t+l*tau].H[0,0]
+        F_1 = FK[k][t+l*tau,:]
+        F_2 = np.mat(np.zeros((1,M)),dtype=np.complex128)
+        for m in range(M):
+            F_2 +=(Phi_H[t,m] * (-1j * 2 * np.pi * m) * np.exp(-1j * 2 * np.pi * m * self.Omega_L[l]) * self.U_M[m,:] * self.D_M)
+        F_3 = F_1.H * F_2
+
+        return c_2, F_2, F_3
+
+    def calculate_parameters_for_Delta_varphi(self, m, k, l, t):
+        # c_2, (F_1, F_4 --> F_5)
+        c_2 = YK[k][t+l*tau].H[0,0]
+        # F_1 = FK[k][t+l*tau,:]
+        # DM_PD = self.D_M.copy()
+        # for m_prime in range(M):
+        #     DM_PD[m_prime, m] = DM_PD_Delta_varphi(self.Delta_varphi[m], m, m_prime)
+        # F_4 = Phi_H[t,:] * generate_V_wl(M, self.Omega_L[l]) * DM_PD
+        # F_5 = F_1.H * F_4
+        # return c_2, F_4, F_5
+        return c_2
+
+
+# # Test out M-step
+# given the true q(x), i.e., $\boldsymbol{\mu}_k$ and $\mathbf{\Sigma}_k$
+# 
+# Compare the generated $\boldsymbol{\omega}_l$ and $\Delta \boldsymbol{\varphi}_m$
+
+# In[122]:
+
+
+Omega_true_L = []
+for omega in Omega_true:
+    if omega != -0.6:
+        Omega_true_L.append(omega)
+
+M_step_instance = M_step(
+    Phi_H= Phi_H,
+    YK = YK,
+    Mu = E_step_instance.Mu.copy(),
+    Sigma = E_step_instance.Sigma.copy(),
+    kappa_klt=0.5,
+    # step_1 = 0.0001,
+    # step_2 = 0.00001
+    # step_1 = 0.1,
+    step_1 = 0.00001,
+    value_1= 0.003,
+    # step_2 = 0.001,
+    step_2 = 0,
+    value_2= 0.01
+)
+M_step_instance.update(
+    Mu = E_step_instance.Mu.copy(),
+    Sigma = E_step_instance.Sigma.copy()
+)
+plt.figure(figsize=(16,4))
+plt.subplot(1,2,1)
+plt.scatter(np.array(range(L)), M_step_instance.Omega_L)
+plt.scatter(np.array(range(len(Omega_true_L))), Omega_true_L)
+plt.subplot(1,2,2)
+plt.plot(np.array(range(M)), M_step_instance.Delta_varphi)
+plt.plot(np.array(range(M)), Delta_varphi)
+
+plt.figure(figsize=(16,4))
+x = np.linspace(-10,10, 100)
+plt.plot(x, np.arctan(x) * 2 / np.pi)
+plt.hist(M_step_instance.hist_data['omega'], bins = 20, density=True)
+plt.hist(M_step_instance.hist_data['Delta_varphi'], bins = 20, density=True)
+plt.legend(['arctan', 'omega', 'Delta_varphi'])
+print(Omega_true_L)
+
+
+# In[127]:
+
+
+M_step_test_loop = 10
+for i in range(M_step_test_loop):
+    M_step_instance.update(
+        Mu = E_step_instance.Mu.copy(),
+        Sigma = E_step_instance.Sigma.copy()
+    )
+    plt.figure(figsize=(16,4))
+    plt.subplot(1,2,1)
+    plt.scatter(np.array(range(L)), M_step_instance.Omega_L)
+    plt.scatter(np.array(range(len(Omega_true_L))), Omega_true_L)
+    plt.legend(['estimated', 'True'])
+    plt.subplot(1,2,2)
+    plt.plot(np.array(range(M)), M_step_instance.Delta_varphi)
+    plt.plot(np.array(range(M)), Delta_varphi)
+    plt.legend(['estimated', 'True'])
+    
+    # plt.figure(figsize=(16,4))
+    # x = np.linspace(-10,10, 100)
+    # plt.plot(x, np.arctan(x) * 2 / np.pi)
+    # plt.hist(M_step_instance.hist_data['omega'], bins = 20, density=True)
+    # plt.hist(M_step_instance.hist_data['Delta_varphi'], bins = 20, density=True)
+    # plt.legend(['arctan', 'omega', 'Delta_varphi'])
+
+
+# In[16]:
+
+
+# the True \omega and true Delta_varphi is:
+Omega_true_L = []
+for omega in Omega_true:
+    if omega != -0.6:
+        Omega_true_L.append(omega)
+print(Omega_true_L)
+plt.figure(figsize=(16,8))
+plt.subplot(2,2,1)
+plt.scatter(np.array(range(len(Omega_true_L))), Omega_true_L)
+plt.title(r'true ${\omega}_l$')
+plt.subplot(2,2,2)
+plt.plot(np.array(range(M)), Delta_varphi)
+plt.title(r'True $\Delta \varphi_{m}$')
+
+plt.subplot(2,2,3)
+plt.scatter(np.array(range(L)), M_step_instance.Omega_L)
+plt.subplot(2,2,4)
+plt.plot(np.array(range(M)), M_step_instance.Delta_varphi)
+
+
+# 
