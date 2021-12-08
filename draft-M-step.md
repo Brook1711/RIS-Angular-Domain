@@ -65,6 +65,18 @@ $$
 $$
 ## 首先以求解$\omega_l$为例：
 
+设置求导前等价函数$f_{l}(\omega_l)$ :
+$$
+\begin{aligned}
+f_l(\omega_l) \triangleq  \sum_{k=1}^{K} \sum_{t=1}^{\tau}  \ln \left[\mathcal{C N}\left(y_{k, l, t} ; \mathbf{F}_{k, l, t} \boldsymbol{x}_{k}, \kappa_{k, t}^{-1}\right)\right]
+
+\end{aligned}
+$$
+
+
+
+
+
 $$
 \begin{aligned}
 \frac{\partial}{\partial \omega_l}\hat{u}^{EM}\left( {\omega}_{l}, \boldsymbol{\xi}_{-\omega_l}^{(i)} ; {\omega}_{l}^{(i)}, \boldsymbol{\xi}_{-{\omega}_{l}}^{(i)} \right) &= \int q({\boldsymbol x{ ;\omega_{l}^{(i)},{\boldsymbol \xi}_{-\omega_l}^{(i)}}})\frac{\partial}{\partial \omega_l} \operatorname{ln}p({\boldsymbol y} \mid {\boldsymbol x},{\boldsymbol \kappa}; {\omega_l }, {\boldsymbol \xi}_{1,-\omega_l}^{(i)})d{\boldsymbol x}
