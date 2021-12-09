@@ -68,9 +68,13 @@ $$
 设置求导前等价函数$f_{l}(\omega_l)$ :
 $$
 \begin{aligned}
-f_l(\omega_l) \triangleq  \sum_{k=1}^{K} \sum_{t=1}^{\tau}  \ln \left[\mathcal{C N}\left(y_{k, l, t} ; \mathbf{F}_{k, l, t} \boldsymbol{x}_{k}, \kappa_{k, t}^{-1}\right)\right]
+f_l(\omega_l) \triangleq \int q(\boldsymbol{x}) \Bigg\{\sum_{k=1}^{K} \sum_{t=1}^{\tau} \ln \left[\mathcal{C N}\left(y_{k, l, t} ; \mathbf{F}_{k, l, t} \boldsymbol{x}_{k}, \kappa_{k, t}^{-1}\right)\right]\Bigg\} d \boldsymbol{x}
 
 \end{aligned}
+$$
+同时，多维等价函数为$f_L(\boldsymbol{\omega})$ :
+$$
+f_L(\boldsymbol{\omega}) = \sum_{l = 1}^{L} f_l(\omega_l)
 $$
 
 
