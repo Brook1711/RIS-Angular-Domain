@@ -267,6 +267,14 @@ $$
 
 ## 接下来求解$\Delta {\varphi}_m$：
 
+原函数$f_m(\varphi_m)$
+$$
+f_m(\varphi_m) =\int q(\boldsymbol{x}) \Bigg\{ \sum_k^K \sum_l^L \sum_t^\tau \ln \left[\mathcal{C N}\left(y_{k, l, t} ; \mathbf{F}_{k, l, t} \boldsymbol{x}_{k}, \kappa_{k, t}^{-1}\right)\right] \Bigg\} d \boldsymbol{x}
+$$
+
+
+
+
 首先：
 $$
 \begin{aligned}
