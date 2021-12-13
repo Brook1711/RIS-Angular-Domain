@@ -65,6 +65,22 @@ $$
 $$
 ## 首先以求解$\omega_l$为例：
 
+设置求导前等价函数$f_{l}(\omega_l)$ :
+$$
+\begin{aligned}
+f_l(\omega_l) \triangleq \int q(\boldsymbol{x}) \Bigg\{\sum_{k=1}^{K} \sum_{t=1}^{\tau} \ln \left[\mathcal{C N}\left(y_{k, l, t} ; \mathbf{F}_{k, l, t} \boldsymbol{x}_{k}, \kappa_{k, t}^{-1}\right)\right]\Bigg\} d \boldsymbol{x}
+
+\end{aligned}
+$$
+同时，多维等价函数为$f_L(\boldsymbol{\omega})$ :
+$$
+f_L(\boldsymbol{\omega}) = \sum_{l = 1}^{L} f_l(\omega_l)
+$$
+
+
+
+
+
 $$
 \begin{aligned}
 \frac{\partial}{\partial \omega_l}\hat{u}^{EM}\left( {\omega}_{l}, \boldsymbol{\xi}_{-\omega_l}^{(i)} ; {\omega}_{l}^{(i)}, \boldsymbol{\xi}_{-{\omega}_{l}}^{(i)} \right) &= \int q({\boldsymbol x{ ;\omega_{l}^{(i)},{\boldsymbol \xi}_{-\omega_l}^{(i)}}})\frac{\partial}{\partial \omega_l} \operatorname{ln}p({\boldsymbol y} \mid {\boldsymbol x},{\boldsymbol \kappa}; {\omega_l }, {\boldsymbol \xi}_{1,-\omega_l}^{(i)})d{\boldsymbol x}
@@ -251,6 +267,14 @@ $$
 
 ## 接下来求解$\Delta {\varphi}_m$：
 
+原函数$f_m(\varphi_m)$
+$$
+f_m(\varphi_m) =\int q(\boldsymbol{x}) \Bigg\{ \sum_k^K \sum_l^L \sum_t^\tau \ln \left[\mathcal{C N}\left(y_{k, l, t} ; \mathbf{F}_{k, l, t} \boldsymbol{x}_{k}, \kappa_{k, t}^{-1}\right)\right] \Bigg\} d \boldsymbol{x}
+$$
+
+
+
+
 首先：
 $$
 \begin{aligned}
@@ -306,12 +330,12 @@ $$
 \begin{aligned}
 \frac{\partial}{\partial \Delta \varphi_m} {\mathbf F}_{k,l,t}{\boldsymbol x}_k &=\underbrace{\Big [{\mathbf \Phi}^H  \Big]_{t,:}{\mathbf V}(\omega_l)}_{(1\times M)} 
 	\left[\begin{matrix}
-  D_M(\Delta \varphi_1,1)&\cdots& \frac{\partial}{\partial \Delta \varphi_m} D_M(\Delta \varphi_m,1)&\cdots&D_M(\Delta \varphi_M,1)\\
-  D_M(\Delta \varphi_1,2)&\cdots& \frac{\partial}{\partial \Delta \varphi_m} D_M(\Delta \varphi_m,2)&\cdots&D_M(\Delta \varphi_M,2)\\
+  0&\cdots& \frac{\partial}{\partial \Delta \varphi_m} D_M(\Delta \varphi_m,1)&\cdots&0\\
+  0&\cdots& \frac{\partial}{\partial \Delta \varphi_m} D_M(\Delta \varphi_m,2)&\cdots&0\\
   \vdots&\cdots&\vdots&\cdots&\vdots \\
-  D_M(\Delta \varphi_1,m^{\prime})&\cdots& \frac{\partial}{\partial \Delta \varphi_m} D_M(\Delta \varphi_m,m^{\prime})&\cdots&D_M(\Delta \varphi_M,m^{\prime})\\
+  0&\cdots& \frac{\partial}{\partial \Delta \varphi_m} D_M(\Delta \varphi_m,m^{\prime})&\cdots&0\\
   \vdots&\cdots&\vdots&\cdots&\vdots\\
-  D_M(\Delta \varphi_1,M)&\cdots& \frac{\partial}{\partial \Delta \varphi_m} D_M(\Delta \varphi_m,M)&\cdots&D_M(\Delta \varphi_M,M)
+  0&\cdots& \frac{\partial}{\partial \Delta \varphi_m} D_M(\Delta \varphi_m,M)&\cdots&0
   \end{matrix}\right]
 {\boldsymbol x}_k
 \end{aligned}
@@ -356,12 +380,12 @@ $$
 \begin{aligned}
 {\mathbf F}_4 = \underbrace{\Big [{\mathbf \Phi}^H  \Big]_{t,:}{\mathbf V}(\omega_l)}_{(1\times M)} 
 	\left[\begin{matrix}
-  D_M(\Delta \varphi_1,1)&\cdots& \frac{\partial}{\partial \Delta \varphi_m} D_M(\Delta \varphi_m,1)&\cdots&D_M(\Delta \varphi_M,1)\\
-  D_M(\Delta \varphi_1,2)&\cdots& \frac{\partial}{\partial \Delta \varphi_m} D_M(\Delta \varphi_m,2)&\cdots&D_M(\Delta \varphi_M,2)\\
+  0&\cdots& \frac{\partial}{\partial \Delta \varphi_m} D_M(\Delta \varphi_m,1)&\cdots&0\\
+  0&\cdots& \frac{\partial}{\partial \Delta \varphi_m} D_M(\Delta \varphi_m,2)&\cdots&0\\
   \vdots&\cdots&\vdots&\cdots&\vdots \\
-  D_M(\Delta \varphi_1,m^{\prime})&\cdots& \frac{\partial}{\partial \Delta \varphi_m} D_M(\Delta \varphi_m,m^{\prime})&\cdots&D_M(\Delta \varphi_M,m^{\prime})\\
+  0&\cdots& \frac{\partial}{\partial \Delta \varphi_m} D_M(\Delta \varphi_m,m^{\prime})&\cdots&0\\
   \vdots&\cdots&\vdots&\cdots&\vdots\\
-  D_M(\Delta \varphi_1,M)&\cdots& \frac{\partial}{\partial \Delta \varphi_m} D_M(\Delta \varphi_m,M)&\cdots&D_M(\Delta \varphi_M,M)
+  0&\cdots& \frac{\partial}{\partial \Delta \varphi_m} D_M(\Delta \varphi_m,M)&\cdots&0
   \end{matrix}\right] \\
 
 
@@ -455,12 +479,12 @@ $$
 \begin{aligned}
 {\mathbf F}_4 = \underbrace{\Big [{\mathbf \Phi}^H  \Big]_{t,:}{\mathbf V}(\omega_l)}_{(1\times M)} 
 	\left[\begin{matrix}
-  D_M(\Delta \varphi_1,1)&\cdots& \frac{\partial}{\partial \Delta \varphi_m} D_M(\Delta \varphi_m,1)&\cdots&D_M(\Delta \varphi_M,1)\\
-  D_M(\Delta \varphi_1,2)&\cdots& \frac{\partial}{\partial \Delta \varphi_m} D_M(\Delta \varphi_m,2)&\cdots&D_M(\Delta \varphi_M,2)\\
+  0&\cdots& \frac{\partial}{\partial \Delta \varphi_m} D_M(\Delta \varphi_m,1)&\cdots&0\\
+ 0&\cdots& \frac{\partial}{\partial \Delta \varphi_m} D_M(\Delta \varphi_m,2)&\cdots&0\\
   \vdots&\cdots&\vdots&\cdots&\vdots \\
-  D_M(\Delta \varphi_1,m^{\prime})&\cdots& \frac{\partial}{\partial \Delta \varphi_m} D_M(\Delta \varphi_m,m^{\prime})&\cdots&D_M(\Delta \varphi_M,m^{\prime})\\
+ 0&\cdots& \frac{\partial}{\partial \Delta \varphi_m} D_M(\Delta \varphi_m,m^{\prime})&\cdots&0\\
   \vdots&\cdots&\vdots&\cdots&\vdots\\
-  D_M(\Delta \varphi_1,M)&\cdots& \frac{\partial}{\partial \Delta \varphi_m} D_M(\Delta \varphi_m,M)&\cdots&D_M(\Delta \varphi_M,M)
+  0&\cdots& \frac{\partial}{\partial \Delta \varphi_m} D_M(\Delta \varphi_m,M)&\cdots&0
   \end{matrix}\right] \\
 
 
