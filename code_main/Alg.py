@@ -10,6 +10,7 @@ import matplotlib.pyplot as plt
 from scipy.stats import gamma
 from scipy.special import gamma as gamma_function
 from scipy.special import digamma
+plt.rc('font', family = 'Times New Roman')
 alpha_0, alpha_1 = 1, 1
 beta_0, beta_1 = 0.001, 1
 K=4
@@ -20,7 +21,7 @@ trans_pro_C = {
     'p10':p10,
     'p1':p01/(p01+p10)
     }
-M = 64
+M = 32
 tau = 8
 L = 4
 
@@ -148,7 +149,7 @@ plt.figure(figsize=(8,10))
 plt.subplot(2,1,1)
 [plt.scatter(range(M), Varphi_true[k], color = color_list[k]) for k in range(K)]
 
-r = gamma.rvs(alpha_1, 0, beta_1, size = 64)
+r = gamma.rvs(alpha_1, 0, beta_1, size = M)
 
 Beta_true = np.random.normal(0, np.power(r, -0.5), M)
 # Beta_true = np.ones(M)
@@ -211,19 +212,47 @@ def f_M_prime(M, x):
     part2 = np.power(M, -0.5) * np.exp(1j * x * (M-1) / 2) * (M/2 * np.cos(M*x/2) * np.sin(x/2) - 1/2 * np.cos(x/2) * np.sin(M * x/2)) / np.power(np.sin(x/2), 2)
     return part1 + part2
 
+plt.figure(figsize=(16,4))
+x_f_n = np.linspace(-0.499, 0.499, 100)
+plt.plot(x_f_n, 10 * np.array([f_N(M, x) for x in x_f_n]))
+plt.plot(x_f_n, [f_M_prime(M, x) for x in x_f_n])
+plt.plot(x_f_n, [0 for x in x_f_n])
+
+
 def DM_PD_Delta_varphi(Delta_varphi_m, m, m_prime):
-    if m_prime < 0.5:
-        return 2* np.pi * f_M_prime(M, 2*np.pi * ( (m_prime - m)/M -1 + Delta_varphi_m ))
+    if m / float(M) < 0.5:
+        return 2* np.pi * f_M_prime(
+            M, 
+            2*np.pi *(-1)* ( m_prime/M - m/M - Delta_varphi_m )
+            )
     else:
-        return 2* np.pi * f_M_prime(M, 2*np.pi * ( (m_prime - m)/M + Delta_varphi_m ))
+        return 2* np.pi * f_M_prime(
+            M,
+            2*np.pi *(-1)* ( m_prime/M - m/M + 1 - Delta_varphi_m )
+            )
+
+def generate_DM_test(M, Delta_varphi_m, m_col, m_prime):
+    if m_col/float(M) < 0.5:
+        return f_N(M, 2*np.pi *(-1)*(m_prime/M - m_col/M - Delta_varphi_m) )
+    else:
+        return f_N(M, 2*np.pi *(-1)*(m_prime/M - m_col/M + 1 -Delta_varphi_m) )
+    
+
+m_prime = 0
+m = 9
+plt.figure(figsize=(16,4))
+x_test = np.linspace(0.001, 1/M -0.001, 100)
+plt.plot(x_test, 100*np.imag(np.array([generate_DM_test(M, x, m, m_prime) for x in x_test])))
+plt.plot(x_test, np.imag(np.array([DM_PD_Delta_varphi(x, m, m_prime) for x in x_test])))
+plt.plot(x_test, [0 for x in x_test])
 
 def generate_DM(M, Delta_varphi):
     DM = np.matrix([np.complex128(0) for m in range(M * M)]).reshape((M,M))
     for col in range(M):
         if col/float(M) < 0.5:
-            DM[:,col] = np.array([(f_N(M, 2*np.pi *(m/M - col/M - Delta_varphi[col]) )) for m in range(M)]).reshape(M,1)
+            DM[:,col] = np.array([(f_N(M, 2*np.pi *(-1)*(m/M - col/M - Delta_varphi[col]) )) for m in range(M)]).reshape(M,1)
         else:
-            DM[:,col] = np.array([(f_N(M, 2*np.pi *(m/M - col/M + 1 - Delta_varphi[col]) )) for m in range(M)]).reshape(M,1)
+            DM[:,col] = np.array([(f_N(M, 2*np.pi *(-1)*(m/M - col/M + 1 - Delta_varphi[col]) )) for m in range(M)]).reshape(M,1)
     return DM
 
 
@@ -237,6 +266,10 @@ plt.subplot(1,2,1)
 [plt.plot(range(M), np.abs(a_M_k_DFT[k]), color_list[k],linestyle='dashed') for k in range(K)]
 plt.subplot(1,2,2)
 [plt.plot(range(M), np.abs(DM_mul_x_K[k]), linestyle='dotted', color='black') for k in range(K)]
+
+plt.figure(figsize=(16,4))
+[plt.plot(range(M), np.real(a_M_k_DFT[k]) / np.imag(a_M_k_DFT[k]), color_list[k],linestyle='dashed') for k in range(K)]
+[plt.plot(range(M), np.real(DM_mul_x_K[k]) / np.imag(DM_mul_x_K[k]), linestyle='dotted', color='black') for k in range(K)]
 
 
 # 
@@ -292,7 +325,9 @@ def generate_Phi_H(M, tau, mode = 'fixed'):
     elif mode == 'random':
         x = np.random.randint(0,2,(tau, M))
         return np.mat(np.exp(1j*np.pi*x))
-
+    elif mode == 'binomial':
+        x = np.random.binomial(1,0.5, (tau, M))
+        return np.mat(x, dtype=np.complex128)
 Phi_H = generate_Phi_H(M, tau=tau, mode='random')
 
 
@@ -440,18 +475,6 @@ print(np.shape(FK[0]))
 # \end{aligned}
 # $$
 # 
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
 
 # # E step algrithm
 # ![image-20211128211203869](Alg.assets/image-20211128211203869.png)
@@ -789,7 +812,7 @@ E_step_instance = E_step(
     # in the E-step process, FK can be directly given
     # However, in the AO-EM methed, FK(contained xi) should be estimated in M-step and passed by M
     FK = FK, 
-    kappa= np.ones(L*tau)*0.5,
+    kappa= np.ones(L*tau)*100,
     YK = YK, 
     trans_pro_C=trans_pro_C, 
     trans_pro_CS = trans_pro_CS
@@ -833,7 +856,7 @@ for k in range(K):
 
 # # M step class
 
-# In[87]:
+# In[13]:
 
 
 import numpy as np
@@ -844,7 +867,7 @@ import matplotlib.pyplot as plt
 # Output: the M step estimate the omega_l and delta_m
 # and calculate the FK
 class M_step:
-    def __init__(self,Phi_H, YK, Mu, Sigma, kappa_klt,step_1 = 1, value_1 = 1, step_2 = 1, value_2 = 1):
+    def __init__(self,Phi_H, YK, Mu, Sigma, kappa_klt,step_1 = 1, value_1 = 1, step_2 = 1, value_2 = 1, if_update_omega = True, if_update_varphi = True, tau_1= 0.8, tau_2 = 0.8):
         self.name = 'default'
         self.Phi_H = Phi_H
         self.YK = YK
@@ -855,10 +878,14 @@ class M_step:
         self.value_2 = value_2
         self.Sigma = Sigma
         self.kappa_klt = kappa_klt
-        self.Omega_L = np.zeros(L)/(2*M)
+        self.if_update_omega = if_update_omega
+        self.if_update_varphi = if_update_varphi
+        self.tau_1 = tau_1
+        self.tau_2 = tau_2
+        self.Omega_L = np.array([0.1289528494122413, 0.3777057097108742, -0.36879843745466045, -0.1106502650134412])
         # self.Omega_L = np.array([0.1289528494122413, 0.3777057097108742, -0.36879843745466045, -0.1106502650134412])
-        # self.Delta_varphi = np.ones(M)/(2*M)
-        self.Delta_varphi = Delta_varphi
+        self.Delta_varphi = np.ones(M)/(2*M)
+        # self.Delta_varphi = Delta_varphi.copy()
         self.U_M = DFT_matrix(M)
         self.D_M = generate_DM(M, self.Delta_varphi)
         # self.XK = Mu
@@ -870,19 +897,21 @@ class M_step:
         pass
 
     def update(self,Mu = 0, Sigma = 0):
-        # first update input
-        # self.Mu = Mu
-        # self.Sigma = Sigma
         self.D_M = generate_DM(M, self.Delta_varphi)
         # begin
         self.last_Omega_L = self.Omega_L.copy()
         self.last_Delta_varphi = self.Delta_varphi.copy()
-        self.update_Omega_L()
-        # self.update_Delta_varphi()
+        if self.if_update_omega:
+            self.update_Omega_L()
+        if self.if_update_varphi:
+            self.update_Delta_varphi()
         pass
 
     def update_Omega_L(self):
         for l in range(L):
+            # **********************************
+
+            # ***********************************
             PD_omega_l = 0
             for t in range(tau):
                 F_2 = np.mat(np.zeros((1,M)),dtype=np.complex128)
@@ -896,7 +925,12 @@ class M_step:
                     PD_omega_l += (c_2 * F_2 * self.Mu[k])[0,0] - np.trace(F_3 * self.Sigma[k]) - (self.Mu[k].H * F_3 * self.Mu[k])[0,0]
             step_value = np.real(PD_omega_l)
             # self.Omega_L[l] += self.step_1 * np.arctan(self.value_1 * step_value) * 2 / np.pi
-            self.Omega_L[l] += self.step_1 * step_value
+            if self.Omega_L[l] + self.step_1 * step_value > 0.5:
+                self.Omega_L[l] = 0.5-0.001
+            elif self.Omega_L[l] + self.step_1 * step_value < - 0.5:
+                self.Omega_L[l] = -0.5+0.001
+            else:
+                self.Omega_L[l] += self.step_1 * step_value
             self.hist_data['omega'].append(self.value_1 * step_value)
             # if step_value > 0 :
             #     self.Omega_L[l] += np.log(step_value)
@@ -910,17 +944,23 @@ class M_step:
             partial_F_4 = self.D_M.copy()
             for m_prime in range(M):
                 partial_F_4[m_prime, m] = DM_PD_Delta_varphi(self.last_Delta_varphi[m], m, m_prime)
-            for k in range(K):
-                for l in range(L):
-                    V_wl =  generate_V_wl(M, self.last_Omega_L[l])
+            for l in range(L):
+                V_wl =  generate_V_wl(M, self.last_Omega_L[l])
+                for k in range(K):
                     for t in range(tau):
                         c_2 = YK[k][t+l*tau].H[0,0]
                         F_4 = Phi_H[t, :] *  V_wl * partial_F_4
                         F_5 = FK[k][t+l*tau,:].H * F_4
+                        # PD_Delta_varphi += (c_2 * F_4 * self.Mu[k])[0,0] - np.trace(F_5 * self.Sigma[k]) - (self.Mu[k].H * F_5 * self.Mu[k])[0,0]
                         PD_Delta_varphi += (c_2 * F_4 * self.Mu[k])[0,0] - np.trace(F_5 * self.Sigma[k]) - (self.Mu[k].H * F_5 * self.Mu[k])[0,0]
             step_value = np.real(PD_Delta_varphi)
             # self.Delta_varphi[m] += self.step_2 * np.arctan(self.value_2 * step_value) * 2 / np.pi
-            self.Delta_varphi[m] += self.step_2 * step_value
+            if self.Delta_varphi[m] + self.step_2 * step_value > 1 / M:
+                self.Delta_varphi[m] =1/M -0.0001
+            elif self.Delta_varphi[m] + self.step_2 * step_value < 0:
+                self.Delta_varphi[m] = 0.0001
+            else:
+                self.Delta_varphi[m] += self.step_2 * step_value
             self.hist_data['Delta_varphi'].append(self.value_2 * step_value)
 
         pass
@@ -954,7 +994,7 @@ class M_step:
 # 
 # Compare the generated $\boldsymbol{\omega}_l$ and $\Delta \boldsymbol{\varphi}_m$
 
-# In[122]:
+# In[14]:
 
 
 Omega_true_L = []
@@ -971,10 +1011,10 @@ M_step_instance = M_step(
     # step_1 = 0.0001,
     # step_2 = 0.00001
     # step_1 = 0.1,
-    step_1 = 0.00001,
+    step_1 = 0.003,
     value_1= 0.003,
     # step_2 = 0.001,
-    step_2 = 0,
+    step_2 = 0.001,
     value_2= 0.01
 )
 M_step_instance.update(
@@ -986,53 +1026,62 @@ plt.subplot(1,2,1)
 plt.scatter(np.array(range(L)), M_step_instance.Omega_L)
 plt.scatter(np.array(range(len(Omega_true_L))), Omega_true_L)
 plt.subplot(1,2,2)
-plt.plot(np.array(range(M)), M_step_instance.Delta_varphi)
-plt.plot(np.array(range(M)), Delta_varphi)
 
-plt.figure(figsize=(16,4))
-x = np.linspace(-10,10, 100)
-plt.plot(x, np.arctan(x) * 2 / np.pi)
-plt.hist(M_step_instance.hist_data['omega'], bins = 20, density=True)
-plt.hist(M_step_instance.hist_data['Delta_varphi'], bins = 20, density=True)
-plt.legend(['arctan', 'omega', 'Delta_varphi'])
-print(Omega_true_L)
+all_activate_support=[]
+for k in range(K):
+    for m in range(M):
+        if channel_support_for_all_users[k][m]:
+            all_activate_support.append((m, 0))
+
+activate_Delta_varphi = []
+for m in range(M):
+    if m in [tup[0] for tup in all_activate_support]:
+        activate_Delta_varphi.append((m, M_step_instance.Delta_varphi[m], Delta_varphi[m]))
+
+plt.scatter([tup[0] for tup in activate_Delta_varphi], [tup[2] for tup in activate_Delta_varphi], color = 'g')
+
+plt.plot(np.array(range(M)), Delta_varphi, color = 'g')
+plt.scatter([tup[0] for tup in activate_Delta_varphi], [tup[1] for tup in activate_Delta_varphi], color = 'b')
+plt.plot(np.array(range(M)), M_step_instance.Delta_varphi, color = 'b')
 
 
-# In[127]:
+# In[15]:
 
 
-M_step_test_loop = 10
+M_step_test_loop = 1
 for i in range(M_step_test_loop):
     M_step_instance.update(
         Mu = E_step_instance.Mu.copy(),
         Sigma = E_step_instance.Sigma.copy()
     )
-    plt.figure(figsize=(16,4))
+    plt.figure(figsize=(16,4),dpi=300)
+
     plt.subplot(1,2,1)
     plt.scatter(np.array(range(L)), M_step_instance.Omega_L)
+    # plt.scatter(np.array(range(L)), M_step_instance.last_Omega_L)
     plt.scatter(np.array(range(len(Omega_true_L))), Omega_true_L)
     plt.legend(['estimated', 'True'])
-    plt.subplot(1,2,2)
-    plt.plot(np.array(range(M)), M_step_instance.Delta_varphi)
-    plt.plot(np.array(range(M)), Delta_varphi)
-    plt.legend(['estimated', 'True'])
     
-    # plt.figure(figsize=(16,4))
-    # x = np.linspace(-10,10, 100)
-    # plt.plot(x, np.arctan(x) * 2 / np.pi)
-    # plt.hist(M_step_instance.hist_data['omega'], bins = 20, density=True)
-    # plt.hist(M_step_instance.hist_data['Delta_varphi'], bins = 20, density=True)
-    # plt.legend(['arctan', 'omega', 'Delta_varphi'])
+    plt.subplot(1,2,2)
+    
+    if m in [tup[0] for tup in all_activate_support]:
+        activate_Delta_varphi.append((m, M_step_instance.Delta_varphi[m], Delta_varphi[m]))
+
+    plt.scatter([tup[0] for tup in activate_Delta_varphi], [tup[2] for tup in activate_Delta_varphi], color = 'g')
+    plt.plot(np.array(range(M)), Delta_varphi, color = 'g')
+    plt.scatter([tup[0] for tup in activate_Delta_varphi], [tup[1] for tup in activate_Delta_varphi], color = 'b')
+    plt.plot(np.array(range(M)), M_step_instance.Delta_varphi, color = 'b')
+    plt.legend(['activate path measured', 'measured', 'activate path simulated', 'simulated'])
 
 
 # In[16]:
 
 
-# the True \omega and true Delta_varphi is:
 Omega_true_L = []
 for omega in Omega_true:
     if omega != -0.6:
         Omega_true_L.append(omega)
+
 print(Omega_true_L)
 plt.figure(figsize=(16,8))
 plt.subplot(2,2,1)
@@ -1045,7 +1094,545 @@ plt.title(r'True $\Delta \varphi_{m}$')
 plt.subplot(2,2,3)
 plt.scatter(np.array(range(L)), M_step_instance.Omega_L)
 plt.subplot(2,2,4)
-plt.plot(np.array(range(M)), M_step_instance.Delta_varphi)
+plt.plot(
+    np.array(range(M)),  
+    M_step_instance.Delta_varphi
+    )
 
 
+# #  Armijo rule
 # 
+# 目前梯度算法不收敛，尝试采用 [Armijo rule](https://en.wikipedia.org/wiki/Duality_(optimization))
+
+# 设置求导前等价函数$f_{l}(\omega_l)$ :
+# $$
+# \begin{aligned}
+# f_l(\omega_l) \triangleq  \sum_{k=1}^{K} \sum_{t=1}^{\tau} \ln \left[\mathcal{C N}\left(y_{k, l, t} ; \mathbf{F}_{k, l, t} \boldsymbol{x}_{k}, \kappa_{k, t}^{-1}\right)\right]
+# 
+# \end{aligned}
+# $$
+# 
+# $$
+# \begin{aligned}
+# {\mathcal{CN}}(y;\mu,\sigma^2)=\frac{1}{2\pi\sigma^2}e^{-\frac{(y_x-\mu_x)^2+(y_y-\mu_y)^2}{2\sigma^2}}
+# \end{aligned}
+# $$
+
+# In[17]:
+
+
+U_M = DFT_matrix(M)
+D_M = generate_DM(M, Delta_varphi)
+def f_l(YK = YK, Mu = E_step_instance.Mu, kappa = 100, omega_l = 0, l = 0 ,Delta_varphi = Delta_varphi):
+    tmp_f_l = 0
+    F_kl = Phi_H * generate_V_wl(M, omega_l) * generate_DM(M, Delta_varphi)
+    for k in range(K):
+        x_k = Mu[k]
+        for t in range(tau):
+            y_klt = YK[k][t+l*tau][0,0]
+            mu_prime = (F_kl[t,:] * x_k)[0,0]
+            sigma_prime = np.power(kappa, -0.5)
+            CN_prime = np.power(2*np.pi* np.power(sigma_prime,2),-1) * np.exp(
+                -1 * np.power(np.abs(y_klt - mu_prime), 2) / (2 * np.power(sigma_prime, 2)) 
+                )
+            # print(CN_prime)
+            tmp_f_l += np.log(CN_prime)
+    return tmp_f_l
+
+
+# In[18]:
+
+
+def prime_f_l(YK = YK, Mu = E_step_instance.Mu, kappa = 100, omega_l = 0, l = 0 ,Delta_varphi = Delta_varphi, Sigma = M_step_instance.Sigma):
+    U_M = DFT_matrix(M)
+    DM = generate_DM(M, Delta_varphi)
+    V_wl = generate_V_wl(M, omega_l)
+    PD_omega_l = 0
+    F_kl = Phi_H * V_wl * DM
+    for t in range(tau):
+        F_1 = F_kl[t,:]
+        F_2 = np.mat(np.zeros((1,M)) , dtype = np.complex128)
+        for m in range(M):
+            F_2 += Phi_H[t,m] * (1j * 2 * np.pi * m) * np.exp(1j * 2 * np.pi * m * omega_l) * (U_M.H)[m,:] 
+        F_2 = F_2 * DM
+        for k in range(K):
+            c_2 = YK[k][t+l*tau].H[0,0]
+            F_3 = F_1.H * F_2 
+            PD_omega_l += (c_2 * F_2 * Mu[k])[0,0] - np.trace(F_3 * Sigma[k]) - (Mu[k].H * F_3 * Mu[k])[0,0]
+
+    step_value = np.real(PD_omega_l)
+    return step_value * kappa * 2
+
+
+x_test = np.linspace(0.125, 0.15625, 100)
+y_test = []
+for x in x_test:
+    y_test.append(
+        f_l(
+            YK=YK, 
+            Mu = E_step_instance.Mu, 
+            kappa= 0.001, 
+            omega_l= x, 
+            l = 0, 
+            Delta_varphi = np.ones(M) *( 1/M )/2
+        )
+    )
+
+
+prime_y_test = []
+for x in range(len(y_test) - 1):
+    prime_y_test.append((y_test[x+1]-y_test[x]) / (x_test[1] - x_test[0]))
+
+prime_y_cal = []
+for x in x_test:
+    prime_y_cal.append(
+        prime_f_l(
+            YK=YK, 
+            Mu=E_step_instance.Mu, 
+            kappa=0.001,
+            omega_l= x, 
+            l = 0, 
+            Delta_varphi = np.ones(M) *( 1/M )/2
+        )
+    )
+
+plt.plot(x_test[:-1],prime_y_test)
+plt.plot(x_test,0.5 * np.array(prime_y_cal), color = 'red')
+
+
+# In[19]:
+
+
+x = np.linspace(-0.5 + 0.00001, 0.5 - 0.00001, 200)
+PD_F_L_list = []
+Delta_varphi_random = np.ones(M) *( 1/M )/2
+for l in range(L):
+    PD_f_l_list = []
+    for omega in x:
+        PD_f_l_list.append(
+            prime_f_l(
+                YK=YK, 
+                Mu = E_step_instance.Mu, 
+                kappa=0.001 , 
+                omega_l= omega, 
+                l = l, 
+                Delta_varphi = Delta_varphi_random
+            )
+        )
+    PD_F_L_list.append(np.array(PD_f_l_list))
+F_L_list = []
+
+for l in range(L):
+    f_l_list = []
+    for omega in x:
+        f_l_list.append(
+            f_l(
+                YK=YK, 
+                Mu = E_step_instance.Mu, 
+                kappa=0.001 , 
+                omega_l= omega, 
+                l = l, 
+                Delta_varphi = Delta_varphi_random
+            )
+        )
+    F_L_list.append(np.array(f_l_list))
+
+
+# In[20]:
+
+
+plt.figure(figsize=(16,8))
+for i in range(4):
+    plt.subplot(4,1,i+1)
+    plt.plot(x, np.array(F_L_list[i]) -( np.array(F_L_list[i]).sum()/ len(x) ) )
+    plt.scatter(Omega_true_L[i], f_l(
+        YK=YK, 
+        Mu = E_step_instance.Mu, 
+        kappa=0.001 , 
+        omega_l= Omega_true_L[i], 
+        l = i
+    ) - ( np.array(F_L_list[i]).sum()/ len(x) ) )
+
+    plt.plot(x, 1e-5 * np.array(PD_F_L_list[i]), color = 'r')
+    plt.scatter(Omega_true_L[i], 1e-5*(prime_f_l(
+        YK=YK, 
+        Mu = E_step_instance.Mu, 
+        kappa=0.001 , 
+        omega_l= Omega_true_L[i], 
+        l = i
+    )), color = 'r')
+    print(
+        (
+            Omega_true_L[i],
+            1e-5*(prime_f_l(
+            YK=YK, 
+            Mu = E_step_instance.Mu, 
+            kappa=0.001 , 
+            omega_l= Omega_true_L[i], 
+            l = i
+        ))
+        )
+    )
+
+
+# # $\Delta \varphi_m $ optimization
+
+# ## 原函数
+
+# In[21]:
+
+
+channel_support_for_all_users[0]
+
+
+# In[22]:
+
+
+def f_m(YK = YK, Mu = E_step_instance.Mu, kappa = 100, Omega = Omega_true_L ,Delta_varphi = Delta_varphi, Delta_varphi_m = 0, m = 0):
+    tmp_f_l = 0
+    # F_kl = Phi_H * generate_V_wl(M, omega_l) * generate_DM(M, Delta_varphi)
+    Delta_varphi_ = Delta_varphi.copy()
+    Delta_varphi_[m] = Delta_varphi_m
+    for l in range(L):
+        F_kl = Phi_H * generate_V_wl(M, Omega[l]) * generate_DM(M, Delta_varphi_)
+        for k in range(K):
+            x_k = Mu[k]
+            for t in range(tau):
+                y_klt = YK[k][t+l*tau][0,0]
+                mu_prime = (F_kl[t,:] * x_k)[0,0]
+                sigma_prime = np.power(kappa, -0.5)
+                CN_prime = np.power(2*np.pi* np.power(sigma_prime,2),-1) * np.exp(
+                    -1 * np.power(np.abs(y_klt - mu_prime), 2) / (2 * np.power(sigma_prime, 2)) 
+                    )
+                # print(CN_prime)
+                tmp_f_l += np.log(CN_prime)
+    return tmp_f_l
+
+m_index = 29
+x = np.linspace(0.001, 1/M-0.001, 100)
+
+varphi_plt = []
+for delta_varphi in x:
+    varphi_plt.append(
+        f_m(
+            YK = YK, 
+            Mu = E_step_instance.Mu, 
+            kappa=0.01, 
+            Omega = Omega_true_L, 
+            Delta_varphi = Delta_varphi, 
+            Delta_varphi_m  =delta_varphi, 
+            m = m_index
+        )
+    )
+varphi_plt = np.array(varphi_plt)
+plt.subplot(1,2,1)
+plt.plot(x, varphi_plt)
+print("True varphi["+ str(m_index) +"]:  "+ str(Delta_varphi[m_index]))
+print("Est varphi["+ str(m_index) +"]:  "+ str(x[int(np.where(varphi_plt == np.max(varphi_plt))[0][0])]))
+
+x = np.linspace(0.001, 1/M-0.001, 99)
+Est_PD_varphi_plt = []
+for i, varphi in enumerate(x):
+    Est_PD_varphi_plt.append((varphi_plt[i+1]-varphi_plt[i]) / (1/M /99))
+plt.subplot(1,2,2)
+plt.plot(x, Est_PD_varphi_plt)
+
+
+# ## 导数
+
+# In[23]:
+
+
+def prime_f_m(YK = YK, Mu = E_step_instance.Mu, kappa = 100, Omega = Omega_true_L ,Delta_varphi = Delta_varphi, Delta_varphi_m = 0, m_col = 0):
+    PD_Delta_varphi_m = 0
+    # partial_F_4_DM = generate_DM(M, Delta_varphi)
+    Delta_varphi_ = Delta_varphi.copy()
+    Delta_varphi_[m_col] = Delta_varphi_m
+    DM = generate_DM(M, Delta_varphi_)
+    partial_F_4_DM = np.mat(np.zeros((M,M)), dtype = np.complex128)
+    # partial_F_4_DM = DM.copy()
+    for m_prime in range(M):
+        partial_F_4_DM[m_prime, m_col] = DM_PD_Delta_varphi(Delta_varphi_m, m_col, m_prime)
+    # print(partial_F_4_DM[:,m])
+    for l in range(L):
+        V_wl = generate_V_wl(M, Omega[l])
+        for k in range(K):
+            for t in range(tau):
+                F_1 = Phi_H[t,:] * V_wl * DM
+                c_2 = YK[k][t+l*tau].H[0,0]
+                F_4 = Phi_H[t,:] * V_wl * partial_F_4_DM
+                # F_5 = F_1.H * F_4
+                # PD_Delta_varphi_m += (c_2 * F_4 * Mu[k])[0,0] - (Mu[k].H * F_5 *Mu[k])[0,0]
+                PD_Delta_varphi_m += ((c_2 - (F_1 * Mu[k]).H[0,0]) * (F_4 * Mu[k]))[0,0]
+    step_value = np.real(PD_Delta_varphi_m) / kappa  *0.9
+    return step_value
+
+x = np.linspace(0.001, 1/M - 0.001, 100)
+plt_prime_f_m = []
+for varphi in x :
+    plt_prime_f_m.append(
+        prime_f_m(
+            YK=YK, 
+            Mu = E_step_instance.Mu,  
+            kappa=100,  
+            Omega = Omega_true_L,  
+            Delta_varphi = Delta_varphi,  
+            Delta_varphi_m= varphi,  
+            m_col = m_index
+        )
+    )
+plt.plot(x, plt_prime_f_m)
+print(x[int(np.where(varphi_plt == np.max(varphi_plt))[0][0])], plt_prime_f_m[int(+np.where(varphi_plt == np.max(varphi_plt))[0][0])])
+
+x = np.linspace(0.001, 1/M-0.001, 99)
+Est_PD_varphi_plt = []
+for i, varphi in enumerate(x):
+    Est_PD_varphi_plt.append((varphi_plt[i+1]-varphi_plt[i]) / (1/M / 99))
+Est_PD_varphi_plt = np.array(Est_PD_varphi_plt)
+# Est_PD_varphi_plt = np.power(Est_PD_varphi_plt, 2)
+# Est_PD_varphi_plt *= 4
+
+plt.plot(x, Est_PD_varphi_plt)
+
+
+# # One convergence tip
+# 
+# the initial $\Delta \varphi_m $ is set to be the mid value of $[0,\frac{1}{M})$ for good reasons, that is 
+# 
+# $$
+# \Delta \varphi_m^{(1)} = \frac{1}{2M}
+# 
+# $$
+
+# In[24]:
+
+
+y_list = []
+x = np.linspace(0.0001, 1/M -0.0001, 100)
+m_indexs = [10, 9, 29]
+for m_index in m_indexs:
+    tmp = np.array([
+        f_m(
+            YK = YK, 
+            Mu = E_step_instance.Mu, 
+            kappa=0.01, 
+            Omega = Omega_true_L, 
+            Delta_varphi = Delta_varphi, 
+            Delta_varphi_m  =delta_varphi, 
+            m = m_index
+        )
+        for delta_varphi in x
+    ])
+    tmp = tmp - np.average(tmp)
+    y_list.append(tmp / np.max(tmp))
+
+
+# In[25]:
+
+
+plt.figure(figsize = (8,4),dpi = 300)
+for i, m_index in enumerate(m_indexs):
+    plt.plot(x, y_list[i])
+
+plt.axvline(0.5 * 1/M, color = 'black')
+plt.legend([r'$\Delta \varphi_m \approx 0 * 1/M$', r'$\Delta \varphi_m \approx 0.45 * 1/M$', r'$\Delta \varphi_m \approx 1 * 1/M$'])
+
+
+# the initial value is set to the mid of [0, 1/M] to avoid local optimal solution
+
+# # New M-Step
+# 
+# first, get the better $ \omega_l, \forall l \in \mathcal{L} $ 
+
+# In[50]:
+
+
+c_para = 0.5
+tau_para = 0.5
+alpha_begin = (1/M) * 0.1
+
+step_loop_num = 5
+
+# Omega_true_L is the global optimal value
+Omega_container = np.ones(L) * (0.5 * 1/M)
+Delta_Omega_container = np.ones((L,M)) * (0.5 * 1/M)
+f_l_value = np.zeros((L,M))
+prime_f_l_value = np.zeros((L,M))
+# Delta_varphi is the global optimal value
+Delta_varphi_container = np.ones(M) *( 1/M )/2
+f_m_value = np.zeros(M)
+prime_f_m_value = np.zeros(M)
+
+
+# In[27]:
+
+
+print(Omega_true_L)
+print(Omega_grid)
+x1, x2 = 0.125, 0.15625
+
+
+# In[28]:
+
+
+x = np.linspace(-0.5 + 0.00001, 0.5 - 0.00001, 200)
+plt.figure(figsize=(16,16),dpi = 300)
+axes = []
+for l in range(L):
+    axes.append(plt.subplot(4,1,l+1))
+    plt.plot(x, np.array(F_L_list[l]))
+    for omega_g in Omega_grid:
+        plt.axvline(omega_g, linestyle = '--')
+    for m, Delta_omega_l in enumerate(Delta_Omega_container[l]):
+        plt.scatter(
+            Delta_omega_l+Omega_grid[m], 
+            f_l(
+                YK=YK, 
+                Mu = E_step_instance.Mu, 
+                kappa=0.001,
+                omega_l= Delta_omega_l + Omega_grid[m],
+                l = l, 
+                Delta_varphi= Delta_varphi_container
+            ),
+            color = 'black',
+            alpha=0.2
+        )
+
+
+# In[51]:
+
+
+def update_omega(l = l, m = m):
+    alpha_step = alpha_begin
+    for step in range(step_loop_num):
+        cnt = 0
+        cnt_max = 20
+        while True and (cnt < cnt_max):
+            x_t = Delta_Omega_container[l,m] + Omega_grid[m]
+            m_gri = prime_f_l(
+                YK=YK, 
+                Mu = E_step_instance.Mu, 
+                kappa=0.001 , 
+                omega_l= x_t, 
+                l = l, 
+                Delta_varphi = Delta_varphi_container
+            )
+            
+            x_t_plus_1 = x_t + alpha_step * np.sign(m_gri)
+            print(x_t, x_t_plus_1)
+            f_t = f_l(
+                YK=YK, 
+                Mu = E_step_instance.Mu, 
+                kappa= 0.001, 
+                omega_l= x_t, 
+                l = l, 
+                Delta_varphi=Delta_varphi_container
+            )
+            f_t_plus_1 = f_l(
+                YK=YK, 
+                Mu = E_step_instance.Mu, 
+                kappa= 0.001, 
+                omega_l= x_t_plus_1, 
+                l = l, 
+                Delta_varphi=Delta_varphi_container
+            )
+            # print(alpha_step)
+            print("ft+1 - ft",f_t_plus_1 - f_t, np.abs(c_para * m_gri * alpha_step))
+            if f_t_plus_1 >= f_t + np.abs(c_para * m_gri * alpha_step):
+                Delta_Omega_container[l,m] += alpha_step * np.sign(m_gri)
+                # print(alpha_step,alpha_step * np.sign(m_gri), Delta_Omega_container[l,m] + Omega_grid[m])
+                # alpha_step *= tau_para
+                break
+            else:
+                alpha_step *= tau_para
+                
+    pass
+
+
+# In[53]:
+
+
+update_omega(0,4)
+
+
+# In[43]:
+
+
+x_test = np.linspace(0.125, 0.15625, 100)
+y_test = []
+for x in x_test:
+    y_test.append(
+        f_l(
+            YK=YK, 
+            Mu = E_step_instance.Mu, 
+            kappa= 0.001, 
+            omega_l= x, 
+            l = 0, 
+            Delta_varphi = Delta_varphi_container
+        )
+    )
+y_test = np.array(y_test)
+y_test = y_test - np.average(y_test)
+
+prime_y_test = []
+for x in x_test:
+    prime_y_test.append(
+        prime_f_l(
+            YK=YK, 
+            Mu = E_step_instance.Mu, 
+            kappa= 0.001, 
+            omega_l= x, 
+            l = 0, 
+            Delta_varphi = Delta_varphi_container
+        )
+    )
+
+plt.plot(x_test, y_test)
+plt.plot(x_test, prime_y_test)
+plt.scatter(Omega_true_L[0], f_l(
+        YK=YK, 
+        Mu = E_step_instance.Mu, 
+        kappa=0.001 , 
+        omega_l= Omega_true_L[0], 
+        l = 0,
+        Delta_varphi=Delta_varphi_container
+    )
+    )
+
+
+# In[42]:
+
+
+x_test[y_test.index(max(y_test))]
+
+
+# In[32]:
+
+
+x_test = np.linspace(0.125, 0.15625, 99)
+prime_y_test = []
+for x in range(len(y_test) - 1):
+    prime_y_test.append((y_test[x+1]-y_test[x]) / (x_test[1] - x_test[0]))
+
+prime_y_cal = []
+for x in x_test:
+    prime_y_cal.append(
+        prime_f_l(
+            YK=YK, 
+            Mu=E_step_instance.Mu, 
+            kappa=0.001,
+            omega_l= x, 
+            l = 0, 
+            Delta_varphi = Delta_varphi_container
+        )
+    )
+
+plt.plot(x_test,prime_y_test)
+plt.plot(x_test,0.5 * np.array(prime_y_cal), color = 'red')
+
+
+# In[ ]:
+
+
+
+
