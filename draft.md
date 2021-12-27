@@ -292,7 +292,7 @@ $$
 $$
 
 $$
-{\mathbf U}_N{\mathbf y}_{rb}={\mathbf U}_N{\mathbf A}_N{\mathbf A}_{rb}{\mathbf s}_r +{\mathbf n}_{rb}
+{\mathbf U}_N{\mathbf y}_{rb}={\mathbf U}_N{\mathbf A}_N{\mathbf A}_{rb}{\mathbf s}_r +{\mathbf U}_N{\mathbf n}_{rb}
 $$
 
 其物理意义为$L$个path中对应的角域能量分布，其中${\mathbf A}_N=[{\mathbf a}_N(\psi^{\prime}_1),\dots,{\mathbf a}_N(\psi^{\prime}_L)]$，则：
