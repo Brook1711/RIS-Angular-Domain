@@ -293,19 +293,139 @@ $$
 
 ​	则给出$\triangle\psi^{\prime}_l$的定义：$\triangle \psi_l = \psi_l^g-\psi_l$，此时，$\psi$未知，但根据Lamma 2可知，$\psi_l^g$对应的DFT中相应频点能量最大，且$\triangle\psi_l$在范围$[-\pi/N,+\pi/N]$内，于是，$\triangle\psi^{\prime}_l$可由以下方法求得：
 $$
-\triangle \psi_{l}=\arg \max _{\triangle \psi \in\left[-\frac{\pi}{N}, \frac{\pi}{N}\right]}\left\|\left[\mathbf{U}_{N}\right]_{n_l, :} \boldsymbol{\Phi}_{N}(\triangle \psi) \mathbf{y}_{rb}\right\|^{2}
+\triangle \hat{\psi}_{l}=\arg \max _{\triangle \psi \in\left[-\frac{\pi}{N}, \frac{\pi}{N}\right]}\left\|\left[\mathbf{U}_{N}\right]_{n_l, :} \boldsymbol{\Phi}_{N}(\triangle \psi) \mathbf{y}_{rb}\right\|^{2}
 $$
-​	其中，$\mathbf{\Phi}_N \in \mathbb{C}^{N\times N}$ 为rotation矩阵：
+​	由此，结合显著角估计，可以得到上行BS处AoA估计$\hat{\psi}_l = \psi_l^g+\Delta \hat{\psi}_l$ 其中，$\mathbf{\Phi}_N \in \mathbb{C}^{N\times N}$ 为rotation矩阵：
 $$
-\boldsymbol{\Phi}_{N}\left(\triangle \psi_{l}\right)=\operatorname{Diag}\left\{1, e^{\mathrm{i} \triangle \psi_{l}}, \ldots, e^{\mathrm{i}(N-1) \triangle \psi_{l}}\right\}, \forall l
+\boldsymbol{\Phi}_{N}\left(\triangle \psi\right)=\operatorname{Diag}\left\{1, e^{\mathrm{i} \triangle \psi}, \ldots, e^{\mathrm{i}(N-1) \triangle \psi}\right\}
 $$
 ​	当${\mathbf s}_r=1\times \sqrt{p}\in{\mathbb R}$，即RIS处单天线发送单符号导频信号时，路损系数的估计值$\hat{{\mathbf A}}_{rb}$为：
 $$
 \begin{aligned}
 \hat{\mathbf A}_{rb}&=\frac{1}{N\sqrt{p}}({\hat{\mathbf A}_{N}^{D}})^{H}{\mathbf y}_{rb}^{D}\\
-&\approx \frac{1}{N\sqrt{p}}({{\mathbf A}_{N}^{D}})^{H}{\mathbf A}_N^{D}{\mathbf A}_{rb}{\mathbf s}_{r}\\
+&= \frac{1}{N\sqrt{p}}({{\mathbf A}_{N}^{D}})^{H}{\mathbf A}_N^{D}{\mathbf A}_{rb}{\mathbf s}_{r}\\
+
+&\approx \frac{1}{N\sqrt{p}}N\mathbf{I}_N\mathbf{A}_{rb}\sqrt{p}\\
 &={\mathbf A}_{rb}
 
+\end{aligned}
+$$
+最终，通过在BS端接收的导频信号${\mathbf y}_{rb}$可以估计出基站侧上行AoA（or 下行AoD）$\psi_l$以及多径衰落系数${\mathbf A}_{rb}$ 
+
+同理，用户侧也在接收RIS端发射的导频信号${\mathbf y}_{r,k}$，此时将k-th用户当作是BS则可以估计得到用户侧上行AoD（or 下行AoA）$\phi_{k,j}$以及多径衰落系数${\mathbf B}_{r,k}$
+
+## C. Cascade Channel estimation
+
+在phase 2中通过用户向BS发送的导频信号估计RIS处的上行AoD（or 下行AoA）$\omega_l$和上行AoA（or 下行AoD）$\varphi_{k,j}$，所有用户依次向BS发送上行导频信号，则BS端接收到$k$-th用户发送的$t$-th导频信号的信号表达为：
+$$
+\left[{\mathbf y}_{k,b} \right]_{:,t} ={\mathbf A}_N{\mathbf A}{\mathbf A}_M^H{\mathbf \Phi}_t{\mathbf A}_{M,k}{\mathbf B}_k{\mathbf A}_{A,k}\sqrt{p}[{\mathbf s_{k,b}}]_{:,t}+{\mathbf n}^b_{k,t}
+$$
+根据[^AngularEstimation][^AngularDomain]，在设计$k$-th用户的导频信号${\mathbf s}_{k,b}\in {\mathbb C}^{A\times \tau_{k,b}}$时，可以根据Phase 1中获知的用户端上行AoD$\phi_{k,j}$ 将发射能量集中到显著角集合$\Omega_{A,k}$中，使得RIS端接收的导频信号质量更好。
+
+​	通过使用Phase1中获知的Partial CSI，可以将接收信号表达式化简为：
+$$
+\begin{aligned}
+\frac{1}{\sqrt{p} N } \hat{{\mathbf A}}_N^H \left[{\mathbf y}_{k,b} \right]_{:,t} &\approx{\mathbf I}_L {\mathbf A}{\mathbf A}_M^H{\mathbf \Phi}_t{\mathbf A}_{M,k}{\mathbf B}_k{\mathbf A}_{A,k}[{\mathbf{s}_{k,b}}]_{:,t} + \frac{1}{\sqrt{p} N } \hat{{\mathbf A}}_N^H {\mathbf n}^b_{k,t}\\
+\frac{1}{\sqrt{p} N }{\mathbf A}^{-1} \hat{{\mathbf A}}_N^H \left[{\mathbf y}_{k,b} \right]_{:,t} &\approx{\mathbf A}_M^H{\mathbf \Phi}_t{\mathbf A}_{M,k}\underbrace{{\mathbf B}_k{\mathbf A}_{A,k}^H[{\mathbf{s}_{k,b}}]_{:,t}}_{\text{part 1}} + \frac{1}{\sqrt{p} N } {\mathbf A}^{-1} \hat{{\mathbf A}}_N^H {\mathbf n}^b_{k,t}
+\end{aligned}
+$$
+​	接下来介绍上行导频信号设计，从上面的公式可以看到，此时信道中的位置量已经只剩下上行信道中的RISAoD($\{ {\omega_1}, \dots,\omega_L\}$)和RIS处的AoA($\{ {\varphi}_1, \dots,\varphi_{J_k} \}$)。需要注意的是，虽然理论上$\{\beta_{k,j},\forall k\in\mathcal{K},\forall j \in \mathcal{J}_k \}$，可以在phase1在用户处得到，但是BS端无法获知，如果使用backhaul链路，则要占用更多的导频开销，所以此时$\{\beta_{k,j},\forall k\in\mathcal{K},\forall j \in \mathcal{J}_k \}$也是未知量。我们的思想是将接收信号表达式化简为只有$\{ {\varphi}_1, \dots,\varphi_{J_k} \}$和$\{ {\omega_1}, \dots,\omega_L\}$以及$\{\beta_{k,j},\forall k\in\mathcal{K},\forall j \in \mathcal{J}_k \}$为变量的形式，即，等式右边除了${\mathbf A}_M^H$和${\mathbf A}_{M,k}$以及$\mathbf{B}_k$之外都是常数矩阵。
+
+​		所以需要设计上式中的$\text{part}\ 1$：
+$$
+\begin{aligned}
+\text{part 1} &= {\mathbf B}_k{\mathbf A}_{A,k}^H[{\mathbf{s}}_{rb}]_{:,t}\\
+&=\left(
+\begin{matrix}
+\beta_{k,1} &  &\\
+& \beta_{k,2}\\
+&& \ddots \\
+&&& \beta_{k,J_k}
+\end{matrix}
+\right)
+\left(
+\begin{matrix}
+{\mathbf a}_{A}^H(\phi_{k,1})	\\
+{\mathbf a}_{A}^H(\phi_{k,2})	\\
+\vdots												\\
+{\mathbf a}_{A}^H(\phi_{k,J_k})
+\end{matrix}
+\right)
+[{\mathbf s}_{rb}]_{:,t}
+\\
+&=\left(
+\begin{matrix}
+\beta_{k,1}{\mathbf a}_{A}^H(\phi_{k,1})[{\mathbf s}_{rb}]_{:,t}	\\
+\beta_{k,2}{\mathbf a}_{A}^H(\phi_{k,2})[{\mathbf s}_{rb}]_{:,t}	\\
+\vdots												\\
+\beta_{k,J_k}{\mathbf a}_{A}^H(\phi_{k,J_k})[{\mathbf s}_{rb}]_{:,t}
+\end{matrix}
+\right)
+
+\end{aligned}
+$$
+正如 Lemma中提到的，$\{{\mathbf a}_A(\phi_{k,1}),\dots,{\mathbf a}_A(\phi_{k,J_k}) \}$在A非常的大时候近似正交[^PanCunhua][^AngularDomain]，利用其正交性设计导频信号${\mathbf s}_{rb}$，为简化表示，令${\mathbf s}_t=[{\mathbf s}_{rb}]_{:,t}$，设计目标在于令part 1为常矩阵方便下一步估计，则${\mathbf s}_t$可以按照以下规则设计：
+$$
+{\mathbf s}_t=\frac{1}{A\sqrt{||\sum_{j=1}^{J_k}{\mathbf a}_A(\phi_{k,j})||^2}}\cdot \sum_{j=1}^{J_k}{\mathbf a}_A(\phi_{k,j}),\quad \forall t \in \{1,\dots,\tau\}
+$$
+则part 1中的每一项：
+$$
+\begin{aligned}
+\left[\text{part 1}\right]_{j,:}&=\beta_{k,j}{\mathbf a}_A^H(\phi_{k,j})\frac{1}{A\sqrt{||\sum_{j=1}^{J_k}{\mathbf a}_A(\phi_{k,j})||^2}}\cdot \sum_{j=1}^{J_k}{\mathbf a}_A(\phi_{k,j})\\
+&\approx \beta_{k,j}\frac{{\mathbf a}_A^H(\phi_{k,j}) {\mathbf a}_A(\phi_{k,j})}{A\sqrt{||\sum_{j=1}^{J_k}{\mathbf a}_A(\phi_{k,j})||^2}}\\
+&= \beta_{k,j}\frac{1}{\sqrt{||\sum_{j=1}^{J_k}{\mathbf a}_A(\phi_{k,j})||^2}}
+\triangleq\beta_{k,j}\cdot c_s
+\end{aligned}
+$$
+
+因此，通过对导频信号${\mathbf s}_t$的设计，$\text{part 1}$可以被写为：
+$$
+\begin{aligned}
+\text{part 1} &= c_s\cdot 
+\left(
+\begin{matrix}
+\beta_{k,1}\\
+\beta_{k,2}\\
+\vdots \\
+\beta_{k,J_k}
+\end{matrix}
+\right)_{(J_k \times 1)}
+\end{aligned}
+$$
+则，BS端接收的导频信号可以被进一步表示为：
+$$
+\begin{aligned}
+
+\frac{1}{c_s\sqrt{p} N }{\mathbf A}^{-1} \hat{{\mathbf A}}_N^H \left[{\mathbf y}_{k,b} \right]_{:,t} &\approx{\mathbf A}_M^H{\mathbf A}_{M,k}{\mathbf x}_k + \frac{1}{c_s \sqrt{p} N } {\mathbf A}^{-1} \hat{{\mathbf A}}_N^H {\mathbf n}^b_{k,t}
+\end{aligned}
+$$
+其中${\mathbf x}_k=[\beta_{k,1},\beta_{k,2},\dots,\beta_{k,J_k}]^T \in {\mathbb C}^{J_k \times 1}$，$c_s=\frac{1}{\sqrt{||\sum_{j=1}^{J_k}\beta_{k,j}^{-1}{\mathbf a}_A(\phi_{k,j})||^2}}$
+
+接下来，为简化表示，使用${\mathbf y}_t\in \mathbb{C}^{L\times 1}$表示$\frac{1}{c_s\sqrt{p} N }{\mathbf A}^{-1} \hat{{\mathbf A}}_N^H \left[{\mathbf y}_{k,b} \right]_{:,t} $。并且将噪声表示为：${\mathbf n}_t = \frac{1}{c_s \sqrt{p} N } {\mathbf A}^{-1} \hat{{\mathbf A}}_N^H {\mathbf n}^b_{k,t}$
+
+之后，我们将其写为：
+$$
+\begin{aligned}
+{\mathbf y}_t & = {\mathbf A}_M^H \operatorname{Diag}({\mathbf \Phi}_t){\mathbf A}_{M,k}{\mathbf x}_k+{\mathbf n}_t\\
+& = {\mathbf A}_M^H \operatorname{Diag}({\mathbf A}_{M,k}{\mathbf x}_k){\mathbf \Phi}_t+{\mathbf n}_t
+\end{aligned}
+$$
+我们通过共轭转置操作考虑${\mathbf y}_t^H \in {\mathbb C}^{1 \times L}$:
+$$
+{\mathbf y}_t^H = {\mathbf \Phi}_t^H \operatorname{Diag}({\mathbf A}^*_{M,k}{\mathbf x}_k^*){\mathbf A}_M + {\mathbf n}_t^H
+$$
+我们考虑其中$l-th$要素$[{\mathbf y}_t^H]_{:,l} \in {\mathbb C} $:
+$$
+\begin{aligned}
+{[{\mathbf y}_t^H]_{:,l}} & = {\mathbf \Phi}_t^H \operatorname{Diag}({\mathbf A}^*_{M,k}{\mathbf x}_k^*){\mathbf a}_M(\omega_l) + [{\boldsymbol n}_t^H]_{:,l} \\
+& = {\mathbf \Phi}_t^H \operatorname{Diag}({\mathbf a}_M(\omega_l)) {\mathbf A}^*_{M,k}{\mathbf x}_k^* + [{\boldsymbol n}_t^H]_{:,l}
+\end{aligned}
+$$
+我们接下来考虑的压缩感知问题考虑在时域上的super sampling，所以我们接下来定义一个measurement vector ${\mathbf Y}_l \triangleq \left[\begin{matrix} [{\mathbf y }_1^H]_{:,l}\\ \vdots \\ {\mathbf y }_\tau^H]_{:,l} \end{matrix}\right] \in {\mathbb C}^{\tau \times 1}$ 
+$$
+\begin{aligned}
+{\mathbf Y}_l & = {\mathbf \Phi}^H \operatorname{Diag}({\mathbf a}_M(\omega_l)) {\mathbf A}^*_{M,k}{\mathbf x}_k^* + \left[\begin{matrix} {\mathbf n}_1^H \\ \vdots \\ {\mathbf n}_\tau^H \end{matrix} \right]_{:,l} \\
+&={\mathbf \Phi}^H \operatorname{Diag}({\mathbf a}_M(\omega_l)) \mathbf{a}_M({\boldsymbol \varphi}) + \mathbf{N}_l
 \end{aligned}
 $$
 
