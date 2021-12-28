@@ -378,7 +378,7 @@ $$
 \end{aligned}
 $$
 
-因此，通过对导频信号${\mathbf s}_t$的设计，$\text{part 1}$可以被写为：
+​	因此，通过对导频信号${\mathbf s}_t$的设计，$\text{part 1}$可以被写为：
 $$
 \begin{aligned}
 \text{part 1} &= c_s\cdot 
@@ -392,42 +392,89 @@ $$
 \right)_{(J_k \times 1)}
 \end{aligned}
 $$
-则，BS端接收的导频信号可以被进一步表示为：
+​	则，BS端接收的导频信号可以被进一步表示为：
 $$
 \begin{aligned}
 
-\frac{1}{c_s\sqrt{p} N }{\mathbf A}^{-1} \hat{{\mathbf A}}_N^H \left[{\mathbf y}_{k,b} \right]_{:,t} &\approx{\mathbf A}_M^H{\mathbf A}_{M,k}{\mathbf x}_k + \frac{1}{c_s \sqrt{p} N } {\mathbf A}^{-1} \hat{{\mathbf A}}_N^H {\mathbf n}^b_{k,t}
+\frac{1}{c_s\sqrt{p} N }{\mathbf A}^{-1} \hat{{\mathbf A}}_N^H \left[{\mathbf y}_{k,b} \right]_{:,t} &\approx{\mathbf A}_M^H{\mathbf A}_{M,k}{\mathbf v}_k + \frac{1}{c_s \sqrt{p} N } {\mathbf A}^{-1} \hat{{\mathbf A}}_N^H {\mathbf n}^b_{k,t}
 \end{aligned}
 $$
-其中${\mathbf x}_k=[\beta_{k,1},\beta_{k,2},\dots,\beta_{k,J_k}]^T \in {\mathbb C}^{J_k \times 1}$，$c_s=\frac{1}{\sqrt{||\sum_{j=1}^{J_k}\beta_{k,j}^{-1}{\mathbf a}_A(\phi_{k,j})||^2}}$
+​	其中${\mathbf v}_k=[\beta_{k,1},\beta_{k,2},\dots,\beta_{k,J_k}]^T \in {\mathbb C}^{J_k \times 1}$，$c_s=\frac{1}{\sqrt{||\sum_{j=1}^{J_k}\beta_{k,j}^{-1}{\mathbf a}_A(\phi_{k,j})||^2}}$
 
-接下来，为简化表示，使用${\mathbf y}_t\in \mathbb{C}^{L\times 1}$表示$\frac{1}{c_s\sqrt{p} N }{\mathbf A}^{-1} \hat{{\mathbf A}}_N^H \left[{\mathbf y}_{k,b} \right]_{:,t} $。并且将噪声表示为：${\mathbf n}_t = \frac{1}{c_s \sqrt{p} N } {\mathbf A}^{-1} \hat{{\mathbf A}}_N^H {\mathbf n}^b_{k,t}$
+​	接下来，为简化表示，使用${\mathbf y}_t\in \mathbb{C}^{L\times 1}$表示$\frac{1}{c_s\sqrt{p} N }{\mathbf A}^{-1} \hat{{\mathbf A}}_N^H \left[{\mathbf y}_{k,b} \right]_{:,t} $。并且将噪声表示为：${\mathbf n}_t = \frac{1}{c_s \sqrt{p} N } {\mathbf A}^{-1} \hat{{\mathbf A}}_N^H {\mathbf n}^b_{k,t}$
 
-之后，我们将其写为：
+​	之后，我们将其写为：
 $$
 \begin{aligned}
-{\mathbf y}_t & = {\mathbf A}_M^H \operatorname{Diag}({\mathbf \Phi}_t){\mathbf A}_{M,k}{\mathbf x}_k+{\mathbf n}_t\\
-& = {\mathbf A}_M^H \operatorname{Diag}({\mathbf A}_{M,k}{\mathbf x}_k){\mathbf \Phi}_t+{\mathbf n}_t
+{\mathbf y}_t & = {\mathbf A}_M^H \operatorname{Diag}({\mathbf \Phi}_t){\mathbf A}_{M,k}{\mathbf v}_k+{\mathbf n}_t\\
+& = {\mathbf A}_M^H \operatorname{Diag}({\mathbf A}_{M,k}{\mathbf v}_k){\mathbf \Phi}_t+{\mathbf n}_t
 \end{aligned}
 $$
-我们通过共轭转置操作考虑${\mathbf y}_t^H \in {\mathbb C}^{1 \times L}$:
+​	我们通过共轭转置操作考虑${\mathbf y}_t^H \in {\mathbb C}^{1 \times L}$:
 $$
-{\mathbf y}_t^H = {\mathbf \Phi}_t^H \operatorname{Diag}({\mathbf A}^*_{M,k}{\mathbf x}_k^*){\mathbf A}_M + {\mathbf n}_t^H
+{\mathbf y}_t^H = {\mathbf \Phi}_t^H \operatorname{Diag}({\mathbf A}^*_{M,k}{\mathbf v}_k^*){\mathbf A}_M + {\mathbf n}_t^H
 $$
-我们考虑其中$l-th$要素$[{\mathbf y}_t^H]_{:,l} \in {\mathbb C} $:
+​	我们考虑其中$l-th$要素$[{\mathbf y}_t^H]_{:,l} \in {\mathbb C} $:
 $$
 \begin{aligned}
 {[{\mathbf y}_t^H]_{:,l}} & = {\mathbf \Phi}_t^H \operatorname{Diag}({\mathbf A}^*_{M,k}{\mathbf x}_k^*){\mathbf a}_M(\omega_l) + [{\boldsymbol n}_t^H]_{:,l} \\
-& = {\mathbf \Phi}_t^H \operatorname{Diag}({\mathbf a}_M(\omega_l)) {\mathbf A}^*_{M,k}{\mathbf x}_k^* + [{\boldsymbol n}_t^H]_{:,l}
+& = {\mathbf \Phi}_t^H \operatorname{Diag}({\mathbf a}_M(\omega_l)) {\mathbf A}^*_{M,k}{\mathbf v}_k^* + [{\boldsymbol n}_t^H]_{:,l}
 \end{aligned}
 $$
-我们接下来考虑的压缩感知问题考虑在时域上的super sampling，所以我们接下来定义一个measurement vector ${\mathbf Y}_l \triangleq \left[\begin{matrix} [{\mathbf y }_1^H]_{:,l}\\ \vdots \\ {\mathbf y }_\tau^H]_{:,l} \end{matrix}\right] \in {\mathbb C}^{\tau \times 1}$ 
+​	我们接下来考虑的压缩感知问题考虑在时域上的super sampling，所以我们接下来定义一个measurement vector ${\mathbf Y}_l \triangleq \left[\begin{matrix} [{\mathbf y }_1^H]_{:,l}\\ \vdots \\ {\mathbf y }_\tau^H]_{:,l} \end{matrix}\right] \in {\mathbb C}^{\tau \times 1}$ 
 $$
 \begin{aligned}
-{\mathbf Y}_l & = {\mathbf \Phi}^H \operatorname{Diag}({\mathbf a}_M(\omega_l)) {\mathbf A}^*_{M,k}{\mathbf x}_k^* + \left[\begin{matrix} {\mathbf n}_1^H \\ \vdots \\ {\mathbf n}_\tau^H \end{matrix} \right]_{:,l} \\
-&={\mathbf \Phi}^H \operatorname{Diag}({\mathbf a}_M(\omega_l)) \mathbf{a}_M({\boldsymbol \varphi}) + \mathbf{N}_l
+{\mathbf Y}_l & = {\mathbf \Phi}^H \operatorname{Diag}({\mathbf a}_M(\omega_l)) {\mathbf A}^*_{M,k}{\mathbf v}_k^* + \left[\begin{matrix} {\mathbf n}_1^H \\ \vdots \\ {\mathbf n}_\tau^H \end{matrix} \right]_{:,l} \\
+&={\mathbf \Phi}^H \operatorname{Diag}({\mathbf a}_M(\omega_l)) \mathbf{a}_M({\boldsymbol \varphi}_k) + \mathbf{N}_l
 \end{aligned}
 $$
+​	为了将角域稀疏性提取出来，我们首先采用DFT变换将$\mathbf{a}_M({\boldsymbol \varphi}_k)$变换到角度域，并通过DFT偏转角公式将$\Delta{\boldsymbol \varphi}_k$提取出来：
+$$
+\begin{aligned}
+{\mathbf Y}_l & = {\mathbf \Phi}^H \operatorname{Diag}({\mathbf a}_M(\omega_l)) \frac{{\mathbf U}^H_M {\mathbf U}_M}{M} {\mathbf a}_M  ({\boldsymbol \varphi}) + {\mathbf N}_l\\
+									& = {\mathbf \Phi}^H {\mathbf V}({\omega_l}){\mathbf a}_M^{DFT}({\boldsymbol \varphi}) + {\mathbf N}_l\\
+									& = {\mathbf \Phi}^H {\mathbf V}({\omega_l}){\mathbf D}_M({\Delta}{\boldsymbol \varphi}) {\mathbf x}_k+ {\mathbf N}_l 
+
+\end{aligned}
+$$
+其中${\mathbf D}_M(\Delta {\boldsymbol \varphi})= [D_M(\Delta \varphi_1),\dots,D_M(\Delta \varphi_M)] \in {\mathbb C}^{M\times M}$。${\mathbf x}_k\in \mathbb{C}^{M\times 1}$ 为一个$J_k-$稀疏的vector
+
+其每一列$D_M(\Delta {\varphi_m})$中的$m^{\prime}$-th元素的值为：
+$$
+D_M(\Delta {\varphi_1},m^{\prime})=\begin{cases}
+\begin{aligned}
+f_M({2\pi}(\frac{m^{\prime}-m} {M}+\Delta\varphi))\ &, \frac{m-1}{M} < 0.5 \\
+f_M({2\pi}(\frac{m^{\prime}-m+M} {M}+\Delta\varphi)) &, \frac{m-1}{M} \geq 0.5
+\end{aligned}
+
+\end{cases}
+$$
+其中[^SpectralCS]：
+$$
+f_M(x) = \frac{1}{\sqrt{M}}e^{jx(M-1)/2} \frac{\operatorname{sin}(Mx/2)}{\operatorname{sin}(x/2)}
+$$
+
+
+### Problem Formulation
+
+
+
+### $\omega_l$ Estimation and Calibration
+
+首先利用上一个Frame的$\varphi^{(t-1)}_{k,j} $进行显著角估计，随后在显著角范围内进行联合校准
+
+
+
+## D. Channel Tracking
+
+
+
+# Part 4: Turbo-EM
+
+
+
+
+
 
 
 [^pure-MP]: H. Liu, X. Yuan and Y. -J. A. Zhang, "Matrix-Calibration-Based Cascaded Channel Estimation for Reconfigurable Intelligent Surface Assisted Multiuser MIMO," in *IEEE Journal on Selected Areas in Communications*, vol. 38, no. 11, pp. 2621-2636, Nov. 2020, doi: 10.1109/JSAC.2020.3007057.
