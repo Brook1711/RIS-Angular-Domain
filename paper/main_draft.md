@@ -65,7 +65,7 @@
 
 
 
-# Part 2: SYSTEM MODEL AND PROBLEM FORMULATION
+# Part 2: SYSTEM MODEL
 
 ![Fig. 1](main_draft.assets/image-20211227194955088.png)
 
@@ -421,30 +421,30 @@ $$
 & = {\mathbf \Phi}_t^H \operatorname{Diag}({\mathbf a}_M(\omega_l)) {\mathbf A}^*_{M,k}{\mathbf v}_k^* + [{\boldsymbol n}_t^H]_{:,l}
 \end{aligned}
 $$
-​	我们接下来考虑的压缩感知问题考虑在时域上的super sampling，所以我们接下来定义一个measurement vector ${\mathbf Y}_l \triangleq \left[\begin{matrix} [{\mathbf y }_1^H]_{:,l}\\ \vdots \\ {\mathbf y }_\tau^H]_{:,l} \end{matrix}\right] \in {\mathbb C}^{\tau \times 1}$ 
+​	我们接下来考虑的压缩感知问题考虑在时域上的super sampling，所以我们接下来定义一个measurement vector ${\mathbf Y}_{k,l} \triangleq \left[\begin{matrix} [{\mathbf y }_1^H]_{:,l}\\ \vdots \\ {\mathbf y }_\tau^H]_{:,l} \end{matrix}\right] \in {\mathbb C}^{\tau \times 1}$ 
 $$
 \begin{aligned}
-{\mathbf Y}_l & = {\mathbf \Phi}^H \operatorname{Diag}({\mathbf a}_M(\omega_l)) {\mathbf A}^*_{M,k}{\mathbf v}_k^* + \left[\begin{matrix} {\mathbf n}_1^H \\ \vdots \\ {\mathbf n}_\tau^H \end{matrix} \right]_{:,l} \\
+{\mathbf Y}_{k,l} & = {\mathbf \Phi}^H \operatorname{Diag}({\mathbf a}_M(\omega_l)) {\mathbf A}^*_{M,k}{\mathbf v}_k^* + \left[\begin{matrix} {\mathbf n}_1^H \\ \vdots \\ {\mathbf n}_\tau^H \end{matrix} \right]_{:,l} \\
 &={\mathbf \Phi}^H \operatorname{Diag}({\mathbf a}_M(\omega_l)) \mathbf{a}_M({\boldsymbol \varphi}_k) + \mathbf{N}_l
 \end{aligned}
 $$
 ​	为了将角域稀疏性提取出来，我们首先采用DFT变换将$\mathbf{a}_M({\boldsymbol \varphi}_k)$变换到角度域，并通过DFT偏转角公式将$\Delta{\boldsymbol \varphi}_k$提取出来：
 $$
 \begin{aligned}
-{\mathbf Y}_l & = {\mathbf \Phi}^H \operatorname{Diag}({\mathbf a}_M(\omega_l)) \frac{{\mathbf U}^H_M {\mathbf U}_M}{M} {\mathbf a}_M  ({\boldsymbol \varphi}) + {\mathbf N}_l\\
-									& = {\mathbf \Phi}^H {\mathbf V}({\omega_l}){\mathbf a}_M^{DFT}({\boldsymbol \varphi}) + {\mathbf N}_l\\
-									& = {\mathbf \Phi}^H {\mathbf V}({\omega_l}){\mathbf D}_M({\Delta}{\boldsymbol \varphi}) {\mathbf x}_k+ {\mathbf N}_l 
+{\mathbf Y}_{k,l} & = {\mathbf \Phi}^H \operatorname{Diag}({\mathbf a}_M(\omega_l)) \frac{{\mathbf U}^H_M {\mathbf U}_M}{M} {\mathbf a}_M  ({\boldsymbol \varphi}_k) + {\mathbf N}_l\\
+									& = {\mathbf \Phi}^H {\mathbf V}({\omega_l}){\mathbf a}_M^{DFT}({\boldsymbol \varphi}_k) + {\mathbf N}_l\\
+									& = {\mathbf \Phi}^H {\mathbf V}({\omega_l}){\mathbf D}_M({\Delta}{\boldsymbol \varphi}_k) {\mathbf x}_k+ {\mathbf N}_l 
 
 \end{aligned}
 $$
-其中${\mathbf D}_M(\Delta {\boldsymbol \varphi})= [D_M(\Delta \varphi_1),\dots,D_M(\Delta \varphi_M)] \in {\mathbb C}^{M\times M}$。${\mathbf x}_k\in \mathbb{C}^{M\times 1}$ 为一个$J_k-$稀疏的vector
+其中${\mathbf V}({\omega_l}) = \operatorname{Diag}({\mathbf{a}_M({\omega_l})}) {\mathbf U}_M^H$; ${\mathbf D}_M(\Delta {\boldsymbol \varphi}_k)= [D_M(\Delta \varphi_{k,1}),\dots,D_M(\Delta \varphi_{k,M})] \in {\mathbb C}^{M\times M}$。${\mathbf x}_k\in \mathbb{C}^{M\times 1}$ 为一个$J_k-$稀疏的vector
 
-其每一列$D_M(\Delta {\varphi_m})$中的$m^{\prime}$-th元素的值为：
+其每一列$D_M(\Delta {\varphi_{k,m}})$中的$m^{\prime}$-th元素的值为：
 $$
-D_M(\Delta {\varphi_1},m^{\prime})=\begin{cases}
+D_M(\Delta {\varphi_{k,m}},m^{\prime})=\begin{cases}
 \begin{aligned}
-f_M({2\pi}(\frac{m^{\prime}-m} {M}+\Delta\varphi))\ &, \frac{m-1}{M} < 0.5 \\
-f_M({2\pi}(\frac{m^{\prime}-m+M} {M}+\Delta\varphi)) &, \frac{m-1}{M} \geq 0.5
+f_M({2\pi}(\frac{m^{\prime}-m} {M}+\Delta\varphi_{k,m}))\ &, \frac{m-1}{M} < 0.5 \\
+f_M({2\pi}(\frac{m^{\prime}-m+M} {M}+\Delta\varphi_{k,m})) &, \frac{m-1}{M} \geq 0.5
 \end{aligned}
 
 \end{cases}
@@ -457,19 +457,120 @@ $$
 
 ### Problem Formulation
 
+由上面的推导可知，对于第k个用户，上行BS接收到的信号
+$$
+{\mathbf Y}_{k,l} = {\mathbf \Phi}^H {\mathbf V}({\omega_l}){\mathbf D}_M({\Delta}{\boldsymbol \varphi}_k) {\mathbf x}_k
+$$
+
+则$k$-th用户的接收信号可以重新写为：
+$$
+{\mathbf Y}_k = 
+\left[
+\begin{matrix}
+\mathbf{\Phi}^{H} \mathbf{V}\left(\omega_{1}\right) \mathbf{D}_{M}\left(\Delta \boldsymbol{\varphi}_{k}\right) \\
+ \vdots \\
+ \mathbf{\Phi}^{H} \mathbf{V}\left(\omega_{L}\right) \mathbf{D}_{M}\left(\Delta \boldsymbol{\varphi}_{k}\right)
+\end{matrix}
+\right]_{\tau L \times M}{\mathbf x}_k+{\mathbf N}_k
+={\mathbf F}_k({\boldsymbol \omega}, \Delta {\boldsymbol \varphi}_k) {\mathbf x}_k+{\mathbf N}_k
+$$
+我们定义${\mathbf F}_{k,l} \triangleq {\mathbf \Phi}^H {\mathbf V}(\omega_l){\mathbf D}_M(\Delta {\boldsymbol \varphi_k})$ and ${\mathbf F}_{k,l,t} \triangleq [{{\mathbf F}_{k,l}}]_{t,:}$ 。${\mathbf Y}=[{\mathbf  y}_1^T,\dots,{\mathbf y}_K^T]^T$。${\mathbf X}=[{\mathbf x}_1^T,\dots,{\mathbf x}_K^T]^T$
 
 
-### $\omega_l$ Estimation and Calibration
 
-首先利用上一个Frame的$\varphi^{(t-1)}_{k,j} $进行显著角估计，随后在显著角范围内进行联合校准
+### Probobility based estimation
+
+由信号表达式可以得出信号${\mathbf y}_k$的概率分布：
+$$
+p({\mathbf  y_{k,l} \mid {\mathbf  x}_{k} ; {\boldsymbol \xi}})=\prod_{t=1}^\tau CN({\mathbf  y}_{k,l,t};[{{\mathbf F}_{k,l}}]_{t,:} {\mathbf  x}_k, { \kappa}_{k,t}^{-1})
+$$
+
+$$
+\begin{aligned}
+p({\mathbf Y} \mid {\mathbf X};{\boldsymbol \xi})&=\prod_k^Kp({\mathbf  y_k \mid {\mathbf  x}_{k} ; {\boldsymbol \xi}})\\
+&=\prod_{k=1}^K \prod_{l=1}^L p({\mathbf  y_{k,l} \mid {\mathbf  x}_{k} ; {\boldsymbol \xi}}) \\
+&=\prod_{k=1}^K \prod_{l=1}^L \prod_{t=1}^\tau CN({ y}_{k,l,t};[{{\mathbf F}_{k,l}}]_{t,:} {\mathbf  x}_k, { \kappa}_{k,t}^{-1})
+\end{aligned}
+$$
+
+
+
+由于${\mathbf a}_M^{DFT}({\boldsymbol \varphi}_{k})$ 是$J_k$个$M$-ULA阵列响应的线性叠加之后的$M$-DFT变换得到的结果，并且我们通过增加${\mathbf D}_M(\Delta {\boldsymbol \varphi}_k) \in {\mathbb C}^{M\times M}$ 将DTFT的结果中的旁瓣剥离，所以最终${\mathbf x}_k$是一个$M$空间$J_k$稀疏的信号。那么问题就变成了通过接收信号${\mathbf y}_{l,k}$ 估计$J_k$稀疏的${\mathbf x}_{k}$。需要注意的是Data矩阵中包含未知参数${\Delta {\boldsymbol \varphi}}_k \triangleq \{ \Delta{\varphi }_{k,1},\dots, \Delta{\varphi }_{k,M}\}$。注意到由于${\boldsymbol x}_k$的$J_k$-稀疏性，${\Delta{\boldsymbol \varphi}}_k$中只有$\{\Delta \varphi_{k,m}|m=1,\dots,J_k \}$会起作用，但是在算法中所有$M$个${\Delta {\boldsymbol \varphi}}_k$中的元素会一起进行处理。
+
+### HMM Model
+
+为了进一步降低算法的时间开销，我们可以利用${\boldsymbol x}_k$中的结构稀疏性提供的额外的先验信息[^SpectralCS]对${\boldsymbol x}_k$中的子空间进行降维[^RobustRecovery][^AngularDomain][^CloudAssisted][^FDD]。
+
+这里我们采用HMM信道建模[^RobustRecovery] [^AngularEstimation] :
+$$
+\begin{aligned}
+p(\boldsymbol{x} \mid \boldsymbol{\gamma})&=\prod_k^K\prod_m^Mp(x_{k,m} \mid \gamma_{k,m})
+
+\end{aligned}
+$$
+
+其中，${\boldsymbol \gamma}$为信道精度，$p(x_{k,m} \mid \gamma_{k,m})=CN(x_{k,m};0;\gamma_{k,m}^{-1})$
+$$
+p({\boldsymbol \gamma} \mid {\boldsymbol s}) = \prod_k^K\prod_m^M p(\gamma_{k,m} \mid s_{k,m})
+$$
+其中，${\boldsymbol s}$ 为channel support：$p(\gamma_{k,m} \mid s_{k,m})= \Gamma(\gamma_{k,m};a_{k},b_{k})^{s_{k,m}}\Gamma(\gamma_{k,m};\overline{a}_{k},\overline{b}_{k})^{1-s_{k,m}}$ 
+
+当$s_{k,m}$为1时，$\frac{a_{k}}{b_{k}}=E[\gamma_{k,m}]=PL_{k}^{-1}$,其中$PL_k$为RIS-User k的LoS链路的路损。$\overline{a}_{k,m},\overline{b}_{k,m}$
+
+需要满足：$\frac{\overline{a}_{k,m}}{\overline{b}_{k,m}}=E[\gamma_{k,m}] \gg 1$  
+
+在channel support的底层，我们用common support${\boldsymbol c}$的马尔可夫性质和联合概率$ p({\boldsymbol c},{\boldsymbol s};{\boldsymbol \xi})$来刻画channel support的结构化稀疏性[^RobustRecovery]：
+$$
+\begin{aligned}
+p({\boldsymbol c}, {\boldsymbol s};{\boldsymbol \xi}) &= p({\boldsymbol c})\prod_{k=1}^Kp({\boldsymbol s}_k \mid {\boldsymbol c}) \\
+	&= p(c_1)\prod_{k=1}^Kp({s}_{k,1} \mid c_1) \prod_{m=2}^M\left[ p(c_m \mid c_{m-1} ) \prod_{k=1}^K p(s_{k,m} \mid c_m) \right]
+\end{aligned}
+$$
+为方便起见，我们定义$p_{01}^c \triangleq p(c_m=1\mid c_{m-1}=0),m=\{2,\dots M\}$
+
+$p_{10}^c \triangleq p(c_m=0\mid c_{m-1}=1),m=\{2,\dots M\}$
+
+则steady state distribution：$\lambda^c \triangleq p(c_1=1)=\frac{p_{01}}{p{01}+p{10}}$
+
+针对不同用户，每个用户都会有不同的activate path在角域的概率分布密度，我们使用高斯分布对每个用户的角域activate path出现概率进行建模：
+
+定义用户k的$\{1,\dots,M\}$个角域activate path ${p}^{s}_{k,m}$:
+$$
+\begin{aligned}
+{p}^{s}_{k}(m)&=p(s_{k,m}=1 \mid c_m=1)\\
+	&= \frac{1}{\sqrt{2 \pi} {\sigma}^s_{k}} \exp \left(-\frac{(m-\mu^s_{k})^{2}}{2 {\sigma^{s}_k}^{2}}\right)
+\end{aligned}
+$$
+注意到根据common path 和user activate path之间的关系有：
+$$
+p(s_{k,m}=1 \mid c_m=0)=0
+$$
+
+
+则common path 和 user path 的联合概率可以由$\{\lambda^c,p^c_{01}, p^c_{10}, \mu^s_1,\sigma^s_1,\dots, \mu^s_k,\sigma^s_k\}$确定
+
+
 
 
 
 ## D. Channel Tracking
 
+​	在phase3中，如Fig. 2所示，此时BS-RIS已经在Phase2中完全确定，只需要定期更新RIS-User链路的信息。首先和Phase1中的步骤一样，首先利用RIS向所有用户广播信号以确定上行链路中用户处AoD。随后，和Phase2中的步骤一样，用户使用估计得到的AoD显著角集合，设计并向BS发射上行Pilot signal。此时由于BS-RIS链路中的参数已经确定，为题可以formulate为：
+$$
+{\mathbf Y}_k = 
+{\mathbf F}_k(\Delta {\boldsymbol \varphi}_k) {\mathbf x}_k+{\mathbf N}_k
+$$
+此时的问题和Phase2中的类似，依然为一个Data Matrix 中包含未知参数的压缩感知问题，但是问题中的未知参数${\boldsymbol \omega}$ 现在已知。
+
+​	同样的，我们使用Part4中提出的Turbo-EM算法对参数和HMM中的隐变量进行估计
+
 
 
 # Part 4: Turbo-EM
+
+本文提出的算法基于EM算法框架，在M中使用MM算法[^MM]对参数进行优化，在E-step中使用VBI和Factor graph相结合的方式[^RobustRecovery][^AngularDomain]对后验概率函数进行估计。
+
+
 
 
 
@@ -490,5 +591,5 @@ $$
 [^SpectralCS]: Duarte, Marco F., and Richard G. Baraniuk. "Spectral compressive sensing." *Applied and Computational Harmonic Analysis* 35.1 (2013): 111-129.
 [^AngularEstimation]: P. Zhao, K. Ma, Z. Wang and S. Chen, "Virtual Angular-Domain Channel Estimation for FDD Based Massive MIMO Systems With Partial Orthogonal Pilot Design," in IEEE Transactions on Vehicular Technology, vol. 69, no. 5, pp. 5164-5178, May 2020, doi: 10.1109/TVT.2020.2979916.
 
-
+[^MM]: Y. Sun, P. Babu and D. P. Palomar, "Majorization-Minimization Algorithms in Signal Processing, Communications, and Machine Learning," in IEEE Transactions on Signal Processing, vol. 65, no. 3, pp. 794-816, 1 Feb.1, 2017, doi: 10.1109/TSP.2016.2601299.
 
