@@ -454,54 +454,17 @@ $$
 f_M(x) = \frac{1}{\sqrt{M}}e^{jx(M-1)/2} \frac{\operatorname{sin}(Mx/2)}{\operatorname{sin}(x/2)}
 $$
 
-
-### Problem Formulation
-
-由上面的推导可知，对于第k个用户，上行BS接收到的信号
-$$
-{\mathbf Y}_{k,l} = {\mathbf \Phi}^H {\mathbf V}({\omega_l}){\mathbf D}_M({\Delta}{\boldsymbol \varphi}_k) {\mathbf x}_k
-$$
-
-则$k$-th用户的接收信号可以重新写为：
-$$
-{\mathbf Y}_k = 
-\left[
-\begin{matrix}
-\mathbf{\Phi}^{H} \mathbf{V}\left(\omega_{1}\right) \mathbf{D}_{M}\left(\Delta \boldsymbol{\varphi}_{k}\right) \\
- \vdots \\
- \mathbf{\Phi}^{H} \mathbf{V}\left(\omega_{L}\right) \mathbf{D}_{M}\left(\Delta \boldsymbol{\varphi}_{k}\right)
-\end{matrix}
-\right]_{\tau L \times M}{\mathbf x}_k+{\mathbf N}_k
-={\mathbf F}_k({\boldsymbol \omega}, \Delta {\boldsymbol \varphi}_k) {\mathbf x}_k+{\mathbf N}_k
-$$
-我们定义${\mathbf F}_{k,l} \triangleq {\mathbf \Phi}^H {\mathbf V}(\omega_l){\mathbf D}_M(\Delta {\boldsymbol \varphi_k})$ and ${\mathbf F}_{k,l,t} \triangleq [{{\mathbf F}_{k,l}}]_{t,:}$ 。${\mathbf Y}=[{\mathbf  y}_1^T,\dots,{\mathbf y}_K^T]^T$。${\mathbf X}=[{\mathbf x}_1^T,\dots,{\mathbf x}_K^T]^T$
-
-
-
-### Probobility based estimation
-
-由信号表达式可以得出信号${\mathbf y}_k$的概率分布：
-$$
-p({\mathbf  y_{k,l} \mid {\mathbf  x}_{k} ; {\boldsymbol \xi}})=\prod_{t=1}^\tau CN({\mathbf  y}_{k,l,t};[{{\mathbf F}_{k,l}}]_{t,:} {\mathbf  x}_k, { \kappa}_{k,t}^{-1})
-$$
-
-$$
-\begin{aligned}
-p({\mathbf Y} \mid {\mathbf X};{\boldsymbol \xi})&=\prod_k^Kp({\mathbf  y_k \mid {\mathbf  x}_{k} ; {\boldsymbol \xi}})\\
-&=\prod_{k=1}^K \prod_{l=1}^L p({\mathbf  y_{k,l} \mid {\mathbf  x}_{k} ; {\boldsymbol \xi}}) \\
-&=\prod_{k=1}^K \prod_{l=1}^L \prod_{t=1}^\tau CN({ y}_{k,l,t};[{{\mathbf F}_{k,l}}]_{t,:} {\mathbf  x}_k, { \kappa}_{k,t}^{-1})
-\end{aligned}
-$$
-
-
-
-由于${\mathbf a}_M^{DFT}({\boldsymbol \varphi}_{k})$ 是$J_k$个$M$-ULA阵列响应的线性叠加之后的$M$-DFT变换得到的结果，并且我们通过增加${\mathbf D}_M(\Delta {\boldsymbol \varphi}_k) \in {\mathbb C}^{M\times M}$ 将DTFT的结果中的旁瓣剥离，所以最终${\mathbf x}_k$是一个$M$空间$J_k$稀疏的信号。那么问题就变成了通过接收信号${\mathbf y}_{l,k}$ 估计$J_k$稀疏的${\mathbf x}_{k}$。需要注意的是Data矩阵中包含未知参数${\Delta {\boldsymbol \varphi}}_k \triangleq \{ \Delta{\varphi }_{k,1},\dots, \Delta{\varphi }_{k,M}\}$。注意到由于${\boldsymbol x}_k$的$J_k$-稀疏性，${\Delta{\boldsymbol \varphi}}_k$中只有$\{\Delta \varphi_{k,m}|m=1,\dots,J_k \}$会起作用，但是在算法中所有$M$个${\Delta {\boldsymbol \varphi}}_k$中的元素会一起进行处理。
-
 ### HMM Model
+
+![image-20211229112328451](main_draft.assets/image-20211229112328451.png)
 
 为了进一步降低算法的时间开销，我们可以利用${\boldsymbol x}_k$中的结构稀疏性提供的额外的先验信息[^SpectralCS]对${\boldsymbol x}_k$中的子空间进行降维[^RobustRecovery][^AngularDomain][^CloudAssisted][^FDD]。
 
 这里我们采用HMM信道建模[^RobustRecovery] [^AngularEstimation] :
+$$
+p({\boldsymbol x}, {\boldsymbol \gamma}, {\boldsymbol c}, {\boldsymbol s})=\underbrace{p({\boldsymbol x}\mid {\boldsymbol \gamma})}_{\text{Sparse signal}} \underbrace{p({\boldsymbol \gamma}\mid {\boldsymbol s})}_{\text{Precision}} \underbrace{p({\boldsymbol c}, {\boldsymbol s})}_{\text {Structured sparse surpport}}
+$$
+为了捕获更加complicated structured sparsity that may occur in practice，我们基于3LHS model 构建适用于多用户SA-RIS通信系统的三层模型，
 $$
 \begin{aligned}
 p(\boldsymbol{x} \mid \boldsymbol{\gamma})&=\prod_k^K\prod_m^Mp(x_{k,m} \mid \gamma_{k,m})
@@ -519,7 +482,7 @@ $$
 
 需要满足：$\frac{\overline{a}_{k,m}}{\overline{b}_{k,m}}=E[\gamma_{k,m}] \gg 1$  
 
-在channel support的底层，我们用common support${\boldsymbol c}$的马尔可夫性质和联合概率$ p({\boldsymbol c},{\boldsymbol s};{\boldsymbol \xi})$来刻画channel support的结构化稀疏性[^RobustRecovery]：
+在channel support的底层，我们用common support${\boldsymbol c}$的马尔可夫性质[^Downlink]和联合概率$ p({\boldsymbol c},{\boldsymbol s};{\boldsymbol \xi})$来刻画channel support的结构化稀疏性[^RobustRecovery],
 $$
 \begin{aligned}
 p({\boldsymbol c}, {\boldsymbol s};{\boldsymbol \xi}) &= p({\boldsymbol c})\prod_{k=1}^Kp({\boldsymbol s}_k \mid {\boldsymbol c}) \\
@@ -546,8 +509,83 @@ $$
 p(s_{k,m}=1 \mid c_m=0)=0
 $$
 
-
 则common path 和 user path 的联合概率可以由$\{\lambda^c,p^c_{01}, p^c_{10}, \mu^s_1,\sigma^s_1,\dots, \mu^s_k,\sigma^s_k\}$确定
+
+​	 进一步的，我们定义三层模型中的隐变量集合${\boldsymbol v} = \{{\boldsymbol x},{\boldsymbol \gamma},{\boldsymbol c}, {\boldsymbol s}, {\boldsymbol \kappa} \}$，那么隐变量的先验概率可以定义为：
+$$
+\hat{p}(\boldsymbol v)=p({\boldsymbol x} \mid {\boldsymbol \gamma})p({\boldsymbol \kappa})p({\boldsymbol \gamma} \mid {\boldsymbol s})p({\boldsymbol c}, {\boldsymbol s};{\boldsymbol \xi})
+$$
+​	同时，我们写出联合概率分布：
+$$
+\begin{aligned}
+p(\boldsymbol{v}, \boldsymbol{y} ; \boldsymbol{\xi}) &=p(\boldsymbol{y}, \boldsymbol{x}, \boldsymbol{\gamma}, \boldsymbol{s}, \boldsymbol{c}, \boldsymbol{\kappa}) \\
+&=p(\boldsymbol{y} \mid \boldsymbol{x}, \boldsymbol{\kappa} ; \boldsymbol{\xi}) p(\boldsymbol{x} \mid \boldsymbol{\gamma}) p(\boldsymbol{\kappa}) p(\boldsymbol{\gamma} \mid \boldsymbol{s}) p(\boldsymbol{c}, \boldsymbol{s} ; \boldsymbol{\xi}) \\
+&=\underbrace{p(\boldsymbol{x} \mid \boldsymbol{\gamma}) p(\boldsymbol{\kappa}) p(\boldsymbol{\gamma} \mid \boldsymbol{s})}_{\text {known distribution }} \underbrace{p(\boldsymbol{y} \mid \boldsymbol{x}, \boldsymbol{\kappa} ; \boldsymbol{\xi}) p(\boldsymbol{c}, \boldsymbol{s} ; \boldsymbol{\xi})}_{\text {with unknown valuables }}
+\end{aligned}
+$$
+
+
+
+
+
+### Problem Formulation
+
+由上面的推导可知，对于第k个用户，上行BS接收到的信号
+$$
+{\mathbf Y}_{k,l} = {\mathbf \Phi}^H {\mathbf V}({\omega_l}){\mathbf D}_M({\Delta}{\boldsymbol \varphi}_k) {\mathbf x}_k
+$$
+
+则$k$-th用户的接收信号可以重新写为：
+$$
+{\mathbf Y}_k = 
+\left[
+\begin{matrix}
+\mathbf{\Phi}^{H} \mathbf{V}\left(\omega_{1}\right) \mathbf{D}_{M}\left(\Delta \boldsymbol{\varphi}_{k}\right) \\
+ \vdots \\
+ \mathbf{\Phi}^{H} \mathbf{V}\left(\omega_{L}\right) \mathbf{D}_{M}\left(\Delta \boldsymbol{\varphi}_{k}\right)
+\end{matrix}
+\right]_{\tau L \times M}{\mathbf x}_k+{\mathbf N}_k
+={\mathbf F}_k({\boldsymbol \omega}, \Delta {\boldsymbol \varphi}_k) {\mathbf x}_k+{\mathbf N}_k
+$$
+我们定义${\mathbf F}_{k,l} \triangleq {\mathbf \Phi}^H {\mathbf V}(\omega_l){\mathbf D}_M(\Delta {\boldsymbol \varphi_k})$ and ${\mathbf F}_{k,l,t} \triangleq [{{\mathbf F}_{k,l}}]_{t,:}$ 。${\boldsymbol y}=[{\mathbf  y}_1^T,\dots,{\mathbf y}_K^T]^T$。${\boldsymbol x}=[{\boldsymbol x}_1^T,\dots,{\mathbf x}_K^T]^T$
+
+​	那么，最终问题化简为了一个参数${\boldsymbol \xi} = \{{\boldsymbol \omega},{\boldsymbol \Delta{\boldsymbol \varphi}_k} ,\forall k \in \mathcal{K} \}$未知的压缩感知问题。但是联合求解参数${\boldsymbol \xi}$和系数信号${\boldsymbol x} $ 是非常challenging的。因此，我们拟利用EM算法框架设计AO算法。 
+
+​	首先，给定参数${\boldsymbol \xi}$ ，我们希望求解边缘后验分布$p({\boldsymbol x}\mid {\boldsymbol y};{\boldsymbol \xi})$ 和 $p({s}_{k,m} \mid {\boldsymbol y};{\boldsymbol \xi})\ \forall k \in \mathcal{K};\forall m \in \mathcal{M}$ ,i.e., 进行贝叶斯推断其中：
+$$
+\begin{aligned}
+p({\boldsymbol x}\mid {\boldsymbol y};{\boldsymbol \xi}) & \propto \int_{-{\boldsymbol x}} p({\boldsymbol y},{\boldsymbol v};{\boldsymbol \xi}) \\
+
+p({s}_{k,m} \mid {\boldsymbol y};{\boldsymbol \xi}) & \propto \int_{-s_{k,m}}p({\boldsymbol y},{\boldsymbol v};{\boldsymbol \xi})
+
+\end{aligned}
+$$
+​	其次，在求解未知参数${\boldsymbol \xi} $ 时，采用MAP准则，那么最优参数的求解可以表示为：
+$$
+{\boldsymbol \xi}^*={\operatorname{argmax}}_{\boldsymbol \xi} \operatorname{ln}p({\boldsymbol \xi}\mid {\boldsymbol y})={\operatorname{argmax}}_{\boldsymbol \xi} \operatorname{ln} p({\boldsymbol y},{\boldsymbol v}, {\boldsymbol \xi})
+$$
+注意到上式中的$p({\boldsymbol \xi}\mid {\boldsymbol y}) \propto \int_{-{\boldsymbol \xi}} p({\boldsymbol y}, {\boldsymbol v}, {\boldsymbol \xi})$。
+
+​	想要求解上述问题是十分困难的，由于求解边缘后验分布时需要的大量的积分操作，这是几乎不可能的。因此，我们使用Turbo-VBI作为一种求解后验分布的估计手段[^RobustRecovery] 
+
+### Probobility based estimation
+
+由信号表达式可以得出信号${\mathbf y}_k$的概率分布：
+$$
+p({\mathbf  y_{k,l} \mid {\mathbf  x}_{k} ; {\boldsymbol \xi}})=\prod_{t=1}^\tau CN({\mathbf  y}_{k,l,t};[{{\mathbf F}_{k,l}}]_{t,:} {\mathbf  x}_k, { \kappa}_{k,t}^{-1})
+$$
+
+$$
+\begin{aligned}
+p({\boldsymbol y} \mid {\boldsymbol x};{\boldsymbol \xi})&=\prod_k^Kp({\mathbf  y_k \mid {\mathbf  x}_{k} ; {\boldsymbol \xi}})\\
+&=\prod_{k=1}^K \prod_{l=1}^L p({\mathbf  y_{k,l} \mid {\mathbf  x}_{k} ; {\boldsymbol \xi}}) \\
+&=\prod_{k=1}^K \prod_{l=1}^L \prod_{t=1}^\tau CN({ y}_{k,l,t};[{{\mathbf F}_{k,l}}]_{t,:} {\mathbf  x}_k, { \kappa}_{k,t}^{-1})
+\end{aligned}
+$$
+
+
+
+由于${\mathbf a}_M^{DFT}({\boldsymbol \varphi}_{k})$ 是$J_k$个$M$-ULA阵列响应的线性叠加之后的$M$-DFT变换得到的结果，并且我们通过增加${\mathbf D}_M(\Delta {\boldsymbol \varphi}_k) \in {\mathbb C}^{M\times M}$ 将DTFT的结果中的旁瓣剥离，所以最终${\mathbf x}_k$是一个$M$空间$J_k$稀疏的信号。那么问题就变成了通过接收信号${\mathbf y}_{l,k}$ 估计$J_k$稀疏的${\mathbf x}_{k}$。需要注意的是Data矩阵中包含未知参数${\Delta {\boldsymbol \varphi}}_k \triangleq \{ \Delta{\varphi }_{k,1},\dots, \Delta{\varphi }_{k,M}\}$。注意到由于${\boldsymbol x}_k$的$J_k$-稀疏性，${\Delta{\boldsymbol \varphi}}_k$中只有$\{\Delta \varphi_{k,m}|m=1,\dots,J_k \}$会起作用，但是在算法中所有$M$个${\Delta {\boldsymbol \varphi}}_k$中的元素会一起进行处理。
 
 
 
@@ -566,11 +604,20 @@ $$
 
 
 
-# Part 4: Turbo-EM
+# Part 4: Structure Sparsity boost Hybrid EM
+
+![image-20211229113635432](main_draft.assets/image-20211229113635432.png)
 
 本文提出的算法基于EM算法框架，在M中使用MM算法[^MM]对参数进行优化，在E-step中使用VBI和Factor graph相结合的方式[^RobustRecovery][^AngularDomain]对后验概率函数进行估计。
 
+* SSH-E Step：已有工作利用VBI的方式【】求解估计的后验概率，但是其方法求解难度大；同时也有工作通过message passing的方法进行后验分布的求解[^pure-MP] 但是其计算复杂度较高，同时在包含loop的factor graph中难以处理，所以我们通过借鉴[^RobustRecovery]中的Turbo-VBI架构，结合message passing和VBI进行后验概率求解。
+* SSH-M Step：通过E步骤中求解得出的“近似”后验概率，我们通过MM算法的思想[^MM]通过一个代理函数$u({\boldsymbol \xi};\dot{{\boldsymbol \xi}})$ 来近似单步迭代内的目标函数$\operatorname{ln}p({\boldsymbol y},{\boldsymbol \xi})$。我们将重点放在RIS处AoA和AoD角度的获取上$\{{\boldsymbol \omega},\Delta {\boldsymbol \varphi}_k \forall k \in \mathcal{K}\}$。需要注意的是每一个frame内只有在帧头的Phase2需要进行$\{{\boldsymbol \omega},\Delta {\boldsymbol \varphi}_k \forall k \in \mathcal{K}\}$的联合考虑，在剩余的若干Phase3中只需要考虑$\{\Delta {\boldsymbol \varphi}_k\ , \forall k \in \mathcal{K}\}$的优化。
 
+​	需要注意的是，我们在所提出的多用户RIS辅助MIMO通信系统当中考虑到了每个用户对上行RIS AoA共享同一个概率分布。利用这一点，我们建模了common path ${\boldsymbol c}$ 这一变量，注意到不同用户的channel support ${\boldsymbol s}_k$ 实际上是建立在${\boldsymbol c}$之上的。具体来讲对于$k$-th 用户的$m$-th AoA ${\varphi}_{k,m}$，当${c}_m=0$时，${\varphi}_{k,m}$所对应的$m$-th AoA一定是inactive的；当${c}_m=1$时，${\varphi}_{k,m}$所对应的$m$-th AoA会有一定概率为activate。通过这样的底层Structured Sparsity建模，我们可以在保留真实信道特征的前提下缩减大量稀疏空间[^SpectralCS] ，因此我们将算法命名为Structure Sparsity boost Hybrid EM算法。
+
+## A. SSH-M step
+
+​	M步骤的目的是根据E步骤所计算得出$\operatorname{ln}p({\boldsymbol y},{\boldsymbol \xi})$的后验概率分布，找出使得$$根据MM算法的思想[^MM]，我们
 
 
 
@@ -584,6 +631,7 @@ $$
 [^PanCunhua]:  Zhou, Gui, et al. "Channel estimation for RIS-aided multiuser millimeter-wave systems." *arXiv preprint arXiv:2106.14792* (2021).
 [^FDD]: J. Dai, A. Liu and V. K. N. Lau, "FDD Massive MIMO Channel Estimation With Arbitrary 2D-Array Geometry," in IEEE Transactions on Signal Processing, vol. 66, no. 10, pp. 2584-2599, 15 May15, 2018, doi: 10.1109/TSP.2018.2807390.
 [^CloudAssisted]: A. Liu, L. Lian, V. Lau, G. Liu and M. Zhao, "Cloud-Assisted Cooperative Localization for Vehicle Platoons: A Turbo Approach," in IEEE Transactions on Signal Processing, vol. 68, pp. 605-620, 2020, doi: 10.1109/TSP.2020.2964198.
+[^Downlink]: A. Liu, L. Lian, V. K. N. Lau and X. Yuan, "Downlink Channel Estimation in Multiuser Massive MIMO With Hidden Markovian Sparsity," in IEEE Transactions on Signal Processing, vol. 66, no. 18, pp. 4796-4810, 15 Sept.15, 2018, doi: 10.1109/TSP.2018.2862420. 
 [^AngularDomain]: G. Liu, A. Liu, R. Zhang and M. Zhao, "Angular-Domain Selective Channel Tracking and Doppler Compensation for High-Mobility mmWave Massive MIMO," in IEEE Transactions on Wireless Communications, vol. 20, no. 5, pp. 2902-2916, May 2021, doi: 10.1109/TWC.2020.3045272.
 [^FactorGraph]: F. R. Kschischang, B. J. Frey and H. -. Loeliger, "Factor graphs and the sum-product algorithm," in *IEEE Transactions on Information Theory*, vol. 47, no. 2, pp. 498-519, Feb 2001, doi: 10.1109/18.910572.
 [^RobustRecovery]: A. Liu, G. Liu, L. Lian, V. K. N. Lau and M. Zhao, "Robust Recovery of Structured Sparse Signals With Uncertain Sensing Matrix: A Turbo-VBI Approach," in IEEE Transactions on Wireless Communications, vol. 19, no. 5, pp. 3185-3198, May 2020, doi: 10.1109/TWC.2020.2971193.
