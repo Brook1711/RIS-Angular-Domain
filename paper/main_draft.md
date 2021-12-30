@@ -617,11 +617,31 @@ $$
 
 ## A. SSH-M step
 
-​	M步骤的目的是根据E步骤所计算得出$\operatorname{ln}p({\boldsymbol y},{\boldsymbol \xi})$的后验概率分布，找出使得$$根据MM算法的思想[^MM]，我们
+​	M步骤的目的是根据E步骤所计算得出$\operatorname{ln}p({\boldsymbol y},{\boldsymbol \xi})$的后验概率分布，找出使得$\operatorname{ln}p({\boldsymbol y},{\boldsymbol \xi})$最大化的参数${\boldsymbol \xi }$。但是正如前文提到的，目标函数的求解过程包含大量积分，无法正常求解。为了使其可解，在SSH-M step里面我们首先按照参数的不同属性将其分块：${\boldsymbol \xi}_1 = \left\{ \omega_1,\dots,\omega_L  \right\}, {\boldsymbol \xi}_2= \left\{ \Delta\varphi_{k,1}, \dots,\Delta \varphi_{k,M} \right\}, {\boldsymbol \xi}_3 =\left\{\lambda^c,p^c_{01}, p^c_{10}, \mu^s_1,\sigma^s_1,\dots, \mu^s_k,\sigma^s_k\right\},\ \forall k \in \mathcal{K}$。由于我们将重点放在AoA/AoD的估计上，所以我们只考虑${\boldsymbol \xi}_1,{\boldsymbol \xi}_2 $ 的迭代。
+
+​	根据MM算法的思想[^MM]，我们通过构建$\operatorname{ln}p({\boldsymbol y},{\boldsymbol \xi})$的替代函数$u({\boldsymbol \xi};\dot{{\boldsymbol \xi}})$来逐步迭代${\boldsymbol \xi}_1,{\boldsymbol \xi}_2 $，
+
+### Surrogate Function Design
 
 
 
 
+
+### ${\boldsymbol \xi}_1$ , i.e., ${\boldsymbol \omega}$ Estimation & Calibration
+
+​	需要指出的是，代理函数在${\omega}_m,\ \forall m \in \mathcal{M}$的值域内均不是光滑且凸的，需要在迭代计算之前找到一个在凸范围之内的初始值。为了实现这个估计过程，我们在每一个Frame的末尾添加了一个Phase3的估计，通过该阶段的估计可以得出一个接近真实值的 $\hat{\boldsymbol \xi}^{(i-1)}_2$, i.e., $\Delta{\boldsymbol \varphi}_k, \forall k \in \mathcal{K}$ 。通过该已知参数估计出${\omega}_m$的显著角集合$$
+$$
+\omega^\text{init}_l = \text{argmax}_{\omega} u_l(\omega;\hat{\boldsymbol \xi}^{(i-1)}_2)
+$$
+​	calibration: 
+
+### ${\boldsymbol \xi}_2$ , i.e., $\Delta{\boldsymbol \varphi}_k, \forall k \in \mathcal{K}$  Estimation
+
+​	和${\boldsymbol \xi}_1$类似，其也可以大致分为估计和校准两步骤。在估计这一步首先要确定其对应的channel support有哪些是active的，从而确定其迭代操作之前的初始值。但是在估计上，由于多用户复用角域稀疏性的结构系数性，我们不能直接简单的利用MAP对其channel support进行估计，而是通过E step中的VBI进行channel supprt的估计。这会在之后提到。
+
+​	calibration：
+
+​	
 
 
 
