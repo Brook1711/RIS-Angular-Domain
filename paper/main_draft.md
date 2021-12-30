@@ -619,9 +619,57 @@ $$
 
 ​	M步骤的目的是根据E步骤所计算得出$\operatorname{ln}p({\boldsymbol y},{\boldsymbol \xi})$的后验概率分布，找出使得$\operatorname{ln}p({\boldsymbol y},{\boldsymbol \xi})$最大化的参数${\boldsymbol \xi }$。但是正如前文提到的，目标函数的求解过程包含大量积分，无法正常求解。为了使其可解，在SSH-M step里面我们首先按照参数的不同属性将其分块：${\boldsymbol \xi}_1 = \left\{ \omega_1,\dots,\omega_L  \right\}, {\boldsymbol \xi}_2= \left\{ \Delta\varphi_{k,1}, \dots,\Delta \varphi_{k,M} \right\}, {\boldsymbol \xi}_3 =\left\{\lambda^c,p^c_{01}, p^c_{10}, \mu^s_1,\sigma^s_1,\dots, \mu^s_k,\sigma^s_k\right\},\ \forall k \in \mathcal{K}$。由于我们将重点放在AoA/AoD的估计上，所以我们只考虑${\boldsymbol \xi}_1,{\boldsymbol \xi}_2 $ 的迭代。
 
-​	根据MM算法的思想[^MM]，我们通过构建$\operatorname{ln}p({\boldsymbol y},{\boldsymbol \xi})$的替代函数$u({\boldsymbol \xi};\dot{{\boldsymbol \xi}})$来逐步迭代${\boldsymbol \xi}_1,{\boldsymbol \xi}_2 $，
+​	根据MM算法的思想[^MM]，我们通过构建$\operatorname{ln}p({\boldsymbol y},{\boldsymbol \xi})$的替代函数$u({\boldsymbol \xi};\dot{{\boldsymbol \xi}})$来逐步迭代${\boldsymbol \xi}_1,{\boldsymbol \xi}_2 $，则问题转化为：
+$$
+\boldsymbol{\xi}_{j}^{(i+1)}=\underset{\boldsymbol{\xi}_{j}}{\operatorname{argmax}} u\left(\boldsymbol{\xi}_{j}, \boldsymbol{\xi}_{-j}^{(i)} ; \boldsymbol{\xi}_{j}^{(i)}, \boldsymbol{\xi}_{-j}^{(i)}\right)
+$$
+​	为了使参数最右，我们采用梯度上升：
+$$
+\boldsymbol{\xi}_{j}^{(i+1)}=\boldsymbol{\xi}_{j}^{(i)}+\left.\gamma^{(i)} \frac{\partial u\left(\boldsymbol{\xi}_{j}, \boldsymbol{\xi}_{-j}^{(i)} ; \boldsymbol{\xi}_{j}^{(i)}, \boldsymbol{\xi}_{-j}^{(i)}\right)}{\partial \boldsymbol{\xi}_{j}}\right|_{\boldsymbol{\xi}_{j}=\boldsymbol{\xi}_{j}^{(i)}}
+$$
+
 
 ### Surrogate Function Design
+
+​	为了能够在交替优化算法中收敛，根据[^MM][^RobustRecovery] 代理函数需要满足以下条件：
+$$
+\begin{aligned}
+u(\boldsymbol{\xi} ; \dot{\boldsymbol{\xi}}) & \leq \ln p(\boldsymbol{y}, \dot{\boldsymbol{\xi}}), \quad \forall \boldsymbol{\xi}, \\
+u(\dot{\boldsymbol{\xi}} ; \dot{\boldsymbol{\xi}}) &=\ln p(\boldsymbol{y}, \dot{\boldsymbol{\xi}}), \\
+\left.\frac{\partial u(\boldsymbol{\xi} ; \dot{\boldsymbol{\xi}})}{\partial \boldsymbol{\xi}}\right|_{\boldsymbol{\xi}=\dot{\boldsymbol{\xi}}} &=\left.\frac{\partial \ln p(\mathbf{y}, \boldsymbol{\xi})}{\partial \boldsymbol{\xi}}\right|_{\boldsymbol{\xi}=\dot{\boldsymbol{\xi}}} .
+\end{aligned}
+$$
+​	在典型EM算法中，代理函数可以设计为$\int p(\boldsymbol{v} \mid \boldsymbol{y}, \dot{\boldsymbol{\xi}}) \ln \frac{p(\boldsymbol{v}, \boldsymbol{y}, \boldsymbol{\xi})}{p(\boldsymbol{v} \mid \boldsymbol{y}, \dot{\xi})} d \boldsymbol{v}$ 
+$$
+\begin{aligned}
+u^{\mathrm{EM}}(\boldsymbol{\xi} ; \dot{\boldsymbol{\xi}})&=\int p(\boldsymbol{v} \mid \boldsymbol{p}, \dot{\boldsymbol{\xi}}) \ln \frac{p(\boldsymbol{v}, \boldsymbol{p}, \boldsymbol{\xi})}{p(\boldsymbol{v} \mid \boldsymbol{p}, \dot{\boldsymbol{\xi}})} d \boldsymbol{v} \\
+	&\approx \int q(\boldsymbol{v} ; \dot{\boldsymbol{\xi}}) \ln \frac{p(\boldsymbol{v}, \boldsymbol{p}, \boldsymbol{\xi})}{q(\boldsymbol{v} ; \dot{\boldsymbol{\xi}})} d \boldsymbol{v}
+	
+\end{aligned}
+$$
+​	其中，$q({\boldsymbol v};\dot{\boldsymbol \xi})\approx p({\boldsymbol v}\mid {\boldsymbol y};\dot{\boldsymbol \xi})$ 为E step中估计得出的隐含变量后验概率分布。我们进一步的将偏导写为：
+$$
+\begin{aligned}
+\frac{\partial}{\partial \boldsymbol{\xi}_{j}} \hat{u}^{E M}&\left(\boldsymbol{\xi}_{j}, \boldsymbol{\xi}_{-j}^{(i)} ; \boldsymbol{\xi}_{j}^{(i)}, \boldsymbol{\xi}_{-j}^{(i)}\right) =\\ &\int q({\boldsymbol x};{\boldsymbol \xi}_j^{(i)},{\boldsymbol \xi}_{-j}^{(i)})\frac{\partial}{\partial {\boldsymbol \xi}_j}\operatorname{ln}p(\boldsymbol{y} \mid \boldsymbol{x}, \boldsymbol{\kappa} ; \boldsymbol{\xi}_{1,2})d{\boldsymbol x} ,\ j\in \left\{1,2\right\}
+
+\end{aligned}
+$$
+
+> 详细推倒可在附录中看到
+
+
+
+​	我们想要优化两方面变量，对于${\boldsymbol \xi}_1$ 中的参数${\omega}_l $而言，其代理函数$u_l(\omega_l,\Delta \dot{\boldsymbol \varphi}  ; \dot{\omega}_l, \Delta \dot{\boldsymbol \varphi})$可以写为：
+$$
+\begin{aligned}
+&u_l(\omega_l,\Delta \dot{\boldsymbol \varphi}  ; \dot{\omega}_l, \Delta \dot{\boldsymbol \varphi}) \triangleq \\
+&\int q(\boldsymbol{x};\dot{\omega}_l, \Delta \dot{\boldsymbol \varphi}) \Bigg\{\sum_{k=1}^{K} \sum_{t=1}^{\tau} \ln \left[\mathcal{C N}\left(y_{k, l, t} ; \mathbf{F}_{k, l, t}(\omega_l,\Delta \dot{\boldsymbol \varphi} ) \boldsymbol{x}_{k}, \kappa_{k, t}^{-1}\right)\right]\Bigg\} d \boldsymbol{x}
+
+\end{aligned}
+$$
+​	对于${\boldsymbol \xi}_2$ 中的参数${\Delta { \varphi}_{m}} $而言，其代理函数$u_l(\omega_l,\Delta \dot{\boldsymbol \varphi}  ; \dot{\omega}_l, \Delta \dot{\boldsymbol \varphi})$可以写为：
+
+
 
 
 
