@@ -43,6 +43,12 @@ MM method 的有效性
 
 1. 对比传统方法NMSE更低：AMP、OMP、LASSO、PanCunhua-OMP
 2. 相对于Turbo-VBI框架有创新：non-Common Hybrid EM
+3. 验证SA的设计合理性：non-SA RIS
+   1. SA针对多用户多天线系统可以极大程度减轻算法负担
+
+三个子图：M=8，16，32，（64 计算量太大，算的太慢）
+
+
 
 ### NMSE-tau
 
