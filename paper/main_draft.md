@@ -73,7 +73,7 @@ Fig. 1
 
 ## A. SA-RIS-Assisted Multiuser MIMO system
 
-​    考虑一个RIS辅助的多用户上行毫米波MIMO通信系统，如图一所示。该系统中BS装备有一个规模为$N \times 1$的ULA天线阵列。RIS装备有规模为$M\times 1$的UPA反射阵列。服务用户均为装备有$A$个天线的ULA接收端。
+​    考虑一个RIS辅助的多用户上行毫米波MIMO通信系统，如图1所示。该系统中BS装备有一个规模为$N \times 1$的ULA天线阵列。RIS装备有规模为$M\times 1$的UPA反射阵列。服务用户均为装备有$A$个天线的ULA接收端。
 
 ​     目前已经有许多工作研究在RIS上部署RF阵列【】或是直接在RIS的每个反射原件之后连接一个射频处理模块【】以进行BS-RIS link 以及RIS-user link的更好的估计。但是，这和RIS诞生之初减少能耗、降低成本的初衷相违背。因此，在RIS上部署大规模射频链路和信号处理单元在实际中并不可行。同时，许多工作对pure passive RIS辅助的级联信道估计的算法都具有较高的复杂度[^pure-MP][^PanCunhua][^pure-MP-2]。
 
@@ -236,7 +236,7 @@ $$
 
 Fig. 2
 
-​	BS和RIS一般部署在建筑物表面，收遮挡不明显，且无相对移动，所以信道相关时间较长[^pure-MP][^pure-MP-2]。然而，RIS-User链路受到遮挡和用户移动性影响较大，改变幅度较大，改变速度较快，。针对本文提出的SA-RIS，我们提出了一种混合时间尺度的帧结构设计，以充分利用BS-RIS的慢衰落特性。具体来讲，该帧结构设计分为三个阶段：第一阶段的广播（Broadcast）、第二阶段的级联信道估计和第三阶段的RIS-User信道校准。
+​	BS和RIS一般部署在建筑物表面，收遮挡不明显，且无相对移动，所以信道相关时间较长[^pure-MP][^pure-MP-2]。然而，RIS-User链路受到遮挡和用户移动性影响较大，改变幅度较大，改变速度较快。针对本文提出的SA-RIS，我们提出了一种混合时间尺度的帧结构设计，以充分利用BS-RIS的慢衰落特性。具体来讲，该帧结构设计分为三个阶段：第一阶段的广播（Broadcast）、第二阶段的级联信道估计和第三阶段的RIS-User信道校准。
 
 （a）Phase 1: Broadcast
 
@@ -329,7 +329,7 @@ $$
 \frac{1}{\sqrt{p} N }{\mathbf A}^{-1} \hat{{\mathbf A}}_N^H \left[{\mathbf y}_{k,b} \right]_{:,t} &\approx{\mathbf A}_M^H{\mathbf \Phi}_t{\mathbf A}_{M,k}\underbrace{{\mathbf B}_k{\mathbf A}_{A,k}^H[{\mathbf{s}_{k,b}}]_{:,t}}_{\text{part 1}} + \frac{1}{\sqrt{p} N } {\mathbf A}^{-1} \hat{{\mathbf A}}_N^H {\mathbf n}^b_{k,t}
 \end{aligned}
 $$
-​	接下来介绍上行导频信号设计，从上面的公式可以看到，此时信道中的位置量已经只剩下上行信道中的RISAoD($\{ {\omega_1}, \dots,\omega_L\}$)和RIS处的AoA($\{ {\varphi}_1, \dots,\varphi_{J_k} \}$)。需要注意的是，虽然理论上$\{\beta_{k,j},\forall k\in\mathcal{K},\forall j \in \mathcal{J}_k \}$，可以在phase1在用户处得到，但是BS端无法获知，如果使用backhaul链路，则要占用更多的导频开销，所以此时$\{\beta_{k,j},\forall k\in\mathcal{K},\forall j \in \mathcal{J}_k \}$也是未知量。我们的思想是将接收信号表达式化简为只有$\{ {\varphi}_1, \dots,\varphi_{J_k} \}$和$\{ {\omega_1}, \dots,\omega_L\}$以及$\{\beta_{k,j},\forall k\in\mathcal{K},\forall j \in \mathcal{J}_k \}$为变量的形式，即，等式右边除了${\mathbf A}_M^H$和${\mathbf A}_{M,k}$以及$\mathbf{B}_k$之外都是常数矩阵。
+​	接下来介绍上行导频信号设计，从上面的公式可以看到，此时信道中的未知量已经只剩下上行信道中的RISAoD($\{ {\omega_1}, \dots,\omega_L\}$)和RIS处的AoA($\{ {\varphi}_1, \dots,\varphi_{J_k} \}$)。需要注意的是，虽然理论上$\{\beta_{k,j},\forall k\in\mathcal{K},\forall j \in \mathcal{J}_k \}$，可以在phase1在用户处得到，但是BS端无法获知，如果使用backhaul链路，则要占用更多的导频开销，所以此时$\{\beta_{k,j},\forall k\in\mathcal{K},\forall j \in \mathcal{J}_k \}$也是未知量。我们的思想是将接收信号表达式化简为只有$\{ {\varphi}_1, \dots,\varphi_{J_k} \}$和$\{ {\omega_1}, \dots,\omega_L\}$以及$\{\beta_{k,j},\forall k\in\mathcal{K},\forall j \in \mathcal{J}_k \}$为变量的形式，即，等式右边除了${\mathbf A}_M^H$和${\mathbf A}_{M,k}$以及$\mathbf{B}_k$之外都是常数矩阵。
 
 ​		所以需要设计上式中的$\text{part}\ 1$：
 $$
@@ -458,7 +458,7 @@ $$
 
 ![image-20211229112328451](main_draft.assets/image-20211229112328451.png)
 
-为了进一步降低算法的时间开销，我们可以利用${\boldsymbol x}_k$中的结构稀疏性提供的额外的先验信息[^SpectralCS]对${\boldsymbol x}_k$中的子空间进行降维[^RobustRecovery][^AngularDomain][^CloudAssisted][^FDD]。
+${\boldsymbol x}_k$中的结构稀疏性提供的额外的先验信息[^SpectralCS]对${\boldsymbol x}_k$中的子空间进行降维[^RobustRecovery][^AngularDomain][^CloudAssisted][^FDD]。
 
 这里我们采用HMM信道建模[^RobustRecovery] [^AngularEstimation] :
 $$
@@ -504,7 +504,7 @@ $$
 	&= \frac{1}{\sqrt{2 \pi} {\sigma}^s_{k}} \exp \left(-\frac{(m-\mu^s_{k})^{2}}{2 {\sigma^{s}_k}^{2}}\right)
 \end{aligned}
 $$
-注意到根据common path 和user activate path之间的关系有：
+
 $$
 p(s_{k,m}=1 \mid c_m=0)=0
 $$
