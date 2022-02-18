@@ -159,7 +159,7 @@ $$
 
 
 
-
+`
 
 ## Update for ${\boldsymbol \gamma}_k$
 
