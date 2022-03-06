@@ -120,7 +120,7 @@ $$
 $$
 \mathbf{a}_{X}(x)=\left[1, e^{-\mathrm{i} 2 \pi x}, \ldots, e^{-\mathrm{i} 2 \pi(X-1) x}\right]^{\mathrm{T}}
 $$
-where $X \in\{M, N\}$ and $x \in\{\psi_l,\omega_l,\varphi_{k,j},\phi_{j,k} \}$, $\psi_l = \frac{d_\text{RIS}}{\lambda_c}\operatorname{cos}(\psi_l^{\prime})$.and $\varphi_{k, j}=$ $\frac{d_{\mathrm{RIS}}}{\lambda_{c}} \cos \left(\vartheta_{k, j}\right)$ are the directional cosine with $\theta_{l}$ and $\phi_{l}$ denoting the $\mathrm{AoD}$ and AoA of the $l$-th spatial path from RIS to BS, respectively, and $\vartheta_{k, j}$ as the AoA of the $j$-th spatial path from user $k$ to RIS. $\lambda_{c}$ is the carrier wavelength. It should be emphasized here that the channel gains $\alpha_{l}$
+where $X \in\{M, N\}$ and $x \in\{\psi_l,\omega_l,\varphi_{k,j},\phi_{j,k} \}$, $\psi_l = \frac{d_\text{RIS}}{\lambda_c}\operatorname{cos}(\psi_l^{\prime})$.and $\varphi_{k, j}=$ $\frac{d_{\mathrm{RIS}}}{\lambda_{c}} \cos \left(\vartheta_{k, j}\right)$ are the directional cosine with $\theta_{l}$ and $\phi_{l}$ denoting the $\mathrm{AoD}$ and AoA of the $l$-th spatial path from RIS to BS, respectively, and $\vartheta_{k, j}$ as the AoA of the $j$-th spatial path from user $k$ to RIS. $\lambda_{c}$ is the carrier wavelresolutionength. It should be emphasized here that the channel gains $\alpha_{l}$
 
 ## C. Angular Domain Channel Expressions
 
