@@ -452,7 +452,7 @@ $$
 \text { M-step : } & \text { Evaluate } & \boldsymbol{\theta}^{\mathrm{NEW}}=\underset{\boldsymbol{\theta}}{\arg \max } Q\left(\boldsymbol{\theta}, \boldsymbol{\theta}^{\mathrm{OLD}}\right)
 \end{array}
 $$
-Obviercely, EM framework requires that the posterior $p(\mathbf{z}\mid\mathbf{x} ;\boldsymbol{\theta})$ is explicitly know or at least able to compute the integration $\langle\ln p(\mathbf{z} \mid \mathbf{x} ; \boldsymbol{\theta})\rangle_{p\left(\mathbf{z} \mid \mathbf{x} ; \boldsymbol{\theta}^{\text {OLD }}\right)}$
+Obviercely, EM framework requires that the posterior $p(\mathbf{z}\mid\mathbf{x} ;\boldsymbol{\theta})$ is explicitly known or at least able to compute the integration $\langle\ln p(\mathbf{z} \mid \mathbf{x} ; \boldsymbol{\theta})\rangle_{p\left(\mathbf{z} \mid \mathbf{x} ; \boldsymbol{\theta}^{\text {OLD }}\right)}$
 
 ## Variational EM 
 

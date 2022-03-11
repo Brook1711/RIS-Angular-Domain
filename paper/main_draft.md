@@ -124,7 +124,23 @@ where $X \in\{M, N\}$ and $x \in\{\psi_l,\omega_l,\varphi_{k,j},\phi_{j,k} \}$, 
 
 ## C. Angular Domain Channel Expressions
 
-根据[^AngularEstimation] 和中文-95，96，103，在MIMO mmwave系统中，信道中存在角度域的稀疏性，相比传统的时域和频域具有更大的优势。
+根据[^AngularEstimation] 和文中-95，96，103，在MIMO mmwave系统中，信道中存在角度域的稀疏性，相比传统的时域和频域具有更大的优势。
+
+> 基于角度域稀疏性的大规模MIMO系统关键技术研究-清华大学-赵培尧
+>
+> 1.1.3 大规模MIMO系统无线信道角度域稀疏性
+>
+> 大规模MIMO系统所面临的训练开销过大、复杂度与功耗过高等技术挑战主要源于基站配备的大规模天线阵列。现有研究表明，无论是传统低频频段还是毫米波频段，大规模MIMO系统无线信道在角度域均具有较强的稀疏
+>
+> 8
+>
+> √
+>
+> *N N*cl ray
+>
+> 第1章 引言
+>
+> 性[68,82,95–100]。大规模MIMO系统无线信道角度域稀疏性使得信道的有效自由度远小于天线维度，因而能够大大降低信号处理的复杂度与开销。目前这一特性已被 应用在信道估计[97,98]和信道反馈[99,100]等领域，其中大部分工作均基于压缩感知 (Compressive Sensing，CS)理论框架。
 
 以下写出$\mathbf{H},\mathbf{h}_k$以及$\mathbf{H}_{rb}, \mathbf{h}_{r,k}$的角域表达式：
 $$
@@ -464,7 +480,7 @@ ${\boldsymbol x}_k$中的结构稀疏性提供的额外的先验信息[^Spectral
 $$
 p({\boldsymbol x}, {\boldsymbol \gamma}, {\boldsymbol c}, {\boldsymbol s})=\underbrace{p({\boldsymbol x}\mid {\boldsymbol \gamma})}_{\text{Sparse signal}} \underbrace{p({\boldsymbol \gamma}\mid {\boldsymbol s})}_{\text{Precision}} \underbrace{p({\boldsymbol c}, {\boldsymbol s})}_{\text {Structured sparse surpport}}
 $$
-为了捕获更加complicated structured sparsity that may occur in practice，我们基于3LHS model 构建适用于多用户SA-RIS通信系统的三层模型，
+为了捕获more complicated structured sparsity that may occur in practice，我们基于3LHS model 构建适用于多用户SA-RIS通信系统的三层模型，
 $$
 \begin{aligned}
 p(\boldsymbol{x} \mid \boldsymbol{\gamma})&=\prod_k^K\prod_m^Mp(x_{k,m} \mid \gamma_{k,m})
