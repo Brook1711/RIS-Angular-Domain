@@ -2,7 +2,7 @@
 
 ${\boldsymbol \xi}_1 = \left\{ \omega_1,\dots,\omega_L  \right\}$
 
-${\boldsymbol \xi}_2= \left\{ \Delta\varphi_1, \dots,\Delta \varphi_M \right\}$
+${\boldsymbol \xi}_2= \left\{ \Delta\varphi_1, \dots,\Delta \varphi_M \right\}$ 
 
 ${\boldsymbol \xi}_3=\left\{ {\kappa_{1,1}},\dots,\kappa_{k,t}, \dots,\kappa_{K,\tau} \right\}$
 
