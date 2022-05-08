@@ -65,7 +65,7 @@ $$
 $$
 ## 首先以求解$\omega_l$为例：
 
-设置求导前等价函数$f_{l}(\omega_l)$ :
+设置求导前等价函数$f_{l}(\omega_l)$ : 
 $$
 \begin{aligned}
 f_l(\omega_l) \triangleq \int q(\boldsymbol{x}) \Bigg\{\sum_{k=1}^{K} \sum_{t=1}^{\tau} \ln \left[\mathcal{C N}\left(y_{k, l, t} ; \mathbf{F}_{k, l, t} \boldsymbol{x}_{k}, \kappa_{k, t}^{-1}\right)\right]\Bigg\} d \boldsymbol{x}
