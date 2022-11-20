@@ -206,6 +206,10 @@ $$
 $$
 此时${\mathbf A}_N^D$每一列仅有一个非零元素，并且$n_l,\psi_l^g$之间的映射关系为：
 $$
+{\psi}_l^g=\frac{n_l-1}{N}-0.5
+$$
+
+$$
 \psi_l^g = 
 \begin{cases}
 \frac{n_l-1}{N}\quad &,\frac{n_l-1}{N} < 0.5 \\
@@ -213,6 +217,12 @@ $$
 \end{cases}
 $$
 同时由于是一一映射，也可以反过来写为：
+$$
+n_l = N(\psi^g_l+0.5)+1
+$$
+
+
+
 $$
 n_l=
 \begin{cases}
@@ -227,6 +237,8 @@ $$
 级联估计时存在“权重畸变”效应，使得估计的显著角集合存在20dB左右的误差
 
 结论：本文使用的分步估计具有更好的估计精度
+
+## D. Structured Sparsity of the AoA/AoDs
 
 
 
@@ -280,7 +292,7 @@ $$
 $$
 
 $$
-{\mathbf U}_N{\mathbf y}_{rb}={\mathbf U}_N{\mathbf A}_N{\mathbf A}_{rb}{\mathbf s}_r +{\mathbf n}_{rb}
+{\mathbf U}_N{\mathbf y}_{rb}={\mathbf U}_N{\mathbf A}_N{\mathbf A}_{rb}{\mathbf s}_r +{\mathbf U}_N{\mathbf n}_{rb}
 $$
 
 其物理意义为$L$个path中对应的角域能量分布，其中${\mathbf A}_N=[{\mathbf a}_N(\psi^{\prime}_1),\dots,{\mathbf a}_N(\psi^{\prime}_L)]$，则：
@@ -385,7 +397,9 @@ $$
 \frac{1}{\sqrt{p} N }{\mathbf A}^{-1} \hat{{\mathbf A}}_N^H \left[{\mathbf y}_{k,b} \right]_{:,t} &\approx{\mathbf A}_M^H{\mathbf \Phi}_t{\mathbf A}_{M,k}\underbrace{{\mathbf B}_k{\mathbf A}_{A,k}^H[{\mathbf{s}}]_{:,t}}_{\text{part 1}} + \frac{1}{\sqrt{p} N } {\mathbf A}^{-1} \hat{{\mathbf A}}_N^H {\mathbf n}_{k,b}
 \end{aligned}
 $$
-接下来介绍上行导频信号设计，从上面的公式可以看到，此时信道中的位置量已经只剩下上行信道中的RISAoD($\{ {\omega_1}, \dots,\omega_L\}$)和RIS处的AoA($\{ {\varphi}_1, \dots,\varphi_{J_k} \}$)，我们的思想是将接收信号表达式化简为只有$\{ {\varphi}_1, \dots,\varphi_{J_k} \}$和$\{ {\omega_1}, \dots,\omega_L\}$为变量的形式，即，等式右边除了${\mathbf A}_M^H$和${\mathbf A}_{M,k}$之外都是常数矩阵。因此，我们设置RIS反射阵列上的元件反射相位均为单位一，即，${\mathbf \Phi}_t = {\mathbf I}_M$，另外需要设计上式中的$\text{part}\ 1$为常矩阵：
+​	接下来介绍上行导频信号设计，从上面的公式可以看到，此时信道中的位置量已经只剩下上行信道中的RISAoD($\{ {\omega_1}, \dots,\omega_L\}$)和RIS处的AoA($\{ {\varphi}_1, \dots,\varphi_{J_k} \}$)。需要注意的是，虽然理论上$\{\beta_{k,j},\forall k\in\mathcal{K},\forall j \in \mathcal{J}_k \}$，可以在phase1在用户处得到，但是BS端无法获知，如果使用backhaul链路，则要占用更多的导频开销，所以此时$\{\beta_{k,j},\forall k\in\mathcal{K},\forall j \in \mathcal{J}_k \}$也是未知量。我们的思想是将接收信号表达式化简为只有$\{ {\varphi}_1, \dots,\varphi_{J_k} \}$和$\{ {\omega_1}, \dots,\omega_L\}$以及$\{\beta_{k,j},\forall k\in\mathcal{K},\forall j \in \mathcal{J}_k \}$为变量的形式，即，等式右边除了${\mathbf A}_M^H$和${\mathbf A}_{M,k}$以及$\mathbf{B}_k$之外都是常数矩阵。
+
+​	所以需要设计上式中的$\text{part}\ 1$：
 $$
 \begin{aligned}
 \text{part 1} &= {\mathbf B}_k{\mathbf A}_{A,k}^H[{\mathbf{s}}_{rb}]_{:,t}\\
@@ -456,7 +470,7 @@ $$
 $$
 其中${\mathbf v}=[1,1,\dots,1]^T \in {\mathbb R}^{J_k \times 1}$，$c_s=\frac{1}{\sqrt{||\sum_{j=1}^{J_k}\beta_{k,j}^{-1}{\mathbf a}_A(\phi_{k,j})||^2}}$
 
-接下来，为简化表示，使用${\mathbf y}_t\in L\times 1$表示$\frac{1}{c_s\sqrt{p} N }{\mathbf A}^{-1} \hat{{\mathbf A}}_N^H \left[{\mathbf y}_{k,b} \right]_{:,t} $。并且将噪声表示为：${\mathbf n}_t = \frac{1}{c_s \sqrt{p} N } {\mathbf A}^{-1} \hat{{\mathbf A}}_N^H {\mathbf n}_{k,b}$
+接下来，为简化表示，使用${\mathbf y}_t\in \mathbb{C}^{L\times 1}$表示$\frac{1}{c_s\sqrt{p} N }{\mathbf A}^{-1} \hat{{\mathbf A}}_N^H \left[{\mathbf y}_{k,b} \right]_{:,t} $。并且将噪声表示为：${\mathbf n}_t = \frac{1}{c_s \sqrt{p} N } {\mathbf A}^{-1} \hat{{\mathbf A}}_N^H {\mathbf n}^b_{k,t}$
 
 之后，我们将其写为压缩感知的形式：
 $$
@@ -476,19 +490,77 @@ $$
 & = {\mathbf \Phi}_t^H \operatorname{Diag}({\mathbf a}_M(\omega_l)) {\mathbf A}^*_{M,k}{\boldsymbol v}_k^* + [{\boldsymbol n}_t^H]_{:,l}
 \end{aligned}
 $$
-我们接下来定义一个measurement vector ${\boldsymbol p}_l \triangleq \left[\begin{matrix} [{\boldsymbol y }_1^H]_{:,l}\\ \vdots \\ {\boldsymbol y }_\tau^H]_{:,l} \end{matrix}\right] \in {\mathbb C}^{\tau \times 1}$ 
+我们接下来考虑的压缩感知问题考虑在时域上的super sampling，所以我们接下来定义一个measurement vector ${\boldsymbol p}_l \triangleq \left[\begin{matrix} [{\boldsymbol y }_1^H]_{:,l}\\ \vdots \\ {\boldsymbol y }_\tau^H]_{:,l} \end{matrix}\right] \in {\mathbb C}^{\tau \times 1}$ 
 $$
 \begin{aligned}
 {\boldsymbol p}_l & = {\mathbf \Phi}^H \operatorname{Diag}({\mathbf a}_M(\omega_l)) {\mathbf A}^*_{M,k}{\boldsymbol v}_k^* + \left[\begin{matrix} {\boldsymbol n}_1^H \\ \vdots \\ {\boldsymbol n}_\tau^H \end{matrix} \right]_{:,l} \\
-									& = {\mathbf \Phi}^H \operatorname{Diag}({\mathbf a}_M(\omega_l)) \frac{{\mathbf U}^H_M {\mathbf U}_M}{M} {\mathbf a}_M  ({\boldsymbol \varphi}) + {\boldsymbol n}_l
+									& = {\mathbf \Phi}^H \operatorname{Diag}({\mathbf a}_M(\omega_l)) \frac{{\mathbf U}^H_M {\mathbf U}_M}{M} {\mathbf a}_M  ({\boldsymbol \varphi}) + {\mathbf N}_l\\
+									& = {\mathbf \Phi}^H {\mathbf V}({\omega_l}){\mathbf a}_M^{DFT}({\boldsymbol \varphi}) + {\mathbf N}_l\\
+									& = {\mathbf \Phi}^H {\mathbf V}({\omega_l}){\mathbf D}_M({\Delta}{\boldsymbol \varphi}) {\boldsymbol x}+ {\mathbf N}_l 
 \end{aligned}
 $$
 
+为了将角域信号的稀疏性剥离出来，我们采用一个DTFT矩阵将${\mathbf a}_M^{DFT}({\boldsymbol \varphi})$分解：
+$$
+{\mathbf a}_M^{DFT}({\boldsymbol \varphi})={\mathbf D}_M(\Delta {\boldsymbol \varphi}){\boldsymbol x}
+$$
+其中${\mathbf D}_M(\Delta {\boldsymbol \varphi})= [D_M(\Delta \varphi_1),\dots,D_M(\Delta \varphi_M)] \in {\mathbb C}^{M\times M}$
 
-我们接下来考虑的压缩感知问题考虑在时域上的super sampling，所以
+其每一列$D_M(\Delta {\varphi_m})$中的$m^{\prime}$-th元素的值为：
+$$
+D_M(\Delta {\varphi_1},m^{\prime})=
+f_M({2\pi}(\frac{m^{\prime}-m} {M}+0.5+\Delta\varphi))\
+$$
+
+$$
+D_M(\Delta {\varphi_1},m^{\prime})=\begin{cases}
+\begin{aligned}
+f_M({2\pi}(\frac{m^{\prime}-m} {M} - 1+\Delta\varphi))\ &, \frac{m^{\prime}-1}{M} < 0.5 \\
+f_M({2\pi}(\frac{m^{\prime}-m} {M}+\Delta\varphi)) &, \frac{m^{\prime}-1}{M} \geq 0.5
+\end{aligned}
+
+\end{cases}
+$$
 
 
+$$
+D_M(\Delta {\varphi_1},m^{\prime})=\begin{cases}
+\begin{aligned}
+f_M({2\pi}(\frac{m^{\prime}-m} {M}+\Delta\varphi))\ &, \frac{m^{\prime}-1}{M} < 0.5 \\
+f_M({2\pi}(\frac{m^{\prime}-m+M} {M}+\Delta\varphi)) &, \frac{m^{\prime}-1}{M} \geq 0.5
+\end{aligned}
 
+\end{cases}
+$$
+where [^1-8]
+$$
+f_M(x) = \frac{1}{\sqrt{M}}e^{jx(M-1)/2} \frac{\operatorname{sin}(Mx/2)}{\operatorname{sin}(x/2)}
+$$
+此时该问题转化为了一个data matrix ${\mathbf V}(\omega_l) $含有未知参数${\omega_l}$的压缩感知问题[^1-4]，测量矩阵${\mathbf \Phi}^H \in {\mathbb C}^{\tau \times M}$可以通过调节不同时刻的RIS相位${\mathbf \Phi}_t$来进行更改，最后需要通过super Sample的${\boldsymbol p}_l \in {\mathbb C}^{\tau \times 1}$来恢复纬度较高的${\mathbf a}_M^{DFT}({\boldsymbol \varphi}) \in {\mathbb C}^{M \times 1}$。
+
+注意到，此时的data matrix :${\mathbf V}(\omega_l)={(1/M)} \cdot \operatorname{Diag}({\mathbf a}_M(\omega_l)) \cdot {\mathbf U}_M^H $，${\mathbf V}(\omega_l)^H \cdot  {\mathbf V}(\omega_l) = (1/M)\cdot {\mathbf I}_M$，其每一列正交
+
+对于一个标准CS问题，超采样的个数只需要$M={\mathcal O}(K{\operatorname log}N)$ [^1-8]即可（此时的$M$为超采样个数，K为稀疏个数，N为原信号维度）
+
+注意到以上有L个${\boldsymbol y}_l$其中所有的未知量${\boldsymbol x}$均为一样的，只有$\omega_l$有L个，显然，对所有${\boldsymbol y}_l$都做一次压缩感知会显著提升计算复杂度，我们在本文中只进行一次压缩感知算法，估计出${\boldsymbol x}$和参数${\Delta \boldsymbol{\varphi}}$以及一个参照AoD ${\omega_r}$，并通过scaling的表示方法和correlation-based算法估计其他$\omega_l,\forall l\in\{1,\dots,L\}$。具体来讲，任意的$\omega_l,l\neq r$ 可以通过已知的$\omega_r$表示为：
+$$
+\omega_l = \omega_r + \Delta \omega_l
+$$
+then
+$$
+\begin{aligned}
+{\boldsymbol y}_l & ={\mathbf \Phi}^H \operatorname{Diag}({\mathbf a}_M(\Delta\omega_l)) \operatorname{Diag}({\mathbf a}_M({\boldsymbol \varphi})) {\mathbf a_M}({\omega_r})+{\mathbf N}_l \\
+				& = {\mathbf \Phi}^H \operatorname{Diag}({\hat{\boldsymbol h}}_r) {\mathbf a}_M(\Delta \omega_l)+{\mathbf N}_l\\
+				& = {\mathbf z}_r(\Delta \omega_l) + {\mathbf N}_l
+\end{aligned}
+$$
+其中，$\hat{\boldsymbol h}_r$为使用压缩感知得到的估计值，那么我们就可以用简单的correlation-based scheme 来估计$\omega_l$:
+$$
+\Delta\hat{\omega}_l=\text{arg} \max_{\Delta \omega \in [-1, 1]} \abs{\langle {\boldsymbol p}_l,{\boldsymbol z}_r(\Delta \omega) \rangle}
+$$
+
+> 
+>
 > 最后经过处理的接收信号可以写为：
 > $$
 > \begin{aligned}
@@ -524,13 +596,198 @@ $$
 
 
 
-## D. Doppler compensation for the second hoop
+## D. Model-based compress sensing
+
+由上面的推导可知，对于第k个用户，上行BS接收到的信号
+$$
+{\boldsymbol y}_{l,k} = {\mathbf \Phi}^H {\mathbf V}({\omega_l}){\mathbf D}_M({\Delta}{\boldsymbol \varphi}_k) {\boldsymbol x}_k
++ {\mathbf N}_l ,\forall l \in \{1,\dots,L\}
+$$
+
+Where ${\mathbf F}_{k,l} \triangleq {\mathbf \Phi}^H {\mathbf V}(\omega_l){\mathbf D}_M(\Delta {\boldsymbol \varphi_k})$ and ${\mathbf F}_{k,l,t} \triangleq [{{\mathbf F}_{k,l}}]_{t,:}$
+$$
+{\boldsymbol y}_k = 
+\left[
+\begin{matrix}
+\mathbf{\Phi}^{H} \mathbf{V}\left(\omega_{1}\right) \mathbf{D}_{M}\left(\Delta \boldsymbol{\varphi}_{k}\right) \\
+ \vdots \\
+ \mathbf{\Phi}^{H} \mathbf{V}\left(\omega_{L}\right) \mathbf{D}_{M}\left(\Delta \boldsymbol{\varphi}_{k}\right)
+\end{matrix}
+\right]_{\tau L \times M}{\boldsymbol x}_k+{\mathbf N}_k
+={\mathbf F}_k {\boldsymbol x}_k+{\mathbf N}_k
+$$
+${\boldsymbol y}=[{\boldsymbol y}_1^T,\dots,{\boldsymbol y}_K^T]^T$
+
+ ${\boldsymbol x}=[{\boldsymbol x}_1^T,\dots,{\boldsymbol x}_K^T]^T$
+
+由信号表达式可以得出信号${\boldsymbol y}_k$的概率分布：
+$$
+p({\boldsymbol y_{k,l} \mid {\boldsymbol x}_{k} ; {\boldsymbol \xi}})=\prod_{t=1}^\tau CN({\boldsymbol y}_{k,l,t};[{{\mathbf F}_{k,l}}]_{t,:} {\boldsymbol x}_k, { \kappa}_{k,t}^{-1})
+$$
+
+$$
+\begin{aligned}
+p({\boldsymbol y} \mid {\boldsymbol x};{\boldsymbol \xi})&=\prod_k^Kp({\boldsymbol y_k \mid {\boldsymbol x}_{k} ; {\boldsymbol \xi}})\\
+&=\prod_{k=1}^K \prod_{l=1}^L p({\boldsymbol y_{k,l} \mid {\boldsymbol x}_{k} ; {\boldsymbol \xi}}) \\
+&=\prod_{k=1}^K \prod_{l=1}^L \prod_{t=1}^\tau CN({ y}_{k,l,t};[{{\mathbf F}_{k,l}}]_{t,:} {\boldsymbol x}_k, { \kappa}_{k,t}^{-1})
+\end{aligned}
+$$
 
 
 
-## E. Computational Complexity
+由于${\mathbf a}_M^{DFT}({\boldsymbol \varphi}_{k})$ 是$J_k$个$M$-ULA阵列响应的线性叠加之后的$M$-DFT变换得到的结果，并且我们通过增加${\mathbf D}_M(\Delta {\boldsymbol \varphi}) \in {\mathbb C}^{M\times M}$ 将DTFT的结果中的旁瓣剥离，所以最终${\boldsymbol x}_k$是一个$M$空间$J_k$稀疏的信号。那么问题就变成了通过接收信号${\boldsymbol y}_{l,k}$ 估计$J_k$稀疏的${\boldsymbol x}_{k}$。需要注意的是Data矩阵中包含未知参数${\Delta {\boldsymbol \varphi}}_k \triangleq \{ \Delta{\varphi }_{k,1},\dots, \Delta{\varphi }_{k,M}\}$。注意到由于${\boldsymbol x}_k$的$J_k$-稀疏性，${\Delta{\boldsymbol \varphi}}_k$中只有$\{\Delta \varphi_{k,m}|m=1,\dots,J_k \}$会起作用，但是在算法中所有$M$个${\Delta {\boldsymbol \varphi}}_k$中的元素会一起进行处理。
+
+为了进一步降低算法的时间开销，我们可以利用${\boldsymbol x}_k$中的结构稀疏性提供的额外的先验信息[^1-8]对${\boldsymbol x}_k$中的子空间进行降维[^1-4][^1-1][^1-2][^1-3]。
+
+这里我们采用HMM信道建模[^1-4] [^1-5] :
+$$
+\begin{aligned}
+p(\boldsymbol{x} \mid \boldsymbol{\gamma})&=\prod_k^K\prod_m^Mp(x_{k,m} \mid \gamma_{k,m})
+
+\end{aligned}
+$$
+
+其中，${\boldsymbol \gamma}$为信道精度，$p(x_{k,m} \mid \gamma_{k,m})=CN(x_{k,m};0;\gamma_{k,m}^{-1})$
+$$
+p({\boldsymbol \gamma} \mid {\boldsymbol s}) = \prod_k^K\prod_m^M p(\gamma_{k,m} \mid s_{k,m})
+$$
+其中，${\boldsymbol s}$ 为channel support：$p(\gamma_{k,m} \mid s_{k,m})= \Gamma(\gamma_{k,m};a_{k},b_{k})^{s_{k,m}}\Gamma(\gamma_{k,m};\overline{a}_{k},\overline{b}_{k})^{1-s_{k,m}}$ 
+
+当$s_{k,m}$为1时，$\frac{a_{k}}{b_{k}}=E[\gamma_{k,m}]=PL_{k}^{-1}$,其中$PL_k$为RIS-User k的LoS链路的路损。$\overline{a}_{k,m},\overline{b}_{k,m}$
+
+需要满足：$\frac{\overline{a}_{k,m}}{\overline{b}_{k,m}}=E[\gamma_{k,m}] \gg 1$  
+
+在channel support的底层，我们用common support${\boldsymbol c}$的马尔可夫性质和联合概率$ p({\boldsymbol c},{\boldsymbol s};{\boldsymbol \xi})$来刻画channel support的结构化稀疏性[^1-4]：
+$$
+\begin{aligned}
+p({\boldsymbol c}, {\boldsymbol s};{\boldsymbol \xi}) &= p({\boldsymbol c})\prod_{k=1}^Kp({\boldsymbol s}_k \mid {\boldsymbol c}) \\
+	&= p(c_1)\prod_{k=1}^Kp({s}_{k,1} \mid c_1) \prod_{m=2}^M\left[ p(c_m \mid c_{m-1} ) \prod_{k=1}^K p(s_{k,m} \mid c_m) \right]
+\end{aligned}
+$$
+为方便起见，我们定义$p_{01}^c \triangleq p(c_m=1\mid c_{m-1}=0),m=\{2,\dots M\}$
+
+$p_{10}^c \triangleq p(c_m=0\mid c_{m-1}=1),m=\{2,\dots M\}$
+
+则steady state distribution：$\lambda^c \triangleq p(c_1=1)=\frac{p_{01}}{p{01}+p{10}}$
+
+针对不同用户，每个用户都会有不同的activate path在角域的概率分布密度，我们使用高斯分布对每个用户的角域activate path出现概率进行建模：
+
+定义用户k的$\{1,\dots,M\}$个角域activate path ${p}^{s}_{k,m}$:
+$$
+\begin{aligned}
+{p}^{s}_{k}(m)&=p(s_{k,m}=1 \mid c_m=1)\\
+	&= \frac{1}{\sqrt{2 \pi} {\sigma}^s_{k}} \exp \left(-\frac{(m-\mu^s_{k})^{2}}{2 {\sigma^{s}_k}^{2}}\right)
+\end{aligned}
+$$
+注意到根据common path 和user activate path之间的关系有：
+$$
+p(s_{k,m}=1 \mid c_m=0)=0
+$$
 
 
+则common path 和 user path 的联合概率可以由$\{\lambda^c,p^c_{01}, p^c_{10}, \mu^s_1,\sigma^s_1,\dots, \mu^s_k,\sigma^s_k\}$确定
+
+
+
+
+
+# Turbo-VBI-EM
+
+首先可以定义该问题中的未知参数${\boldsymbol \xi} \triangleq \{{\boldsymbol \xi}_1,{\boldsymbol \xi}_2,{\boldsymbol \xi}_3 \}$，
+
+${\boldsymbol \xi}_1 = \{\omega_1,\dots,\omega_L \}$
+
+${\boldsymbol \xi}_2=\{\Delta\varphi_1, \dots,\Delta \varphi_M \}$
+
+${\boldsymbol \xi}_3 =\{\lambda^c,p^c_{01}, p^c_{10}, \mu^s_1,\sigma^s_1,\dots, \mu^s_k,\sigma^s_k\}$
+
+
+
+## A. M-step
+
+ 从以上的推导可以看出，该问题是一个Spectral Compress Sensing 问题[^1-8]，我们在本文中使用Redundancy DFT提高估计精度。
+$$
+\begin{aligned}
+u(\boldsymbol{\xi} ; \dot{\boldsymbol{\xi}}) & \leq \ln p(\boldsymbol{y}, \dot{\boldsymbol{\xi}}), \quad \forall \boldsymbol{\xi} \\
+u(\dot{\boldsymbol{\xi}} ; \dot{\boldsymbol{\xi}}) &=\ln p(\boldsymbol{y}, \dot{\boldsymbol{\xi}}) \\
+\left.\frac{\partial u(\boldsymbol{\xi} ; \dot{\boldsymbol{\xi}})}{\partial \boldsymbol{\xi}}\right|_{\boldsymbol{\xi}=\dot{\boldsymbol{\xi}}} &=\left.\frac{\partial \ln p(\boldsymbol{y}; \boldsymbol{\xi})}{\partial \boldsymbol{\xi}}\right|_{\boldsymbol{\xi}=\dot{\boldsymbol{\xi}}}
+\end{aligned}
+$$
+
+$$
+\boldsymbol{\xi}_{j}^{(i+1)}=\underset{\boldsymbol{\xi}_{j}}{\operatorname{argmax}} u\left(\boldsymbol{\xi}_{j}, \boldsymbol{\xi}_{-j}^{(i)} ; \boldsymbol{\xi}_{j}^{(i)}, \boldsymbol{\xi}_{-j}^{(i)}\right)
+$$
+
+$$
+\boldsymbol{\xi}_{j}^{(i+1)}=\boldsymbol{\xi}_{j}^{(i)}+\left.\gamma^{(i)} \frac{\partial u\left(\boldsymbol{\xi}_{j}, \boldsymbol{\xi}_{-j}^{(i)} ; \boldsymbol{\xi}_{j}^{(i)}, \boldsymbol{\xi}_{-j}^{(i)}\right)}{\partial \boldsymbol{\xi}_{j}}\right|_{\boldsymbol{\xi}_{j}=\boldsymbol{\xi}_{j}^{(i)}}
+$$
+
+
+代理函数设计：
+$$
+u(\boldsymbol{\xi} ; \dot{\boldsymbol{\xi}})=u^{\mathrm{EM}}(\boldsymbol{\xi} ; \dot{\boldsymbol{\xi}})+\sum_{j \in \mathcal{J}_{c}^{1}} \tau_{j}\left\|\boldsymbol{\xi}_{j}-\dot{\boldsymbol{\xi}}_{j}\right\|^{2}
+$$
+其中，
+$$
+\begin{aligned}
+u^{\mathrm{EM}}(\boldsymbol{\xi} ; \dot{\boldsymbol{\xi}})&=\int p(\boldsymbol{v} \mid \boldsymbol{y}; \dot{\boldsymbol{\xi}}) \ln \frac{p(\boldsymbol{v}, \boldsymbol{y}; \boldsymbol{\xi})}{p(\boldsymbol{v} \mid \boldsymbol{y}; \dot{\boldsymbol{\xi}})} d \boldsymbol{v} \\
+	&\approx \int q(\boldsymbol{v} ; \dot{\boldsymbol{\xi}}) \ln \frac{p(\boldsymbol{v}, \boldsymbol{y}; \boldsymbol{\xi})}{q(\boldsymbol{v} ; \dot{\boldsymbol{\xi}})} d \boldsymbol{v}
+	
+\end{aligned}
+$$
+
+
+定义$p(\boldsymbol{x} \mid \boldsymbol{y}; \hat{\boldsymbol{\xi}}) \approx q(\boldsymbol{x} ; \hat{\boldsymbol{\xi}}) \text { and } p\left(s_{i} \mid \boldsymbol{y}, \hat{\boldsymbol{\xi}}\right) \approx q\left(s_{i} ; \hat{\boldsymbol{\xi}}\right)$
+
+其中，后验概率采用VBI近似，同时，联合概率${p(\boldsymbol{v}, \boldsymbol{y}, \boldsymbol{\xi})}$有以下表达形式：
+$$
+\begin{aligned}
+p({\boldsymbol v}, {\boldsymbol y};{\boldsymbol \xi}) & = p({\boldsymbol y}, {\boldsymbol x}, {\boldsymbol \gamma}, {\boldsymbol s}, {\boldsymbol c},{\boldsymbol \kappa})\\
+	&=p({\boldsymbol y} | {\boldsymbol x, \boldsymbol \kappa};{\boldsymbol \xi})p({\boldsymbol x} | {\boldsymbol \gamma}) p({\boldsymbol \kappa})p({\boldsymbol \gamma}|{\boldsymbol s})p({\boldsymbol c}, {\boldsymbol s};{\boldsymbol \xi})\\
+	&=\underbrace{p({\boldsymbol x} | {\boldsymbol \gamma}) p({\boldsymbol \kappa})p({\boldsymbol \gamma}|{\boldsymbol s})}_{\text{known distribution}} \ \ \underbrace{p({\boldsymbol y} | {\boldsymbol x, \boldsymbol \kappa};{\boldsymbol \xi})p({\boldsymbol c}, {\boldsymbol s};{\boldsymbol \xi})}_{\text{with unknown valuables}}
+
+\end{aligned}
+$$
+
+
+
+## B. E-step
+
+定义近似的先验信息：
+$$
+\begin{aligned}
+\hat{p}(\boldsymbol{x}, \boldsymbol{\rho}, \boldsymbol{s}) &=\hat{p}(\boldsymbol{s}) p(\boldsymbol{\rho} \mid \boldsymbol{s}) p(\boldsymbol{x} \mid \boldsymbol{\rho}) \\
+\hat{p}(\boldsymbol{s}) &=\prod\left(\pi_{i}\right)^{s_{i}}\left(1-\pi_{i}\right)^{1-s_{i}}
+\end{aligned}
+$$
+
+$$
+\mathscr{A}_{\mathrm{VBI}}: q^{*}(\boldsymbol{v} ; \boldsymbol{\xi})=\arg \min _{q(\boldsymbol{v} ; \boldsymbol{\xi})} \int q(\boldsymbol{v} ; \boldsymbol{\xi}) \ln \frac{q(\boldsymbol{v} ; \boldsymbol{\xi})}{\hat{p}(\boldsymbol{v} \mid \boldsymbol{y}, \boldsymbol{\xi})} d \boldsymbol{v}
+$$
+
+ 
+
+
+definition 1 (stationary solution): $q^{*}(\boldsymbol{v})=\prod_{k \in \mathcal{H}} q^{*}\left(\boldsymbol{v}^{k}\right)$
+
+
+
+
+$$
+\begin{aligned}
+&q^{*}\left(\boldsymbol{v}^{k}\right) \\
+&\quad=\arg \min _{q\left(\boldsymbol{v}^{k}\right)} \int \prod_{l \neq k} q^{*}\left(\boldsymbol{v}^{l}\right) q\left(\boldsymbol{v}^{k}\right) \ln \frac{\prod_{l \neq k} q^{*}\left(\boldsymbol{v}^{l}\right) q\left(\boldsymbol{v}^{k}\right)}{\hat{p}(\boldsymbol{v} \mid \boldsymbol{y}, \boldsymbol{\xi})}
+\end{aligned}
+$$
+$\langle f(x)\rangle_{q(x)}=\int f(x) q(x) d x$ 
+
+ Initialization of Sparse VBI: 
+
+
+
+
+
+## . Computational Complexity
 
 
 
@@ -652,9 +909,14 @@ $$
 [^1-1]: Angular-domain selective channel tracking and doppler compensation for high-mobility mmWave massive MIMO
 [^1-2]: Cloud-Assisted Cooperative Localization for Vehicle Platoons: A Turbo Approach
 [^1-3]: FDD Massive MIMO Channel Estimation With Arbitrary 2D-Array Geometry
+[^1-4]: Robust Recovery of Structured Sparse Signals WithUncertain Sensing Matrix: A Turbo-VBI Approach
 [^1-5]: Virtual Angular-Domain Channel Estimation for FDD Based Massive MIMO Systems With
+
 Partial Orthogonal Pilot Design
 
+
+
+[^1-8]: [1-8] Spectral compressive sensing
 [^2-3]: Channel Estimation for IRS-Assisted Millimeter-Wave MIMO Systems：Sparsity-Inspired Approaches
 [^2-2]: Channel Estimation for RIS-Aided Multiuser Millimeter-Wave Massive MIMO Systems
 
